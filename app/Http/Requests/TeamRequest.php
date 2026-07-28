@@ -22,7 +22,7 @@ class TeamRequest extends FormRequest
      */
     public function rules(): array
     {
-        $teamId = $this->input('id') ?? $this->route('id');
+        $teamId = $this->input('id') ?? $this->route('team');
         $rules = [
             'name' => 'required|string|max:255|unique:teams,name',
             'description' => 'nullable|string|max:255',
