@@ -24,4 +24,9 @@ class Project extends Model
     {
         return $this->hasOne(GithubRepository::class);
     }
+
+    public function sprints()
+    {
+        return $this->hasMany(Sprint::class);
+    }
 }
