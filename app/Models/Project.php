@@ -22,6 +22,6 @@ class Project extends Model
 
     public function githubRepository()
     {
-        // return $this->belongsTo(GithubRepository::class, 'github_repository_id');
+        return $this->hasOne(GithubRepository::class);
     }
 }
