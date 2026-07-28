@@ -37,6 +37,11 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class, 'team_user');
+    }
+
     /**
      * Get the attributes that should be cast.
      *
