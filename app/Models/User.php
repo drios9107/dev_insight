@@ -57,6 +57,16 @@ class User extends Authenticatable
         return $this->hasMany(Commit::class, 'author_id');
     }
 
+    public function pullRequests()
+    {
+        return $this->hasMany(PullRequest::class, 'author_id');
+    }
+
+    public function assignedPullRequests()
+    {
+        return $this->hasMany(PullRequest::class, 'assignee_id');
+    }
+
     /**
      * Get the attributes that should be cast.
      *

@@ -24,4 +24,9 @@ class GithubRepository extends Model
     {
         return $this->hasMany(Commit::class, 'github_repository_id');
     }
+
+    public function pullRequests()
+    {
+        return $this->hasMany(PullRequest::class, 'github_repository_id');
+    }
 }

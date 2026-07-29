@@ -37,4 +37,9 @@ class Task extends Model
     {
         return $this->hasMany(Commit::class, 'task_id');
     }
+
+    public function pullRequests()
+    {
+        return $this->hasMany(PullRequest::class, 'task_id');
+    }
 }
