@@ -14,4 +14,9 @@ class GithubRepository extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    public function githubIssues()
+    {
+        return $this->hasMany(GithubIssue::class, 'github_repository_id');
+    }
 }

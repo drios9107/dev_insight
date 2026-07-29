@@ -30,6 +30,6 @@ class Task extends Model
 
     public function github_issue()
     {
-        // return $this->belongsTo(GithubIssue::class);
+        return $this->belongsTo(GithubIssue::class);
     }
 }
