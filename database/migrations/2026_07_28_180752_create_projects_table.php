@@ -21,8 +21,8 @@ return new class extends Migration
             $table->foreignId('owner_id')->constrained('users');
             $table->foreignId('github_repository_id')->constrained('github_repositories')->nullable();
             $table->enum('status', array_column(ProjectStatus::cases(), 'value'));
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
+            $table->timestamp('start_date')->nullable();
+            $table->timestamp('end_date')->nullable();
             $table->string('color')->nullable();
         });
     }

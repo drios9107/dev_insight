@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('name');
             $table->text('goal')->nullable();
             $table->foreignId('project_id')->constrained('projects');
-            $table->date('start_date');
-            $table->date('end_date');
+            $table->timestamp('start_date');
+            $table->timestamp('end_date');
             $table->enum('status', array_column(SprintStatusEnum::cases(), 'value'))->default(SprintStatusEnum::Planning->value);
             $table->float('velocity')->nullable();
             $table->float('actual_velocity')->nullable();
