@@ -52,6 +52,11 @@ class User extends Authenticatable
         return $this->hasMany(GithubIssue::class, 'author_id');
     }
 
+    public function commits()
+    {
+        return $this->hasMany(Commit::class, 'author_id');
+    }
+
     /**
      * Get the attributes that should be cast.
      *

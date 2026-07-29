@@ -19,4 +19,9 @@ class GithubRepository extends Model
     {
         return $this->hasMany(GithubIssue::class, 'github_repository_id');
     }
+
+    public function commits()
+    {
+        return $this->hasMany(Commit::class, 'github_repository_id');
+    }
 }

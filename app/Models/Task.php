@@ -32,4 +32,9 @@ class Task extends Model
     {
         return $this->belongsTo(GithubIssue::class);
     }
+
+    public function commits()
+    {
+        return $this->hasMany(Commit::class, 'task_id');
+    }
 }

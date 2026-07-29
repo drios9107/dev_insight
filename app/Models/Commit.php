@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Model;
+
+#[Fillable(['sha', 'github_repository_id', 'author_id', 'task_id', 'message', 'date', 'url', 'additions', 'deletions', 'total_changes'])]
+class Commit extends Model
+{
+    public function githubRepository()
+    {
+        return $this->belongsTo(GithubRepository::class);
+    }
+
+    public function author()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function task()
+    {
+        return $this->belongsTo(Task::class);
+    }
+}
