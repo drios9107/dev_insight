@@ -8,11 +8,11 @@ use App\Services\CommitService;
 
 class CommitController extends Controller
 {
-    private CommitService $githubIssueService;
+    private CommitService $commitService;
 
-    public function __construct(CommitService $githubIssueService)
+    public function __construct(CommitService $commitService)
     {
-        $this->githubIssueService = $githubIssueService;
+        $this->commitService = $commitService;
     }
 
     /**
@@ -20,7 +20,7 @@ class CommitController extends Controller
      */
     public function index()
     {
-        return CommitResource::collection($this->githubIssueService->index());
+        return CommitResource::collection($this->commitService->index());
     }
 
     /**
@@ -28,7 +28,7 @@ class CommitController extends Controller
      */
     public function store(CommitRequest $request)
     {
-        return new CommitResource($this->githubIssueService->store($request->validated()));
+        return new CommitResource($this->commitService->store($request->validated()));
     }
 
     /**
@@ -36,7 +36,7 @@ class CommitController extends Controller
      */
     public function show(int $id)
     {
-        return new CommitResource($this->githubIssueService->show($id));
+        return new CommitResource($this->commitService->show($id));
     }
 
     /**
@@ -44,7 +44,7 @@ class CommitController extends Controller
      */
     public function update(CommitRequest $request, int $id)
     {
-        return new CommitResource($this->githubIssueService->update($id, $request->validated()));
+        return new CommitResource($this->commitService->update($id, $request->validated()));
     }
 
     /**
@@ -52,7 +52,7 @@ class CommitController extends Controller
      */
     public function destroy(int $id)
     {
-        $this->githubIssueService->destroy($id);
+        $this->commitService->destroy($id);
 
         return response()->noContent();
     }

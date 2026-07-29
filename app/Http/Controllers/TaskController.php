@@ -8,11 +8,11 @@ use App\Services\TaskService;
 
 class TaskController extends Controller
 {
-    private TaskService $projectService;
+    private TaskService $taskService;
 
-    public function __construct(TaskService $projectService)
+    public function __construct(TaskService $taskService)
     {
-        $this->projectService = $projectService;
+        $this->taskService = $taskService;
     }
 
     /**
@@ -20,7 +20,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return TaskResource::collection($this->projectService->index());
+        return TaskResource::collection($this->taskService->index());
     }
 
     /**
@@ -28,7 +28,7 @@ class TaskController extends Controller
      */
     public function store(TaskRequest $request)
     {
-        return new TaskResource($this->projectService->store($request->validated()));
+        return new TaskResource($this->taskService->store($request->validated()));
     }
 
     /**
@@ -36,7 +36,7 @@ class TaskController extends Controller
      */
     public function show(int $id)
     {
-        return new TaskResource($this->projectService->show($id));
+        return new TaskResource($this->taskService->show($id));
     }
 
     /**
@@ -44,7 +44,7 @@ class TaskController extends Controller
      */
     public function update(TaskRequest $request, int $id)
     {
-        return new TaskResource($this->projectService->update($id, $request->validated()));
+        return new TaskResource($this->taskService->update($id, $request->validated()));
     }
 
     /**
@@ -52,6 +52,6 @@ class TaskController extends Controller
      */
     public function destroy(int $id)
     {
-        return new TaskResource($this->projectService->destroy($id));
+        return new TaskResource($this->taskService->destroy($id));
     }
 }

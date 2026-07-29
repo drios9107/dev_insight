@@ -9,11 +9,12 @@ use App\Services\TeamService;
 class TeamController extends Controller
 {
     private TeamService $teamService;
+
     public function __construct(TeamService $teamService)
     {
         $this->teamService = $teamService;
     }
-    
+
     /**
      * Display a listing of the resource.
      */
