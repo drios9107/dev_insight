@@ -47,4 +47,9 @@ class Task extends Model
     {
         return $this->hasMany(Comment::class, 'task_id');
     }
+
+    public function activityLogs()
+    {
+        return $this->hasMany(ActivityLog::class, 'task_id');
+    }
 }

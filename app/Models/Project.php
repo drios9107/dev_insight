@@ -34,4 +34,9 @@ class Project extends Model
     {
         return $this->hasMany(Metric::class);
     }
+
+    public function activityLogs()
+    {
+        return $this->hasMany(ActivityLog::class, 'project_id');
+    }
 }
