@@ -30,4 +30,9 @@ class PullRequest extends Model
     {
         return $this->belongsTo(Task::class, 'task_id');
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(PullRequestReview::class, 'pull_request_id');
+    }
 }

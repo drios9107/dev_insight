@@ -67,6 +67,11 @@ class User extends Authenticatable
         return $this->hasMany(PullRequest::class, 'assignee_id');
     }
 
+    public function pullRequestReviews()
+    {
+        return $this->hasMany(PullRequestReview::class, 'reviewer_id');
+    }
+
     /**
      * Get the attributes that should be cast.
      *
