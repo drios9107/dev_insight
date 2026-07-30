@@ -29,4 +29,9 @@ class Project extends Model
     {
         return $this->hasMany(Sprint::class);
     }
+
+    public function metrics()
+    {
+        return $this->hasMany(Metric::class);
+    }
 }

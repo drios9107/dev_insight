@@ -22,4 +22,9 @@ class Team extends Model
     {
         return $this->hasMany(Project::class);
     }
+
+    public function metrics()
+    {
+        return $this->hasMany(Metric::class);
+    }
 }
