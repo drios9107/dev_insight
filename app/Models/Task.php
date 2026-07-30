@@ -42,4 +42,9 @@ class Task extends Model
     {
         return $this->hasMany(PullRequest::class, 'task_id');
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'task_id');
+    }
 }

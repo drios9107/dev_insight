@@ -71,6 +71,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(PullRequestReview::class, 'reviewer_id');
     }
+    
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'user_id');
+    }
 
     /**
      * Get the attributes that should be cast.
