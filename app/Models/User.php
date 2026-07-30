@@ -71,10 +71,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(PullRequestReview::class, 'reviewer_id');
     }
-    
+
     public function comments()
     {
         return $this->hasMany(Comment::class, 'user_id');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'user_id');
     }
 
     /**
