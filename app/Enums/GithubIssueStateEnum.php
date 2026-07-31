@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum GithubIssueState: string
+enum GithubIssueStateEnum: string
 {
     case Open = 'open';
     case Closed = 'closed';

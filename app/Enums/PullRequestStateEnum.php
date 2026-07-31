@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum PullRequestState: string
+enum PullRequestStateEnum: string
 {
     case Open = 'open';
     case Closed = 'closed';

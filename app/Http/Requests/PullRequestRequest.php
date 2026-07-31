@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\PullRequestState;
+use App\Enums\PullRequestStateEnum;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -32,7 +32,7 @@ class PullRequestRequest extends FormRequest
             'body' => 'nullable|string',
             'state' => [
                 'required',
-                Rule::in(array_column(PullRequestState::cases(), 'value')),
+                Rule::in(array_column(PullRequestStateEnum::cases(), 'value')),
             ],
             'author_id' => 'nullable|exists:users,id',
             'assignee_id' => 'nullable|exists:users,id',

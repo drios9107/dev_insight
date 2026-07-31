@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\GithubIssueState;
+use App\Enums\GithubIssueStateEnum;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -32,7 +32,7 @@ class GithubIssueRequest extends FormRequest
             'body' => 'nullable|string',
             'state' => [
                 'required',
-                Rule::in(array_column(GithubIssueState::cases(), 'value')),
+                Rule::in(array_column(GithubIssueStateEnum::cases(), 'value')),
             ],
             'author_id' => 'nullable|integer|exists:users,id',
             'task_id' => 'nullable|integer|exists:tasks,id',

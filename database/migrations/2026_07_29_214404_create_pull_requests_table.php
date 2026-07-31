@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\PullRequestState;
+use App\Enums\PullRequestStateEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('number');
             $table->string('title');
             $table->text('body')->nullable();
-            $table->enum('state', array_column(PullRequestState::cases(), 'value'));
+            $table->enum('state', array_column(PullRequestStateEnum::cases(), 'value'));
             $table->foreignId('author_id')->nullable()->constrained('users');
             $table->foreignId('assignee_id')->nullable()->constrained('users');
             $table->string('base_branch');

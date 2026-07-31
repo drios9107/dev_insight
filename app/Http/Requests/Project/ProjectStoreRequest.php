@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Project;
 
-use App\Enums\ProjectStatus;
+use App\Enums\ProjectStatusEnum;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -23,7 +23,7 @@ class ProjectStoreRequest extends FormRequest
             'github_repository_id' => 'required|exists:github_repositories,id',
             'status' => [
                 'required',
-                Rule::in(array_column(ProjectStatus::cases(), 'value')),
+                Rule::in(array_column(ProjectStatusEnum::cases(), 'value')),
             ],
             'start_date' => 'nullable|numeric',
             'end_date' => 'nullable|numeric',
