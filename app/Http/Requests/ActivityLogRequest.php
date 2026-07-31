@@ -14,7 +14,7 @@ class ActivityLogRequest extends FormRequest
     {
         $user = $this->user();
 
-        return $user->role->name === 'Admin';
+        return $user->isAdmin();
     }
 
     /**

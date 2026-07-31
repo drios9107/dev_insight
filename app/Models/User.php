@@ -87,6 +87,11 @@ class User extends Authenticatable
         return $this->hasMany(ActivityLog::class, 'user_id');
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->role?->name === 'Admin';
+    }
+
     /**
      * Get the attributes that should be cast.
      *
