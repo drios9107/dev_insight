@@ -26,7 +26,6 @@ return new class extends Migration
             $table->enum('priority', array_column(TaskPriorityEnum::cases(), 'value'))->default(TaskPriorityEnum::Medium->value);
             // @todo: whats story_points
             $table->integer('story_points')->default(0);
-            $table->foreignId('github_issue_id')->constrained('github_issues')->nullable();
             $table->timestamp('due_date')->nullable();
             $table->timestamp('completed_at')->nullable();
             $table->integer('hours_estimate')->default(1);
