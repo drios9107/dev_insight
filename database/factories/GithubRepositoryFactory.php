@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\GithubRepository;
-use App\Models\Project;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +17,7 @@ class GithubRepositoryFactory extends Factory
      */
     public function definition(): array
     {
-        $name = $this->faker->unique()->word();
+        $name = $this->faker->unique()->company().' Repository';
 
         return [
             'github_id' => $this->faker->unique()->randomNumber(8),
@@ -28,12 +27,8 @@ class GithubRepositoryFactory extends Factory
             'description' => $this->faker->optional()->sentence(),
             'default_branch' => $this->faker->randomElement(['main', 'master', 'develop']),
             'is_private' => $this->faker->boolean(30),
-            'language' => $this->faker->randomElement(['PHP', 'JavaScript', 'Python', 'Java', 'Go', 'Ruby', 'TypeScript', 'C#', null]),
-            'stars_count' => $this->faker->numberBetween(0, 1000),
-            'forks_count' => $this->faker->numberBetween(0, 100),
             'last_synced_at' => $this->faker->optional()->dateTimeBetween('-30 days', 'now'),
             'webhook_secret' => $this->faker->optional()->sha1(),
-            'project_id' => $this->faker->optional()->passthrough(Project::factory()),
             'created_at' => $this->faker->dateTimeBetween('-60 days', 'now'),
             'updated_at' => $this->faker->dateTimeBetween('-60 days', 'now'),
         ];

@@ -20,9 +20,9 @@ class CommentFactory extends Factory
     public function definition(): array
     {
         return [
-            'task_id' => Task::factory(),
-            'user_id' => User::factory(),
-            'parent_comment_id' => $this->faker->optional()->passthrough(Comment::factory()),
+            'task_id' => Task::inRandomOrder(0)->first()->id,
+            'user_id' => User::inRandomOrder(0)->first()->id,
+            'parent_id' => null,
             'content' => $this->faker->paragraph(2),
             'is_internal' => $this->faker->boolean(20),
         ];

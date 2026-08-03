@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 #[Fillable(['name', 'description', 'team_id', 'owner_id', 'github_repository_id', 'status', 'start_date', 'end_date', 'color'])]
-#[Hidden(['github_repository_id'])]
 class Project extends Model
 {
+    use HasFactory;
+
     public function team()
     {
         return $this->belongsTo(Team::class);
@@ -22,7 +23,7 @@ class Project extends Model
 
     public function githubRepository()
     {
-        return $this->hasOne(GithubRepository::class);
+        return $this->belongsTo(GithubRepository::class);
     }
 
     public function sprints()

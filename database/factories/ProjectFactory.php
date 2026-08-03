@@ -21,15 +21,15 @@ class ProjectFactory extends Factory
      */
     public function definition(): array
     {
-        $name = $this->faker->words(3, true);
+        $name = $this->faker->words(2, true);
         $statuses = array_column(ProjectStatusEnum::cases(), 'value');
 
         return [
             'name' => ucfirst($name),
-            'description' => $this->faker->optional()->paragraph(),
-            'team_id' => Team::factory(),
-            'owner_id' => User::factory(),
-            'github_repository_id' => $this->faker->optional()->passthrough(GithubRepository::factory()),
+            'description' => $this->faker->optional()->sentence(),
+            'team_id' => Team::inRandomOrder(0)->first()->id,
+            'owner_id' => User::inRandomOrder(0)->first()->id,
+            'github_repository_id' => $this->faker->passthrough(GithubRepository::inRandomOrder(0)->first()->id),
             'status' => $this->faker->randomElement($statuses),
             'start_date' => $this->faker->optional()->dateTimeBetween('-60 days', 'now'),
             'end_date' => $this->faker->optional()->dateTimeBetween('now', '+60 days'),

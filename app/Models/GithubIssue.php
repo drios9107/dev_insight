@@ -3,11 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['github_id', 'github_repository_id', 'number', 'title', 'body', 'state', 'author_id', 'task_id', 'closed_at'])]
+#[Fillable(['github_id', 'github_repository_id', 'number', 'title', 'body', 'state', 'author_id', 'closed_at'])]
 class GithubIssue extends Model
 {
+    use HasFactory;
+
     public function githubRepository()
     {
         return $this->belongsTo(GithubRepository::class);
@@ -20,6 +23,6 @@ class GithubIssue extends Model
 
     public function task()
     {
-        return $this->belongsTo(Task::class);
+        return $this->hasOne(Task::class);
     }
 }

@@ -30,13 +30,13 @@ class SprintFactory extends Factory
         return [
             'name' => 'Sprint '.$this->faker->numberBetween(1, 50),
             'goal' => $this->faker->optional()->sentence(6),
-            'project_id' => Project::factory(),
+            'project_id' => Project::inRandomOrder(0)->first()->id,
             'start_date' => $startDate,
             'end_date' => $endDate,
             'status' => $status,
             'velocity' => $this->faker->optional()->numberBetween(5, 30),
             'actual_velocity' => $status === 'completed' ? $this->faker->numberBetween(5, 30) : null,
-            'created_by' => User::factory(),
+            'created_by' => User::inRandomOrder(0)->first()->id,
         ];
     }
 }

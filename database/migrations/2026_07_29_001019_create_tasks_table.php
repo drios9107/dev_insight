@@ -21,16 +21,17 @@ return new class extends Migration
             $table->foreignId('project_id')->constrained('projects')->nullable();
             $table->foreignId('sprint_id')->constrained('sprints')->nullable();
             $table->foreignId('assignee_id')->constrained('users')->nullable();
+            $table->foreignId('github_issue_id')->constrained('github_issues')->nullable();
             $table->foreignId('reporter_id')->constrained('users');
             $table->enum('status', array_column(TaskStatusEnum::cases(), 'value'))->default(TaskStatusEnum::Backlog->value);
             $table->enum('priority', array_column(TaskPriorityEnum::cases(), 'value'))->default(TaskPriorityEnum::Medium->value);
             // @todo: whats story_points
-            $table->integer('story_points')->default(0);
+            $table->integer('story_points')->default(0)->nullable();
             $table->timestamp('due_date')->nullable();
             $table->timestamp('completed_at')->nullable();
-            $table->integer('hours_estimate')->default(1);
-            $table->integer('hours_spent')->default(0);
-            $table->integer('order')->default(1);
+            $table->integer('hours_estimate')->default(1)->nullable();
+            $table->integer('hours_spent')->default(0)->nullable();
+            $table->integer('order')->default(1)->nullable();
             $table->softDeletes();
         });
     }

@@ -22,7 +22,6 @@ return new class extends Migration
             $table->boolean('is_private')->default(false);
             $table->string('default_branch')->default('main');
             $table->timestamp('last_synced_at')->nullable();
-            $table->foreignId('project_id')->constrained('projects')->nullable();
             $table->string('webhook_secret')->nullable();
         });
     }

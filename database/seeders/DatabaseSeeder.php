@@ -19,6 +19,21 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             UserSeeder::class,
+            TeamSeeder::class,
+            // @todo: good up to this point
+            GithubRepositorySeeder::class,
+            ProjectSeeder::class,
+            GithubIssueSeeder::class,
+            SprintSeeder::class,
+            TaskSeeder::class,
+            CommitSeeder::class,
+            PullRequestSeeder::class,
+            PullRequestReviewSeeder::class,
+            CommentSeeder::class,
+            MetricSeeder::class,
+            NotificationSeeder::class,
+            ActivityLogSeeder::class,
+
         ]);
     }
 }

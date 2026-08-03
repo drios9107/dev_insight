@@ -19,9 +19,9 @@ class TeamFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->unique()->word(),
+            'name' => fake()->unique()->company().' Team',
             'description' => fake()->text(),
-            'owner_id' => User::factory(),
+            'owner_id' => User::inRandomOrder(0)->first()->id,
             'avatar_url' => fake()->imageUrl(),
             'is_active' => fake()->boolean(),
         ];

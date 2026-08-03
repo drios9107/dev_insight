@@ -20,8 +20,8 @@ class MetricFactory extends Factory
     public function definition(): array
     {
         return [
-            'project_id' => Project::factory(),
-            'team_id' => Team::factory(),
+            'project_id' => Project::inRandomOrder(0)->first()->id,
+            'team_id' => Team::inRandomOrder(0)->first()->id,
             'date' => $this->faker->dateTimeBetween('-90 days', 'now'),
             'commits_count' => $this->faker->numberBetween(0, 50),
             'prs_opened' => $this->faker->numberBetween(0, 20),

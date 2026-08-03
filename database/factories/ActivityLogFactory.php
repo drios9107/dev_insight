@@ -22,19 +22,20 @@ class ActivityLogFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => $this->faker->optional()->passthrough(User::factory()),
-            'team_id' => $this->faker->optional()->passthrough(Team::factory()),
-            'project_id' => $this->faker->optional()->passthrough(Project::factory()),
-            'task_id' => $this->faker->optional()->passthrough(Task::factory()),
+            'user_id' => $this->faker->optional()->passthrough(User::inRandomOrder(0)->first()->id),
+            'team_id' => $this->faker->optional()->passthrough(Team::inRandomOrder(0)->first()->id),
+            'project_id' => $this->faker->optional()->passthrough(Project::inRandomOrder(0)->first()->id),
+            'task_id' => $this->faker->optional()->passthrough(Task::inRandomOrder(0)->first()->id),
             'type' => $this->faker->randomElement(['created', 'updated', 'deleted']),
             'description' => $this->faker->sentence(),
-            'data' => $this->faker->optional()->passthrough([
-                'changes' => [
-                    'old' => $this->faker->word(),
-                    'new' => $this->faker->word(),
-                ],
-                'metadata' => $this->faker->words(3),
-            ]),
+            // @todo: fix json factory data
+            // 'data' => $this->faker->optional()->passthrough([
+            //     'changes' => [
+            //         'old' => $this->faker->word(),
+            //         'new' => $this->faker->word(),
+            //     ],
+            //     'metadata' => $this->faker->words(3),
+            // ]),
             'ip_address' => $this->faker->optional()->ipv4(),
             'user_agent' => $this->faker->optional()->userAgent(),
             'created_at' => $this->faker->dateTimeBetween('-30 days', 'now'),

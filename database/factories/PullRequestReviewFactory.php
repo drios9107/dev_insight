@@ -24,8 +24,8 @@ class PullRequestReviewFactory extends Factory
 
         return [
             'github_id' => $this->faker->unique()->randomNumber(8),
-            'pull_request_id' => PullRequest::factory(),
-            'reviewer_id' => $this->faker->optional()->passthrough(User::factory()),
+            'pull_request_id' => PullRequest::inRandomOrder(0)->first()->id,
+            'reviewer_id' => $this->faker->optional()->passthrough(User::inRandomOrder(0)->first()->id),
             'state' => $this->faker->randomElement($states),
             'body' => $this->faker->optional()->paragraph(),
             'submitted_at' => $this->faker->dateTimeBetween('-30 days', 'now'),

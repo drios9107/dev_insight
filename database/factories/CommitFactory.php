@@ -25,15 +25,15 @@ class CommitFactory extends Factory
 
         return [
             'sha' => $this->faker->unique()->sha1(),
-            'github_repository_id' => GithubRepository::factory(),
-            'author_id' => $this->faker->optional()->passthrough(User::factory()),
+            'github_repository_id' => GithubRepository::inRandomOrder(0)->first()->id,
+            'author_id' => User::inRandomOrder(0)->first()->id,
+            'task_id' => Task::inRandomOrder(0)->first()->id,
             'message' => $this->faker->sentence(6),
             'date' => $this->faker->dateTimeBetween('-60 days', 'now'),
             'url' => $this->faker->url(),
             'additions' => $additions,
             'deletions' => $deletions,
             'total_changes' => $additions + $deletions,
-            'task_id' => $this->faker->optional()->passthrough(Task::factory()),
             'created_at' => $this->faker->dateTimeBetween('-60 days', 'now'),
             'updated_at' => $this->faker->dateTimeBetween('-60 days', 'now'),
         ];
