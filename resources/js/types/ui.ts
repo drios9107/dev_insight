@@ -19,3 +19,8 @@ export type AuthLayoutProps = {
     title?: string;
     description?: string;
 };
+
+export interface IHtmlWithLabel extends React.ComponentProps<"input"> {
+    label?: string
+    errors?: any
+}
