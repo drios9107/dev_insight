@@ -25,14 +25,14 @@ class ProjectFactory extends Factory
         $statuses = array_column(ProjectStatusEnum::cases(), 'value');
 
         return [
-            'name' => ucfirst($name),
             'description' => $this->faker->optional()->sentence(),
+            'name' => ucfirst($name),
             'team_id' => Team::inRandomOrder(0)->first()->id,
             'owner_id' => User::inRandomOrder(0)->first()->id,
             'github_repository_id' => $this->faker->passthrough(GithubRepository::inRandomOrder(0)->first()->id),
             'status' => $this->faker->randomElement($statuses),
-            'start_date' => $this->faker->optional()->dateTimeBetween('-60 days', 'now'),
-            'end_date' => $this->faker->optional()->dateTimeBetween('now', '+60 days'),
+            'start_date' => $this->faker->dateTimeBetween('-60 days', 'now'),
+            'end_date' => $this->faker->dateTimeBetween('now', '+60 days'),
             'color' => $this->faker->optional()->hexColor(),
             'created_at' => $this->faker->dateTimeBetween('-90 days', 'now'),
             'updated_at' => $this->faker->dateTimeBetween('-90 days', 'now'),

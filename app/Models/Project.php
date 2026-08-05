@@ -11,6 +11,11 @@ class Project extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
+    ];
+
     public function team()
     {
         return $this->belongsTo(Team::class);
