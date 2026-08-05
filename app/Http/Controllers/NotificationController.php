@@ -31,7 +31,7 @@ class NotificationController extends Controller
     {
         $data = NotificationResource::collection($this->service->index());
 
-        return Inertia::render('team/index', [
+        return Inertia::render('notification/index', [
             'list' => $data,
             'title' => 'Notifications',
         ]);
@@ -46,7 +46,7 @@ class NotificationController extends Controller
 
         $this->service->store($validated);
 
-        return redirect()->route('team.index')
+        return redirect()->route('notification.index')
             ->with('success', 'Notification created successfully!');
     }
 
@@ -59,7 +59,7 @@ class NotificationController extends Controller
 
         $this->service->update($id, $validated);
 
-        return redirect()->route('team.index')
+        return redirect()->route('notification.index')
             ->with('success', 'Notification updated successfully!');
     }
 

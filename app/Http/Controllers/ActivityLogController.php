@@ -31,7 +31,7 @@ class ActivityLogController extends Controller
     {
         $data = ActivityLogResource::collection($this->service->index());
 
-        return Inertia::render('team/index', [
+        return Inertia::render('activity-log/index', [
             'list' => $data,
             'title' => 'Activity Logs',
         ]);
@@ -46,7 +46,7 @@ class ActivityLogController extends Controller
 
         $this->service->store($validated);
 
-        return redirect()->route('team.index')
+        return redirect()->route('activity-log.index')
             ->with('success', 'Activity Log created successfully!');
     }
 

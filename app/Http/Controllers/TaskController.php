@@ -31,7 +31,7 @@ class TaskController extends Controller
     {
         $data = TaskResource::collection($this->service->index());
 
-        return Inertia::render('team/index', [
+        return Inertia::render('task/index', [
             'list' => $data,
             'title' => 'Tasks',
         ]);
@@ -46,7 +46,7 @@ class TaskController extends Controller
 
         $this->service->store($validated);
 
-        return redirect()->route('team.index')
+        return redirect()->route('task.index')
             ->with('success', 'Task created successfully!');
     }
 
@@ -59,7 +59,7 @@ class TaskController extends Controller
 
         $this->service->update($id, $validated);
 
-        return redirect()->route('team.index')
+        return redirect()->route('task.index')
             ->with('success', 'Task updated successfully!');
     }
 

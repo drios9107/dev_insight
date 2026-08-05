@@ -31,7 +31,7 @@ class GithubIssueController extends Controller
     {
         $data = GithubIssueResource::collection($this->service->index());
 
-        return Inertia::render('team/index', [
+        return Inertia::render('github-issue/index', [
             'list' => $data,
             'title' => 'Github Issues',
         ]);
@@ -46,7 +46,7 @@ class GithubIssueController extends Controller
 
         $this->service->store($validated);
 
-        return redirect()->route('team.index')
+        return redirect()->route('github-issue.index')
             ->with('success', 'Github Issue created successfully!');
     }
 
@@ -59,7 +59,7 @@ class GithubIssueController extends Controller
 
         $this->service->update($id, $validated);
 
-        return redirect()->route('team.index')
+        return redirect()->route('github-issue.index')
             ->with('success', 'Github Issue updated successfully!');
     }
 

@@ -31,7 +31,7 @@ class PullRequestController extends Controller
     {
         $data = PullRequestResource::collection($this->service->index());
 
-        return Inertia::render('team/index', [
+        return Inertia::render('pull-request/index', [
             'list' => $data,
             'title' => 'PRs',
         ]);
@@ -46,7 +46,7 @@ class PullRequestController extends Controller
 
         $this->service->store($validated);
 
-        return redirect()->route('team.index')
+        return redirect()->route('pull-request.index')
             ->with('success', 'PR created successfully!');
     }
 
@@ -59,7 +59,7 @@ class PullRequestController extends Controller
 
         $this->service->update($id, $validated);
 
-        return redirect()->route('team.index')
+        return redirect()->route('pull-request.index')
             ->with('success', 'PR updated successfully!');
     }
 

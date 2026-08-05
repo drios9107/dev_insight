@@ -31,7 +31,7 @@ class PullRequestReviewController extends Controller
     {
         $data = PullRequestReviewResource::collection($this->service->index());
 
-        return Inertia::render('team/index', [
+        return Inertia::render('pull-request-review/index', [
             'list' => $data,
             'title' => 'PR Reviews',
         ]);
@@ -46,7 +46,7 @@ class PullRequestReviewController extends Controller
 
         $this->service->store($validated);
 
-        return redirect()->route('team.index')
+        return redirect()->route('pull-request-review.index')
             ->with('success', 'PR Review created successfully!');
     }
 
@@ -59,7 +59,7 @@ class PullRequestReviewController extends Controller
 
         $this->service->update($id, $validated);
 
-        return redirect()->route('team.index')
+        return redirect()->route('pull-request-review.index')
             ->with('success', 'PR Review updated successfully!');
     }
 

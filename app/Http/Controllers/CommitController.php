@@ -31,7 +31,7 @@ class CommitController extends Controller
     {
         $data = CommitResource::collection($this->service->index());
 
-        return Inertia::render('team/index', [
+        return Inertia::render('commit/index', [
             'list' => $data,
             'title' => 'Commits',
         ]);
@@ -46,7 +46,7 @@ class CommitController extends Controller
 
         $this->service->store($validated);
 
-        return redirect()->route('team.index')
+        return redirect()->route('commit.index')
             ->with('success', 'Commit created successfully!');
     }
 
@@ -59,7 +59,7 @@ class CommitController extends Controller
 
         $this->service->update($id, $validated);
 
-        return redirect()->route('team.index')
+        return redirect()->route('commit.index')
             ->with('success', 'Commit updated successfully!');
     }
 

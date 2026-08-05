@@ -31,7 +31,7 @@ class UserController extends Controller
     {
         $data = UserResource::collection($this->service->index());
 
-        return Inertia::render('team/index', [
+        return Inertia::render('user/index', [
             'list' => $data,
             'title' => 'Users',
         ]);
@@ -46,7 +46,7 @@ class UserController extends Controller
 
         $this->service->store($validated);
 
-        return redirect()->route('team.index')
+        return redirect()->route('user.index')
             ->with('success', 'User created successfully!');
     }
 
@@ -59,7 +59,7 @@ class UserController extends Controller
 
         $this->service->update($id, $validated);
 
-        return redirect()->route('team.index')
+        return redirect()->route('user.index')
             ->with('success', 'User updated successfully!');
     }
 

@@ -31,7 +31,7 @@ class GithubRepositoryController extends Controller
     {
         $data = GithubRepositoryResource::collection($this->service->index());
 
-        return Inertia::render('team/index', [
+        return Inertia::render('github-repository/index', [
             'list' => $data,
             'title' => 'Github Repositories',
         ]);
@@ -46,7 +46,7 @@ class GithubRepositoryController extends Controller
 
         $this->service->store($validated);
 
-        return redirect()->route('team.index')
+        return redirect()->route('github-repository.index')
             ->with('success', 'Github Repository created successfully!');
     }
 
@@ -59,7 +59,7 @@ class GithubRepositoryController extends Controller
 
         $this->service->update($id, $validated);
 
-        return redirect()->route('team.index')
+        return redirect()->route('github-repository.index')
             ->with('success', 'Github Repository updated successfully!');
     }
 

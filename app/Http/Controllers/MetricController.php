@@ -31,7 +31,7 @@ class MetricController extends Controller
     {
         $data = MetricResource::collection($this->service->index());
 
-        return Inertia::render('team/index', [
+        return Inertia::render('metric/index', [
             'list' => $data,
             'title' => 'Metrics',
         ]);
@@ -46,7 +46,7 @@ class MetricController extends Controller
 
         $this->service->store($validated);
 
-        return redirect()->route('team.index')
+        return redirect()->route('metric.index')
             ->with('success', 'Metric created successfully!');
     }
 
@@ -59,7 +59,7 @@ class MetricController extends Controller
 
         $this->service->update($id, $validated);
 
-        return redirect()->route('team.index')
+        return redirect()->route('metric.index')
             ->with('success', 'Metric updated successfully!');
     }
 

@@ -32,7 +32,7 @@ class ProjectController extends Controller
     {
         $data = ProjectResource::collection($this->service->index());
 
-        return Inertia::render('team/index', [
+        return Inertia::render('project/index', [
             'list' => $data,
             'title' => 'Projects',
         ]);
@@ -47,7 +47,7 @@ class ProjectController extends Controller
 
         $this->service->store($validated);
 
-        return redirect()->route('team.index')
+        return redirect()->route('project.index')
             ->with('success', 'Project created successfully!');
     }
 
@@ -60,7 +60,7 @@ class ProjectController extends Controller
 
         $this->service->update($id, $validated);
 
-        return redirect()->route('team.index')
+        return redirect()->route('project.index')
             ->with('success', 'Project updated successfully!');
     }
 

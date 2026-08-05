@@ -31,7 +31,7 @@ class CommentController extends Controller
     {
         $data = CommentResource::collection($this->service->index());
 
-        return Inertia::render('team/index', [
+        return Inertia::render('comment/index', [
             'list' => $data,
             'title' => 'Comments',
         ]);
@@ -46,7 +46,7 @@ class CommentController extends Controller
 
         $this->service->store($validated);
 
-        return redirect()->route('team.index')
+        return redirect()->route('comment.index')
             ->with('success', 'Comment created successfully!');
     }
 
@@ -59,7 +59,7 @@ class CommentController extends Controller
 
         $this->service->update($id, $validated);
 
-        return redirect()->route('team.index')
+        return redirect()->route('comment.index')
             ->with('success', 'Comment updated successfully!');
     }
 
