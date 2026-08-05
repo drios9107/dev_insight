@@ -18,11 +18,11 @@ class TeamResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'owner' => $this->owner->name,
+            'owner' => new UserResource($this->owner),
             'avatar_url' => $this->avatar_url,
             'is_active' => $this->is_active,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'created_at' => date_format($this->created_at, 'Y-m-d'),
+            'updated_at' => date_format($this->updated_at, 'Y-m-d'),
         ];
     }
 }
