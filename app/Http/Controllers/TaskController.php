@@ -5,14 +5,23 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Services\TaskService;
+use Inertia\Inertia;
 
 class TaskController extends Controller
 {
-    private TaskService $taskService;
+    private TaskService $service;
 
-    public function __construct(TaskService $taskService)
+    public function __construct(TaskService $service)
     {
-        $this->taskService = $taskService;
+        $this->service = $service;
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function all()
+    {
+        return TaskResource::collection($this->service->index());
     }
 
     /**
@@ -20,7 +29,12 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return TaskResource::collection($this->taskService->index());
+        $data = TaskResource::collection($this->service->index());
+
+        return Inertia::render('team/index', [
+            'list' => $data,
+            'title' => 'Tasks',
+        ]);
     }
 
     /**
@@ -28,15 +42,12 @@ class TaskController extends Controller
      */
     public function store(TaskRequest $request)
     {
-        return new TaskResource($this->taskService->store($request->validated()));
-    }
+        $validated = $request->validated();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(int $id)
-    {
-        return new TaskResource($this->taskService->show($id));
+        $this->service->store($validated);
+
+        return redirect()->route('team.index')
+            ->with('success', 'Task created successfully!');
     }
 
     /**
@@ -44,7 +55,12 @@ class TaskController extends Controller
      */
     public function update(TaskRequest $request, int $id)
     {
-        return new TaskResource($this->taskService->update($id, $request->validated()));
+        $validated = $request->validated();
+
+        $this->service->update($id, $validated);
+
+        return redirect()->route('team.index')
+            ->with('success', 'Task updated successfully!');
     }
 
     /**
@@ -52,6 +68,8 @@ class TaskController extends Controller
      */
     public function destroy(int $id)
     {
-        return new TaskResource($this->taskService->destroy($id));
+        $this->service->destroy($id);
+
+        return redirect()->back()->with('success', 'Task deleted successfully!');
     }
 }
