@@ -5,14 +5,23 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SprintRequest;
 use App\Http\Resources\SprintResource;
 use App\Services\SprintService;
+use Inertia\Inertia;
 
 class SprintController extends Controller
 {
-    private SprintService $sprintService;
+    private SprintService $service;
 
-    public function __construct(SprintService $sprintService)
+    public function __construct(SprintService $service)
     {
-        $this->sprintService = $sprintService;
+        $this->service = $service;
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function all()
+    {
+        return SprintResource::collection($this->service->index());
     }
 
     /**
@@ -20,7 +29,12 @@ class SprintController extends Controller
      */
     public function index()
     {
-        return SprintResource::collection($this->sprintService->index());
+        $data = SprintResource::collection($this->service->index());
+
+        return Inertia::render('sprint/index', [
+            'list' => $data,
+            'title' => 'Sprints',
+        ]);
     }
 
     /**
@@ -28,15 +42,12 @@ class SprintController extends Controller
      */
     public function store(SprintRequest $request)
     {
-        return new SprintResource($this->sprintService->store($request->validated()));
-    }
+        $validated = $request->validated();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(int $id)
-    {
-        return new SprintResource($this->sprintService->show($id));
+        $this->service->store($validated);
+
+        return redirect()->route('sprint.index')
+            ->with('success', 'Sprint created successfully!');
     }
 
     /**
@@ -44,7 +55,12 @@ class SprintController extends Controller
      */
     public function update(SprintRequest $request, int $id)
     {
-        return new SprintResource($this->sprintService->update($id, $request->validated()));
+        $validated = $request->validated();
+
+        $this->service->update($id, $validated);
+
+        return redirect()->route('sprint.index')
+            ->with('success', 'Sprint updated successfully!');
     }
 
     /**
@@ -52,8 +68,8 @@ class SprintController extends Controller
      */
     public function destroy(int $id)
     {
-        $this->sprintService->destroy($id);
+        $this->service->destroy($id);
 
-        return response()->noContent();
+        return redirect()->back()->with('success', 'Sprint deleted successfully!');
     }
 }
