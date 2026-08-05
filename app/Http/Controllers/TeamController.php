@@ -9,11 +9,11 @@ use Inertia\Inertia;
 
 class TeamController extends Controller
 {
-    private TeamService $teamService;
+    private TeamService $service;
 
-    public function __construct(TeamService $teamService)
+    public function __construct(TeamService $service)
     {
-        $this->teamService = $teamService;
+        $this->service = $service;
     }
 
     /**
@@ -21,7 +21,7 @@ class TeamController extends Controller
      */
     public function index()
     {
-        $data = TeamResource::collection($this->teamService->index());
+        $data = TeamResource::collection($this->service->index());
 
         return Inertia::render('team/index', [
             'list' => $data,
@@ -36,7 +36,7 @@ class TeamController extends Controller
     {
         $validated = $request->validated();
 
-        $this->teamService->store($validated);
+        $this->service->store($validated);
 
         return redirect()->route('team.index')
             ->with('success', 'Team created successfully!');
@@ -49,7 +49,7 @@ class TeamController extends Controller
     {
         $validated = $request->validated();
 
-        $this->teamService->update($id, $validated);
+        $this->service->update($id, $validated);
 
         return redirect()->route('team.index')
             ->with('success', 'Team updated successfully!');
@@ -60,8 +60,8 @@ class TeamController extends Controller
      */
     public function destroy(int $id)
     {
-        $this->teamService->destroy($id);
+        $this->service->destroy($id);
 
-        return response()->json(null, 204);
+        return redirect()->back()->with('success', 'Team deleted successfully!');
     }
 }
