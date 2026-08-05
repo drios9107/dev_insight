@@ -5,14 +5,23 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CommitRequest;
 use App\Http\Resources\CommitResource;
 use App\Services\CommitService;
+use Inertia\Inertia;
 
 class CommitController extends Controller
 {
-    private CommitService $commitService;
+    private CommitService $service;
 
-    public function __construct(CommitService $commitService)
+    public function __construct(CommitService $service)
     {
-        $this->commitService = $commitService;
+        $this->service = $service;
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function all()
+    {
+        return CommitResource::collection($this->service->index());
     }
 
     /**
@@ -20,7 +29,12 @@ class CommitController extends Controller
      */
     public function index()
     {
-        return CommitResource::collection($this->commitService->index());
+        $data = CommitResource::collection($this->service->index());
+
+        return Inertia::render('team/index', [
+            'list' => $data,
+            'title' => 'Commits',
+        ]);
     }
 
     /**
@@ -28,15 +42,12 @@ class CommitController extends Controller
      */
     public function store(CommitRequest $request)
     {
-        return new CommitResource($this->commitService->store($request->validated()));
-    }
+        $validated = $request->validated();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(int $id)
-    {
-        return new CommitResource($this->commitService->show($id));
+        $this->service->store($validated);
+
+        return redirect()->route('team.index')
+            ->with('success', 'Commit created successfully!');
     }
 
     /**
@@ -44,7 +55,12 @@ class CommitController extends Controller
      */
     public function update(CommitRequest $request, int $id)
     {
-        return new CommitResource($this->commitService->update($id, $request->validated()));
+        $validated = $request->validated();
+
+        $this->service->update($id, $validated);
+
+        return redirect()->route('team.index')
+            ->with('success', 'Commit updated successfully!');
     }
 
     /**
@@ -52,8 +68,8 @@ class CommitController extends Controller
      */
     public function destroy(int $id)
     {
-        $this->commitService->destroy($id);
+        $this->service->destroy($id);
 
-        return response()->noContent();
+        return redirect()->back()->with('success', 'Commit deleted successfully!');
     }
 }
