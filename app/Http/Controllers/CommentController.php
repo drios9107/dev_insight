@@ -5,14 +5,23 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CommentRequest;
 use App\Http\Resources\CommentResource;
 use App\Services\CommentService;
+use Inertia\Inertia;
 
 class CommentController extends Controller
 {
-    private CommentService $commentService;
+    private CommentService $service;
 
-    public function __construct(CommentService $commentService)
+    public function __construct(CommentService $service)
     {
-        $this->commentService = $commentService;
+        $this->service = $service;
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function all()
+    {
+        return CommentResource::collection($this->service->index());
     }
 
     /**
@@ -20,7 +29,12 @@ class CommentController extends Controller
      */
     public function index()
     {
-        return CommentResource::collection($this->commentService->index());
+        $data = CommentResource::collection($this->service->index());
+
+        return Inertia::render('team/index', [
+            'list' => $data,
+            'title' => 'Comments',
+        ]);
     }
 
     /**
@@ -28,15 +42,12 @@ class CommentController extends Controller
      */
     public function store(CommentRequest $request)
     {
-        return new CommentResource($this->commentService->store($request->validated()));
-    }
+        $validated = $request->validated();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(int $id)
-    {
-        return new CommentResource($this->commentService->show($id));
+        $this->service->store($validated);
+
+        return redirect()->route('team.index')
+            ->with('success', 'Comment created successfully!');
     }
 
     /**
@@ -44,7 +55,12 @@ class CommentController extends Controller
      */
     public function update(CommentRequest $request, int $id)
     {
-        return new CommentResource($this->commentService->update($id, $request->validated()));
+        $validated = $request->validated();
+
+        $this->service->update($id, $validated);
+
+        return redirect()->route('team.index')
+            ->with('success', 'Comment updated successfully!');
     }
 
     /**
@@ -52,8 +68,8 @@ class CommentController extends Controller
      */
     public function destroy(int $id)
     {
-        $this->commentService->destroy($id);
+        $this->service->destroy($id);
 
-        return response()->noContent();
+        return redirect()->back()->with('success', 'Comment deleted successfully!');
     }
 }
