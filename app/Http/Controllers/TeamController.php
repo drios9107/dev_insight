@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TeamRequest;
 use App\Http\Resources\TeamResource;
 use App\Services\TeamService;
+use Inertia\Inertia;
 
 class TeamController extends Controller
 {
@@ -20,7 +21,12 @@ class TeamController extends Controller
      */
     public function index()
     {
-        return TeamResource::collection($this->teamService->index());
+        $data = TeamResource::collection($this->teamService->index());
+
+        return Inertia::render('team/index', [
+            'list' => $data,
+            'title' => 'Teams',
+        ]);
     }
 
     /**
@@ -28,7 +34,12 @@ class TeamController extends Controller
      */
     public function store(TeamRequest $request)
     {
-        return new TeamResource($this->teamService->store($request->validated()));
+        $validated = $request->validated();
+
+        $this->teamService->store($validated);
+
+        return redirect()->route('team.index')
+            ->with('success', 'Team created successfully!');
     }
 
     /**
@@ -36,7 +47,12 @@ class TeamController extends Controller
      */
     public function update(TeamRequest $request, int $id)
     {
-        return new TeamResource($this->teamService->update($id, $request->validated()));
+        $validated = $request->validated();
+
+        $this->teamService->update($id, $validated);
+
+        return redirect()->route('team.index')
+            ->with('success', 'Team updated successfully!');
     }
 
     /**
