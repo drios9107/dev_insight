@@ -5,14 +5,23 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PullRequestReviewRequest;
 use App\Http\Resources\PullRequestReviewResource;
 use App\Services\PullRequestReviewService;
+use Inertia\Inertia;
 
 class PullRequestReviewController extends Controller
 {
-    private PullRequestReviewService $pullRequest;
+    private PullRequestReviewService $service;
 
-    public function __construct(PullRequestReviewService $pullRequest)
+    public function __construct(PullRequestReviewService $service)
     {
-        $this->pullRequest = $pullRequest;
+        $this->service = $service;
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function all()
+    {
+        return PullRequestReviewResource::collection($this->service->index());
     }
 
     /**
@@ -20,7 +29,12 @@ class PullRequestReviewController extends Controller
      */
     public function index()
     {
-        return PullRequestReviewResource::collection($this->pullRequest->index());
+        $data = PullRequestReviewResource::collection($this->service->index());
+
+        return Inertia::render('team/index', [
+            'list' => $data,
+            'title' => 'PR Reviews',
+        ]);
     }
 
     /**
@@ -28,15 +42,12 @@ class PullRequestReviewController extends Controller
      */
     public function store(PullRequestReviewRequest $request)
     {
-        return new PullRequestReviewResource($this->pullRequest->store($request->validated()));
-    }
+        $validated = $request->validated();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(int $id)
-    {
-        return new PullRequestReviewResource($this->pullRequest->show($id));
+        $this->service->store($validated);
+
+        return redirect()->route('team.index')
+            ->with('success', 'PR Review created successfully!');
     }
 
     /**
@@ -44,7 +55,12 @@ class PullRequestReviewController extends Controller
      */
     public function update(PullRequestReviewRequest $request, int $id)
     {
-        return new PullRequestReviewResource($this->pullRequest->update($id, $request->validated()));
+        $validated = $request->validated();
+
+        $this->service->update($id, $validated);
+
+        return redirect()->route('team.index')
+            ->with('success', 'PR Review updated successfully!');
     }
 
     /**
@@ -52,8 +68,8 @@ class PullRequestReviewController extends Controller
      */
     public function destroy(int $id)
     {
-        $this->pullRequest->destroy($id);
+        $this->service->destroy($id);
 
-        return response()->noContent();
+        return redirect()->back()->with('success', 'PR Review deleted successfully!');
     }
 }
