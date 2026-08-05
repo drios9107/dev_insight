@@ -5,14 +5,23 @@ namespace App\Http\Controllers;
 use App\Http\Requests\RoleRequest;
 use App\Http\Resources\RoleResource;
 use App\Services\RoleService;
+use Inertia\Inertia;
 
 class RoleController extends Controller
 {
-    protected RoleService $roleService;
+    private RoleService $service;
 
-    public function __construct(RoleService $roleService)
+    public function __construct(RoleService $service)
     {
-        $this->roleService = $roleService;
+        $this->service = $service;
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function all()
+    {
+        return RoleResource::collection($this->service->index());
     }
 
     /**
@@ -20,7 +29,12 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return RoleResource::collection($this->roleService->index());
+        $data = RoleResource::collection($this->service->index());
+
+        return Inertia::render('role/index', [
+            'list' => $data,
+            'title' => 'Roles',
+        ]);
     }
 
     /**
@@ -28,15 +42,12 @@ class RoleController extends Controller
      */
     public function store(RoleRequest $request)
     {
-        return new RoleResource($this->roleService->store($request->validated()));
-    }
+        $validated = $request->validated();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(int $id)
-    {
-        return new RoleResource($this->roleService->show($id));
+        $this->service->store($validated);
+
+        return redirect()->route('role.index')
+            ->with('success', 'Role created successfully!');
     }
 
     /**
@@ -44,7 +55,12 @@ class RoleController extends Controller
      */
     public function update(RoleRequest $request, int $id)
     {
-        return new RoleResource($this->roleService->update($id, $request->validated()));
+        $validated = $request->validated();
+
+        $this->service->update($id, $validated);
+
+        return redirect()->route('role.index')
+            ->with('success', 'Role updated successfully!');
     }
 
     /**
@@ -52,8 +68,8 @@ class RoleController extends Controller
      */
     public function destroy(int $id)
     {
-        $this->roleService->destroy($id);
+        $this->service->destroy($id);
 
-        return response()->json(null, 204);
+        return redirect()->back()->with('success', 'Role deleted successfully!');
     }
 }
