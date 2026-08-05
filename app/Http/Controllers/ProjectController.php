@@ -6,14 +6,23 @@ use App\Http\Requests\Project\ProjectStoreRequest;
 use App\Http\Requests\Project\ProjectUpdateRequest;
 use App\Http\Resources\ProjectResource;
 use App\Services\ProjectService;
+use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
-    private ProjectService $projectService;
+    private ProjectService $service;
 
-    public function __construct(ProjectService $projectService)
+    public function __construct(ProjectService $service)
     {
-        $this->projectService = $projectService;
+        $this->service = $service;
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function all()
+    {
+        return ProjectResource::collection($this->service->index());
     }
 
     /**
@@ -21,7 +30,12 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        return ProjectResource::collection($this->projectService->index());
+        $data = ProjectResource::collection($this->service->index());
+
+        return Inertia::render('team/index', [
+            'list' => $data,
+            'title' => 'Projects',
+        ]);
     }
 
     /**
@@ -29,15 +43,12 @@ class ProjectController extends Controller
      */
     public function store(ProjectStoreRequest $request)
     {
-        return new ProjectResource($this->projectService->store($request->validated()));
-    }
+        $validated = $request->validated();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(int $id)
-    {
-        return new ProjectResource($this->projectService->show($id));
+        $this->service->store($validated);
+
+        return redirect()->route('team.index')
+            ->with('success', 'Project created successfully!');
     }
 
     /**
@@ -45,7 +56,12 @@ class ProjectController extends Controller
      */
     public function update(ProjectUpdateRequest $request, int $id)
     {
-        return new ProjectResource($this->projectService->update($id, $request->validated()));
+        $validated = $request->validated();
+
+        $this->service->update($id, $validated);
+
+        return redirect()->route('team.index')
+            ->with('success', 'Project updated successfully!');
     }
 
     /**
@@ -53,6 +69,8 @@ class ProjectController extends Controller
      */
     public function destroy(int $id)
     {
-        return new ProjectResource($this->projectService->destroy($id));
+        $this->service->destroy($id);
+
+        return redirect()->back()->with('success', 'Project deleted successfully!');
     }
 }
