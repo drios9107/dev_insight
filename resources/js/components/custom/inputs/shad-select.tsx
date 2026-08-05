@@ -22,7 +22,7 @@ const ShadSelect = ({
 }: ICustomSelect) => {
 
     return (
-        <div className="space-y-2 w-full">
+        <div className="flex flex-col gap-2">
             {label && <Label htmlFor={id ?? name}>
                 {label}
                 {props.required && <span className="text-red-500 ml-1">*</span>}
@@ -57,9 +57,7 @@ const ShadSelect = ({
                 </SelectContent>
             </Select>
 
-            {name && errors?.[name] && (
-                <p className="mt-1 text-sm text-red-500">{errors?.[name]}</p>
-            )}
+            {name && errors?.[name] && <span className="text-red-600 text-sm px-1" style={{ marginTop: -8 }}>{errors[name]}</span>}
         </div>
     );
 };
