@@ -5,14 +5,23 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ActivityLogRequest;
 use App\Http\Resources\ActivityLogResource;
 use App\Services\ActivityLogService;
+use Inertia\Inertia;
 
 class ActivityLogController extends Controller
 {
-    private ActivityLogService $activityLogService;
+    private ActivityLogService $service;
 
-    public function __construct(ActivityLogService $activityLogService)
+    public function __construct(ActivityLogService $service)
     {
-        $this->activityLogService = $activityLogService;
+        $this->service = $service;
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function all()
+    {
+        return ActivityLogResource::collection($this->service->index());
     }
 
     /**
@@ -20,7 +29,12 @@ class ActivityLogController extends Controller
      */
     public function index()
     {
-        return ActivityLogResource::collection($this->activityLogService->index());
+        $data = ActivityLogResource::collection($this->service->index());
+
+        return Inertia::render('team/index', [
+            'list' => $data,
+            'title' => 'Activity Logs',
+        ]);
     }
 
     /**
@@ -28,7 +42,12 @@ class ActivityLogController extends Controller
      */
     public function store(ActivityLogRequest $request)
     {
-        return new ActivityLogResource($this->activityLogService->store($request->validated()));
+        $validated = $request->validated();
+
+        $this->service->store($validated);
+
+        return redirect()->route('team.index')
+            ->with('success', 'Activity Log created successfully!');
     }
 
     /**
@@ -36,8 +55,8 @@ class ActivityLogController extends Controller
      */
     public function destroy(int $id)
     {
-        $this->activityLogService->destroy($id);
+        $this->service->destroy($id);
 
-        return response()->json(null, 204);
+        return redirect()->back()->with('success', 'Activity Log deleted successfully!');
     }
 }
