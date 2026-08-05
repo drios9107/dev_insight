@@ -5,14 +5,23 @@ namespace App\Http\Controllers;
 use App\Http\Requests\NotificationRequest;
 use App\Http\Resources\NotificationResource;
 use App\Services\NotificationService;
+use Inertia\Inertia;
 
 class NotificationController extends Controller
 {
-    private NotificationService $notificationService;
+    private NotificationService $service;
 
-    public function __construct(NotificationService $notificationService)
+    public function __construct(NotificationService $service)
     {
-        $this->notificationService = $notificationService;
+        $this->service = $service;
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function all()
+    {
+        return NotificationResource::collection($this->service->index());
     }
 
     /**
@@ -20,7 +29,12 @@ class NotificationController extends Controller
      */
     public function index()
     {
-        return NotificationResource::collection($this->notificationService->index());
+        $data = NotificationResource::collection($this->service->index());
+
+        return Inertia::render('team/index', [
+            'list' => $data,
+            'title' => 'Notifications',
+        ]);
     }
 
     /**
@@ -28,7 +42,12 @@ class NotificationController extends Controller
      */
     public function store(NotificationRequest $request)
     {
-        return new NotificationResource($this->notificationService->store($request->validated()));
+        $validated = $request->validated();
+
+        $this->service->store($validated);
+
+        return redirect()->route('team.index')
+            ->with('success', 'Notification created successfully!');
     }
 
     /**
@@ -36,7 +55,12 @@ class NotificationController extends Controller
      */
     public function update(NotificationRequest $request, int $id)
     {
-        return new NotificationResource($this->notificationService->update($id, $request->validated()));
+        $validated = $request->validated();
+
+        $this->service->update($id, $validated);
+
+        return redirect()->route('team.index')
+            ->with('success', 'Notification updated successfully!');
     }
 
     /**
@@ -44,8 +68,8 @@ class NotificationController extends Controller
      */
     public function destroy(int $id)
     {
-        $this->notificationService->destroy($id);
+        $this->service->destroy($id);
 
-        return response()->json(null, 204);
+        return redirect()->back()->with('success', 'Notification deleted successfully!');
     }
 }
