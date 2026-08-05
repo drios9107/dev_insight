@@ -5,14 +5,23 @@ namespace App\Http\Controllers;
 use App\Http\Requests\GithubRepositoryRequest;
 use App\Http\Resources\GithubRepositoryResource;
 use App\Services\GithubRepositoryService;
+use Inertia\Inertia;
 
 class GithubRepositoryController extends Controller
 {
-    private GithubRepositoryService $githubRepositoryService;
+    private GithubRepositoryService $service;
 
-    public function __construct(GithubRepositoryService $githubRepositoryService)
+    public function __construct(GithubRepositoryService $service)
     {
-        $this->githubRepositoryService = $githubRepositoryService;
+        $this->service = $service;
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function all()
+    {
+        return GithubRepositoryResource::collection($this->service->index());
     }
 
     /**
@@ -20,7 +29,12 @@ class GithubRepositoryController extends Controller
      */
     public function index()
     {
-        return GithubRepositoryResource::collection($this->githubRepositoryService->index());
+        $data = GithubRepositoryResource::collection($this->service->index());
+
+        return Inertia::render('team/index', [
+            'list' => $data,
+            'title' => 'Github Repositories',
+        ]);
     }
 
     /**
@@ -28,15 +42,12 @@ class GithubRepositoryController extends Controller
      */
     public function store(GithubRepositoryRequest $request)
     {
-        return new GithubRepositoryResource($this->githubRepositoryService->store($request->validated()));
-    }
+        $validated = $request->validated();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(int $id)
-    {
-        return new GithubRepositoryResource($this->githubRepositoryService->show($id));
+        $this->service->store($validated);
+
+        return redirect()->route('team.index')
+            ->with('success', 'Github Repository created successfully!');
     }
 
     /**
@@ -44,7 +55,12 @@ class GithubRepositoryController extends Controller
      */
     public function update(GithubRepositoryRequest $request, int $id)
     {
-        return new GithubRepositoryResource($this->githubRepositoryService->update($id, $request->validated()));
+        $validated = $request->validated();
+
+        $this->service->update($id, $validated);
+
+        return redirect()->route('team.index')
+            ->with('success', 'Github Repository updated successfully!');
     }
 
     /**
@@ -52,8 +68,8 @@ class GithubRepositoryController extends Controller
      */
     public function destroy(int $id)
     {
-        $this->githubRepositoryService->destroy($id);
+        $this->service->destroy($id);
 
-        return response()->noContent();
+        return redirect()->back()->with('success', 'Github Repository deleted successfully!');
     }
 }
