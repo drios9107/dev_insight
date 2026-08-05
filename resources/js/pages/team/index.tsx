@@ -2,7 +2,7 @@ import CrudButtons from "@/components/custom/crud-buttons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
-import { ITeam } from "@/types/team";
+import { ITeam } from "@/types/models/team";
 import { Head, router } from "@inertiajs/react";
 import { Plus } from "lucide-react";
 import { useCallback, useState } from "react";

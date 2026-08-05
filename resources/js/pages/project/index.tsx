@@ -1,0 +1,96 @@
+import CrudButtons from "@/components/custom/crud-buttons";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
+import { IProject, TProjectStatus } from "@/types/models/project";
+import { Head, router } from "@inertiajs/react";
+import { Circle, Plus } from "lucide-react";
+import { useCallback, useState } from "react";
+// import CustomForm from "@/components/custom/forms/projects-form";
+import { toast } from "sonner";
+import project from "@/routes/project";
+
+const ProjectStatusEnum = {
+    planning: 'Planning',
+    active: 'Active',
+    paused: 'Paused',
+    completed: 'Completed',
+    archived: 'Archived',
+}
+
+const Projects = (props: any) => {
+    const [isOpen, setIsOpen] = useState(false)
+    const [itemToEdit, setItemToEdit] = useState<IProject | null>(null)
+    console.log('***props', props)
+    const onDetails = () => { }
+
+    const onEdit = useCallback((item: IProject) => {
+        setItemToEdit(item)
+        setIsOpen(true)
+    }, [setItemToEdit, setIsOpen])
+
+    const onDelete = useCallback((id: number) => {
+        router.delete(project.destroy(id).url, {
+            onSuccess: () => toast.success('Project deleted successfully'),
+            onError: (error) => toast.error(`Project deletion failed: ${error}`)
+        })
+    }, [])
+
+    const onCloseForm = () => {
+        setIsOpen(false)
+        setItemToEdit(null)
+    }
+
+    const getBadgeColor = useCallback((status: TProjectStatus) => {
+        const mapping = {
+            planning: 'warning',
+            active: 'info',
+            paused: 'destructive',
+            completed: 'success',
+            archived: 'secondary',
+        }
+        return mapping[status] as "default" | "destructive" | "outline" | "secondary"
+    }, [])
+
+    const getBadgeText = useCallback((status: TProjectStatus) => {
+        return ProjectStatusEnum[status]
+    }, [])
+
+    return <>
+        <Head title={props.title} />
+        <h1 className="sr-only">{props.title}</h1>
+        <h1 className="p-6">{props.title}</h1>
+        <div className="flex gap-6 flex-wrap justify-center">
+            <Button className="bg-green-600" onClick={() => setIsOpen(true)}><Plus /></Button>
+            {props.list.data.map((i: IProject) => <Card key={i.id} style={{ width: '300px' }} className={'px-6'}>
+                <CardTitle className="flex justify-between">
+                    <div className="flex gap-1 items-center">
+                        <Circle fill={i.color} color={i.color} size={16} />
+                        {i.name}
+                    </div>
+                    <Badge variant={getBadgeColor(i.status)}>{getBadgeText(i.status)}</Badge>
+                </CardTitle>
+                <CardContent className="flex flex-col flex-1 gap-1">
+                    <span>
+                        Owner: {i.owner?.name}
+                    </span>
+                    <span>
+                        Team: {i.team?.name}
+                    </span>
+                    <span>
+                        {i.start_date} - {i.end_date}
+                    </span>
+                    <CardDescription className="">
+                        {i.description}
+                    </CardDescription>
+                </CardContent>
+                <CrudButtons onEdit={() => onEdit(i)} onDelete={() => onDelete(i.id)} />
+            </Card>)}
+
+            {/* {isOpen && <CustomForm onClose={onCloseForm} item={itemToEdit} />} */}
+        </div>
+
+    </>
+}
+
+export default Projects;
