@@ -1,8 +1,10 @@
+import { IUser } from "./user";
+
 export interface ITeam {
-    id: string;
+    id: number;
     name: string;
     description: string;
-    owner: string;
+    owner: IUser;
     avatar_url: string;
     is_active: boolean;
     created_at: string;

@@ -29,7 +29,7 @@ const ShadSelect = ({
             </Label>}
 
             <Select
-                value={value || ''}
+                value={String(value) || ''}
                 onValueChange={onChange}
                 name={name}
                 {...props}
