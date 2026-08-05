@@ -7,6 +7,7 @@ import ShadSwitch from "../inputs/shad-switch"
 import ShadSelect from "../inputs/shad-select"
 import ShadTextarea from "../inputs/shad-textarea"
 import { toast } from "sonner"
+import user from "@/routes/user"
 
 const defaultData = {
     name: '',
@@ -19,9 +20,12 @@ const defaultData = {
 const CustomForm = ({ item, onClose }: { item?: any, onClose: () => void }) => {
     const { data, setData, post, put, processing, errors, reset } = useForm(defaultData)
     const [users, setUsers] = useState([])
+    const [usersLoading, setUsersLoading] = useState(false)
+
 
     useEffect(() => {
-        fetch('http://localhost:8000/all-users')
+        setUsersLoading(true)
+        fetch(user.all().url)
             .then(async res => {
                 if (res.ok) {
                     const data = await res.json()
@@ -29,6 +33,9 @@ const CustomForm = ({ item, onClose }: { item?: any, onClose: () => void }) => {
                 }
             })
             .catch(err => console.log('***users error', err))
+            .finally(() => {
+                setUsersLoading(false);
+            });
     }, [])
 
     useEffect(() => {
@@ -64,7 +71,7 @@ const CustomForm = ({ item, onClose }: { item?: any, onClose: () => void }) => {
         })
     }, [item, data, setData])
 
-    return <SimpleModal onClose={onClose} title="Create Team" description="Create a new team" isLoading={processing}><>
+    return <SimpleModal onClose={onClose} title="Create Team" description="Create a new team" isLoading={processing || usersLoading}><>
         <ShadInput required label="Name" name="name" value={data.name} onChange={(e) => setData('name', e.target.value)} errors={errors} />
         <ShadSelect required label="Owner ID" name="owner_id" value={data.owner_id} onChange={(e: string) => setData('owner_id', e)} list={users} errors={errors} />
         <ShadInput label="Avatar URL" name="avatar_url" value={data.avatar_url} onChange={(e) => setData('avatar_url', e.target.value)} />
