@@ -5,14 +5,23 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PullRequestRequest;
 use App\Http\Resources\PullRequestResource;
 use App\Services\PullRequestService;
+use Inertia\Inertia;
 
 class PullRequestController extends Controller
 {
-    private PullRequestService $pullRequest;
+    private PullRequestService $service;
 
-    public function __construct(PullRequestService $pullRequest)
+    public function __construct(PullRequestService $service)
     {
-        $this->pullRequest = $pullRequest;
+        $this->service = $service;
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function all()
+    {
+        return PullRequestResource::collection($this->service->index());
     }
 
     /**
@@ -20,7 +29,12 @@ class PullRequestController extends Controller
      */
     public function index()
     {
-        return PullRequestResource::collection($this->pullRequest->index());
+        $data = PullRequestResource::collection($this->service->index());
+
+        return Inertia::render('team/index', [
+            'list' => $data,
+            'title' => 'PRs',
+        ]);
     }
 
     /**
@@ -28,15 +42,12 @@ class PullRequestController extends Controller
      */
     public function store(PullRequestRequest $request)
     {
-        return new PullRequestResource($this->pullRequest->store($request->validated()));
-    }
+        $validated = $request->validated();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(int $id)
-    {
-        return new PullRequestResource($this->pullRequest->show($id));
+        $this->service->store($validated);
+
+        return redirect()->route('team.index')
+            ->with('success', 'PR created successfully!');
     }
 
     /**
@@ -44,7 +55,12 @@ class PullRequestController extends Controller
      */
     public function update(PullRequestRequest $request, int $id)
     {
-        return new PullRequestResource($this->pullRequest->update($id, $request->validated()));
+        $validated = $request->validated();
+
+        $this->service->update($id, $validated);
+
+        return redirect()->route('team.index')
+            ->with('success', 'PR updated successfully!');
     }
 
     /**
@@ -52,8 +68,8 @@ class PullRequestController extends Controller
      */
     public function destroy(int $id)
     {
-        $this->pullRequest->destroy($id);
+        $this->service->destroy($id);
 
-        return response()->noContent();
+        return redirect()->back()->with('success', 'PR deleted successfully!');
     }
 }
