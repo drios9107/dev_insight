@@ -3,31 +3,34 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { ITeam } from "@/types/team";
-import { Head } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import CustomForm from "@/components/custom/forms/teams-form";
+import { toast } from "sonner";
+import team from "@/routes/team";
 
 const Teams = (props: any) => {
     const [isOpen, setIsOpen] = useState(false)
     const [itemToEdit, setItemToEdit] = useState<ITeam | null>(null)
-    console.log('***props', props)
 
     const onDetails = () => { }
 
-    const onEdit = (item: ITeam) => {
+    const onEdit = useCallback((item: ITeam) => {
         setItemToEdit(item)
         setIsOpen(true)
-    }
+    }, [setItemToEdit, setIsOpen])
 
-    const onDelete = () => {
-        // axios.delete(`/teams/${itemToEdit?.id}`)
-        //     .then(response => {
-        //         console.log('***response', response)
-        //     })
-        //     .catch(error => {
-        //         console.log('***error', error)
-        //     })
+    const onDelete = useCallback((id: number) => {
+        router.delete(team.destroy(id).url, {
+            onSuccess: () => toast.success('Team deleted successfully'),
+            onError: (error) => toast.error(`Team deletion failed: ${error}`)
+        })
+    }, [])
+
+    const onCloseForm = () => {
+        setIsOpen(false)
+        setItemToEdit(null)
     }
 
     return <>
@@ -44,7 +47,7 @@ const Teams = (props: any) => {
                 </CardTitle>
                 <CardContent className="flex flex-col flex-1 gap-1">
                     <span>
-                        Owner: {i.owner}
+                        Owner: {i.owner?.name}
                     </span>
                     <span>
                         Created: {i.created_at}
@@ -53,10 +56,10 @@ const Teams = (props: any) => {
                         {i.description}
                     </CardDescription>
                 </CardContent>
-                <CrudButtons onEdit={() => onEdit(i)} onDelete={onDelete} />
+                <CrudButtons onEdit={() => onEdit(i)} onDelete={() => onDelete(i.id)} />
             </Card>)}
 
-            {isOpen && <CustomForm onClose={() => setIsOpen(false)} item={itemToEdit} />}
+            {isOpen && <CustomForm onClose={onCloseForm} item={itemToEdit} />}
         </div>
 
     </>
