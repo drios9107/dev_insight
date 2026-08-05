@@ -5,14 +5,23 @@ namespace App\Http\Controllers;
 use App\Http\Requests\GithubIssueRequest;
 use App\Http\Resources\GithubIssueResource;
 use App\Services\GithubIssueService;
+use Inertia\Inertia;
 
 class GithubIssueController extends Controller
 {
-    private GithubIssueService $githubIssueService;
+    private GithubIssueService $service;
 
-    public function __construct(GithubIssueService $githubIssueService)
+    public function __construct(GithubIssueService $service)
     {
-        $this->githubIssueService = $githubIssueService;
+        $this->service = $service;
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function all()
+    {
+        return GithubIssueResource::collection($this->service->index());
     }
 
     /**
@@ -20,7 +29,12 @@ class GithubIssueController extends Controller
      */
     public function index()
     {
-        return GithubIssueResource::collection($this->githubIssueService->index());
+        $data = GithubIssueResource::collection($this->service->index());
+
+        return Inertia::render('team/index', [
+            'list' => $data,
+            'title' => 'Github Issues',
+        ]);
     }
 
     /**
@@ -28,15 +42,12 @@ class GithubIssueController extends Controller
      */
     public function store(GithubIssueRequest $request)
     {
-        return new GithubIssueResource($this->githubIssueService->store($request->validated()));
-    }
+        $validated = $request->validated();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(int $id)
-    {
-        return new GithubIssueResource($this->githubIssueService->show($id));
+        $this->service->store($validated);
+
+        return redirect()->route('team.index')
+            ->with('success', 'Github Issue created successfully!');
     }
 
     /**
@@ -44,7 +55,12 @@ class GithubIssueController extends Controller
      */
     public function update(GithubIssueRequest $request, int $id)
     {
-        return new GithubIssueResource($this->githubIssueService->update($id, $request->validated()));
+        $validated = $request->validated();
+
+        $this->service->update($id, $validated);
+
+        return redirect()->route('team.index')
+            ->with('success', 'Github Issue updated successfully!');
     }
 
     /**
@@ -52,8 +68,8 @@ class GithubIssueController extends Controller
      */
     public function destroy(int $id)
     {
-        $this->githubIssueService->destroy($id);
+        $this->service->destroy($id);
 
-        return response()->noContent();
+        return redirect()->back()->with('success', 'Github Issue deleted successfully!');
     }
 }
