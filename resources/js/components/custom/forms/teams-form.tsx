@@ -17,7 +17,7 @@ const defaultData = {
 }
 
 const CustomForm = ({ item, onClose }: { item?: any, onClose: () => void }) => {
-    const { data, setData, post, put, processing, errors } = useForm(defaultData)
+    const { data, setData, post, put, processing, errors, reset } = useForm(defaultData)
     const [users, setUsers] = useState([])
 
     useEffect(() => {
@@ -33,11 +33,13 @@ const CustomForm = ({ item, onClose }: { item?: any, onClose: () => void }) => {
 
     useEffect(() => {
         if (item) {
-            setData('name', item?.name)
-            setData('description', item?.description)
-            setData('owner_id', item?.owner_id)
-            setData('avatar_url', item?.avatar_url)
-            setData('is_active', item?.is_active)
+            setData({
+                name: item?.name,
+                description: item?.description,
+                owner_id: item?.owner?.id?.toString(),
+                avatar_url: item?.avatar_url,
+                is_active: item?.is_active
+            })
         }
     }, [item, setData])
 
@@ -57,8 +59,7 @@ const CustomForm = ({ item, onClose }: { item?: any, onClose: () => void }) => {
                 onClose()
             },
             onError: () => {
-                console.log('***errors', errors)
-                toast.error('Team creation failed', { className: 'text-red-500' })
+                toast.error(`Team creation failed: ${errors.toString()}`, { className: 'text-red-500' })
             },
         })
     }, [item, data, setData])
