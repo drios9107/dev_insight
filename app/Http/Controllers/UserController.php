@@ -5,14 +5,23 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
 use App\Services\UserService;
+use Inertia\Inertia;
 
 class UserController extends Controller
 {
-    protected UserService $userService;
+    private UserService $service;
 
-    public function __construct(UserService $userService)
+    public function __construct(UserService $service)
     {
-        $this->userService = $userService;
+        $this->service = $service;
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function all()
+    {
+        return UserResource::collection($this->service->index());
     }
 
     /**
@@ -20,7 +29,12 @@ class UserController extends Controller
      */
     public function index()
     {
-        return UserResource::collection($this->userService->index());
+        $data = UserResource::collection($this->service->index());
+
+        return Inertia::render('team/index', [
+            'list' => $data,
+            'title' => 'Users',
+        ]);
     }
 
     /**
@@ -28,15 +42,12 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
-        return new UserResource($this->userService->store($request->validated()));
-    }
+        $validated = $request->validated();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(int $id)
-    {
-        return new UserResource($this->userService->show($id));
+        $this->service->store($validated);
+
+        return redirect()->route('team.index')
+            ->with('success', 'User created successfully!');
     }
 
     /**
@@ -44,7 +55,12 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, int $id)
     {
-        return new UserResource($this->userService->update($id, $request->validated()));
+        $validated = $request->validated();
+
+        $this->service->update($id, $validated);
+
+        return redirect()->route('team.index')
+            ->with('success', 'User updated successfully!');
     }
 
     /**
@@ -52,8 +68,8 @@ class UserController extends Controller
      */
     public function destroy(int $id)
     {
-        $this->userService->destroy($id);
+        $this->service->destroy($id);
 
-        return response()->json(null, 204);
+        return redirect()->back()->with('success', 'User deleted successfully!');
     }
 }
