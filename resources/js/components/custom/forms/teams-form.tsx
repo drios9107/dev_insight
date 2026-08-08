@@ -71,13 +71,12 @@ const CustomForm = ({ item, onClose }: { item?: any, onClose: () => void }) => {
         })
     }, [item, data, setData])
 
-    return <SimpleModal onClose={onClose} title="Create Team" description="Create a new team" isLoading={processing || usersLoading}><>
+    return <SimpleModal onClick={onSubmit} onClose={onClose} title="Create Team" description="Create a new team" isLoading={processing || usersLoading}><>
         <ShadInput required label="Name" name="name" value={data.name} onChange={(e) => setData('name', e.target.value)} errors={errors} />
-        <ShadSelect required label="Owner ID" name="owner_id" value={data.owner_id} onChange={(e: string) => setData('owner_id', e)} list={users} errors={errors} />
+        <ShadSelect required label="Owner" name="owner_id" value={data.owner_id} onChange={(e: string) => setData('owner_id', e)} list={users} errors={errors} />
         <ShadInput label="Avatar URL" name="avatar_url" value={data.avatar_url} onChange={(e) => setData('avatar_url', e.target.value)} />
         <ShadSwitch label="Is Active" name="is_active" value={data.is_active} onChange={(e) => setData('is_active', e)} />
         <ShadTextarea label="Description" name="description" value={data.description} onChange={(e) => setData('description', e.target.value)} errors={errors} />
-        <Button type="submit" onClick={onSubmit}>Save</Button>
     </></SimpleModal>
 }
 
