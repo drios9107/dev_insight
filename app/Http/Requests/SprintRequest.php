@@ -29,8 +29,8 @@ class SprintRequest extends FormRequest
             'name' => 'required|string|unique:sprints,name',
             'goal' => 'nullable|string',
             'project_id' => 'required|integer|exists:projects,id',
-            'start_date' => 'required|numeric',
-            'end_date' => 'required|numeric',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
             'status' => [
                 'required',
                 Rule::in(array_column(SprintStatusEnum::cases(), 'value')),
@@ -45,10 +45,10 @@ class SprintRequest extends FormRequest
                 $rules['project_id'] = 'nullable|integer|exists:projects,id';
             }
             if ($this->input('start_date')) {
-                $rules['start_date'] = 'nullable|numeric';
+                $rules['start_date'] = 'nullable|date';
             }
             if ($this->input('end_date')) {
-                $rules['end_date'] = 'nullable|numeric';
+                $rules['end_date'] = 'nullable|date';
             }
         }
 

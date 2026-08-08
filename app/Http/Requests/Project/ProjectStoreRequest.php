@@ -25,8 +25,8 @@ class ProjectStoreRequest extends FormRequest
                 'required',
                 Rule::in(array_column(ProjectStatusEnum::cases(), 'value')),
             ],
-            'start_date' => 'nullable|numeric',
-            'end_date' => 'nullable|numeric',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
             'color' => 'nullable|string|max:255',
         ];
     }

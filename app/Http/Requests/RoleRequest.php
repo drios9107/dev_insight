@@ -22,7 +22,7 @@ class RoleRequest extends FormRequest
      */
     public function rules(): array
     {
-        $roleId = $this->route('role')?->id ?? $this->input('id');
+        $roleId = $this->route('role')?->id;
         $rules = [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',

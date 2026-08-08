@@ -15,7 +15,7 @@ class ProjectUpdateRequest extends FormRequest
 
     public function rules(): array
     {
-        $projectId = $this->route('project')?->id ?? $this->input('id');
+        $projectId = $this->route('project');
 
         return [
             'name' => [
@@ -32,8 +32,8 @@ class ProjectUpdateRequest extends FormRequest
                 'sometimes',
                 Rule::in(array_column(ProjectStatusEnum::cases(), 'value')),
             ],
-            'start_date' => 'sometimes|numeric',
-            'end_date' => 'sometimes|numeric',
+            'start_date' => 'sometimes|date',
+            'end_date' => 'sometimes|date',
             'color' => 'sometimes|string|max:255',
         ];
     }
