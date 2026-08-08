@@ -12,7 +12,7 @@ const ShadTextarea = ({ label, id, name, value, onChange, errors, rows = 4, ...p
             <Textarea
                 id={id ?? name}
                 name={name}
-                value={value}
+                value={value ?? ''}
                 onChange={onChange}
                 rows={rows}
                 {...props}

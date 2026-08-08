@@ -4,7 +4,7 @@ import { IHtmlWithLabel } from "@/types"
 
 const ShadInput = ({ label, id, name, value, onChange, errors, ...props }: IHtmlWithLabel) => {
     return (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 w-full">
             {label && <Label htmlFor={id ?? name}>
                 {label}
                 {props.required && <span className="text-red-500 ml-1">*</span>}
