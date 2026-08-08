@@ -9,19 +9,21 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Loader } from "./loader"
+import { Save } from "lucide-react"
 
 interface SimpleModalProps {
     title?: string
     description?: string
     onClose: () => void
+    onClick: () => void
     children: React.ReactNode
     isLoading?: boolean
 }
 
-export function SimpleModal({ title = "", description, onClose, children, isLoading }: SimpleModalProps) {
+export function SimpleModal({ title = "", description, onClose, children, isLoading, onClick }: SimpleModalProps) {
     return (
         <Dialog open onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-lg">
+            <DialogContent className="sm:max-w-lg overflow-y-auto" style={{ height: 600 }}>
                 <DialogHeader>
                     <DialogTitle className="text-center text-xl font-semibold">
                         {title}
@@ -36,8 +38,9 @@ export function SimpleModal({ title = "", description, onClose, children, isLoad
                 {isLoading && <Loader />}
 
                 <DialogFooter className="flex justify-center">
+                    <Button type="button" onClick={onClick}><Save />Save</Button>
                     <DialogClose asChild>
-                        <Button variant="outline">Cerrar</Button>
+                        <Button variant="outline">Close</Button>
                     </DialogClose>
                 </DialogFooter>
             </DialogContent>
