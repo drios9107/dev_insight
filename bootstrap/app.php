@@ -3,11 +3,13 @@
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -32,4 +34,23 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+
+        $exceptions->render(function (QueryException $e, Request $request) {
+            Log::error('***Database error', [
+                'code' => $e->getCode(),
+                'sql' => $e->getSql(),
+                'bindings' => $e->getBindings(),
+                'message' => $e->getMessage(),
+            ]);
+
+            if ($e->getCode() === '23503') {
+                return redirect()->back()->withErrors([
+                    'message' => 'Resource is being used.',
+                ]);
+            }
+
+            return redirect()->back()->withErrors([
+                'message' => 'An unexpected database error occurred.',
+            ]);
+        });
     })->create();
