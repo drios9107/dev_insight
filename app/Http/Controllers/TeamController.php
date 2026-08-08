@@ -19,6 +19,14 @@ class TeamController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function all()
+    {
+        return TeamResource::collection($this->service->index());
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
         $data = TeamResource::collection($this->service->index());
