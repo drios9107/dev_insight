@@ -29,18 +29,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::get('all-comments', [CommentController::class, 'all'])->name('comment.all');
-    Route::get('all-commits', [CommitController::class, 'all'])->name('commits.all');
+    Route::get('all-commits', [CommitController::class, 'all'])->name('commit.all');
     Route::get('all-githubs-issue', [GithubIssueController::class, 'all'])->name('githubs-issue.all');
     Route::get('all-githubs-repository', [GithubRepositoryController::class, 'all'])->name('githubs-repository.all');
-    Route::get('all-metrics', [MetricController::class, 'all'])->name('metrics.all');
-    Route::get('all-notifications', [NotificationController::class, 'all'])->name('notifications.all');
-    Route::get('all-projects', [ProjectController::class, 'all'])->name('projects.all');
+    Route::get('all-metrics', [MetricController::class, 'all'])->name('metric.all');
+    Route::get('all-notifications', [NotificationController::class, 'all'])->name('notification.all');
+    Route::get('all-projects', [ProjectController::class, 'all'])->name('project.all');
     Route::get('all-pulls-request', [PullRequestController::class, 'all'])->name('pulls-request.all');
     Route::get('all-pulls-request-review', [PullRequestReviewController::class, 'all'])->name('pulls-request-review.all');
-    Route::get('all-roles', [RoleController::class, 'all'])->name('roles.all');
-    Route::get('all-sprints', [SprintController::class, 'all'])->name('sprints.all');
-    Route::get('all-tasks', [TaskController::class, 'all'])->name('tasks.all');
-    Route::get('all-teams', [TeamController::class, 'all'])->name('teams.all');
+    Route::get('all-roles', [RoleController::class, 'all'])->name('role.all');
+    Route::get('all-sprints', [SprintController::class, 'all'])->name('sprint.all');
+    Route::get('all-tasks', [TaskController::class, 'all'])->name('task.all');
+    Route::get('all-teams', [TeamController::class, 'all'])->name('team.all');
     Route::get('all-users', [UserController::class, 'all'])->name('user.all');
 
     Route::resource('/comment', CommentController::class)->only($apiRoutes);
@@ -57,7 +57,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/task', TaskController::class)->only($apiRoutes);
     Route::resource('/team', TeamController::class)->only($apiRoutes);
     Route::resource('/user', UserController::class)->only($apiRoutes);
-
 });
 
-require __DIR__.'/settings.php';
+require __DIR__ . '/settings.php';
