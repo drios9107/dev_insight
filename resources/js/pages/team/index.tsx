@@ -9,9 +9,12 @@ import { useCallback, useState } from "react";
 import CustomForm from "@/components/custom/forms/teams-form";
 import { toast } from "sonner";
 import team from "@/routes/team";
+import Header from "@/components/custom/header";
+import { DeleteModal } from "@/components/custom/delete-modal";
 
 const Teams = (props: any) => {
     const [isOpen, setIsOpen] = useState(false)
+    const [itemToDelete, setItemToDelete] = useState<ITeam | null>(null)
     const [itemToEdit, setItemToEdit] = useState<ITeam | null>(null)
 
     const onDetails = () => { }
@@ -21,24 +24,27 @@ const Teams = (props: any) => {
         setIsOpen(true)
     }, [setItemToEdit, setIsOpen])
 
-    const onDelete = useCallback((id: number) => {
-        router.delete(team.destroy(id).url, {
-            onSuccess: () => toast.success('Team deleted successfully'),
-            onError: (error) => toast.error(`Team deletion failed: ${error}`)
-        })
-    }, [])
+    const onDelete = useCallback(() => {
+        if (itemToDelete) {
+            router.delete(team.destroy(itemToDelete!.id).url, {
+                onSuccess: () => toast.success('Team deleted successfully'),
+                onError: (error) => toast.error(`Team deletion failed: ${error?.message}`),
+                onFinish: () => setItemToDelete(null)
+            })
+        }
+    }, [itemToDelete])
 
     const onCloseForm = () => {
         setIsOpen(false)
         setItemToEdit(null)
+        setItemToDelete(null)
     }
 
     return <>
         <Head title={props.title} />
         <h1 className="sr-only">{props.title}</h1>
-        <h1 className="p-6">{props.title}</h1>
+        <Header title={props.title} onClick={() => setIsOpen(true)} />
         <div className="flex gap-6 flex-wrap justify-center">
-            <Button className="bg-green-600" onClick={() => setIsOpen(true)}><Plus /></Button>
             {props.list.data.map((i: ITeam) => <Card key={i.id} style={{ width: '300px' }} className="px-6">
                 <CardTitle className="flex justify-between">
                     {i.name}
@@ -56,10 +62,11 @@ const Teams = (props: any) => {
                         {i.description}
                     </CardDescription>
                 </CardContent>
-                <CrudButtons onEdit={() => onEdit(i)} onDelete={() => onDelete(i.id)} />
+                <CrudButtons onEdit={() => onEdit(i)} onDelete={() => setItemToDelete(i)} />
             </Card>)}
 
             {isOpen && <CustomForm onClose={onCloseForm} item={itemToEdit} />}
+            {itemToDelete && <DeleteModal onClose={onCloseForm} onClick={onDelete} />}
         </div>
 
     </>

@@ -4,24 +4,19 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { IProject, TProjectStatus } from "@/types/models/project";
 import { Head, router } from "@inertiajs/react";
-import { Circle, Plus } from "lucide-react";
+import { Circle } from "lucide-react";
 import { useCallback, useState } from "react";
-// import CustomForm from "@/components/custom/forms/projects-form";
-import { toast } from "sonner";
 import project from "@/routes/project";
-
-const ProjectStatusEnum = {
-    planning: 'Planning',
-    active: 'Active',
-    paused: 'Paused',
-    completed: 'Completed',
-    archived: 'Archived',
-}
+import { toast } from "sonner";
+import { ProjectStatusEnum } from "@/enums/project";
+import CustomForm from "@/components/custom/forms/projects-form";
+import Header from "@/components/custom/header";
+import { DeleteModal } from "@/components/custom/delete-modal";
 
 const Projects = (props: any) => {
     const [isOpen, setIsOpen] = useState(false)
+    const [itemToDelete, setItemToDelete] = useState<IProject | null>(null)
     const [itemToEdit, setItemToEdit] = useState<IProject | null>(null)
-    console.log('***props', props)
     const onDetails = () => { }
 
     const onEdit = useCallback((item: IProject) => {
@@ -29,16 +24,20 @@ const Projects = (props: any) => {
         setIsOpen(true)
     }, [setItemToEdit, setIsOpen])
 
-    const onDelete = useCallback((id: number) => {
-        router.delete(project.destroy(id).url, {
-            onSuccess: () => toast.success('Project deleted successfully'),
-            onError: (error) => toast.error(`Project deletion failed: ${error}`)
-        })
-    }, [])
+    const onDelete = useCallback(() => {
+        if (itemToDelete) {
+            router.delete(project.destroy(itemToDelete!.id).url, {
+                onSuccess: () => toast.success('Project deleted successfully'),
+                onError: (error) => toast.error(`Project deletion failed: ${error?.message}`),
+                onFinish: () => setItemToDelete(null)
+            })
+        }
+    }, [itemToDelete])
 
     const onCloseForm = () => {
         setIsOpen(false)
         setItemToEdit(null)
+        setItemToDelete(null)
     }
 
     const getBadgeColor = useCallback((status: TProjectStatus) => {
@@ -59,9 +58,8 @@ const Projects = (props: any) => {
     return <>
         <Head title={props.title} />
         <h1 className="sr-only">{props.title}</h1>
-        <h1 className="p-6">{props.title}</h1>
-        <div className="flex gap-6 flex-wrap justify-center">
-            <Button className="bg-green-600" onClick={() => setIsOpen(true)}><Plus /></Button>
+        <Header title={props.title} onClick={() => setIsOpen(true)} />
+        <div className="flex gap-6 px-6 flex-wrap justify-start">
             {props.list.data.map((i: IProject) => <Card key={i.id} style={{ width: '300px' }} className={'px-6'}>
                 <CardTitle className="flex justify-between">
                     <div className="flex gap-1 items-center">
@@ -84,10 +82,11 @@ const Projects = (props: any) => {
                         {i.description}
                     </CardDescription>
                 </CardContent>
-                <CrudButtons onEdit={() => onEdit(i)} onDelete={() => onDelete(i.id)} />
+                <CrudButtons onEdit={() => onEdit(i)} onDelete={() => setItemToDelete(i)} />
             </Card>)}
 
-            {/* {isOpen && <CustomForm onClose={onCloseForm} item={itemToEdit} />} */}
+            {isOpen && <CustomForm onClose={onCloseForm} item={itemToEdit} />}
+            {itemToDelete && <DeleteModal onClose={onCloseForm} onClick={onDelete} />}
         </div>
 
     </>
