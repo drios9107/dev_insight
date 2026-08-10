@@ -1,6 +1,5 @@
 import CrudButtons from "@/components/custom/crud-buttons";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { IProject, TProjectStatus } from "@/types/models/project";
 import { Head, router } from "@inertiajs/react";
@@ -12,6 +11,7 @@ import { ProjectStatusEnum } from "@/enums/project";
 import CustomForm from "@/components/custom/forms/projects-form";
 import Header from "@/components/custom/header";
 import { DeleteModal } from "@/components/custom/delete-modal";
+import BodyWrapper from "@/components/custom/body-wrapper";
 
 const Projects = (props: any) => {
     const [isOpen, setIsOpen] = useState(false)
@@ -59,7 +59,7 @@ const Projects = (props: any) => {
         <Head title={props.title} />
         <h1 className="sr-only">{props.title}</h1>
         <Header title={props.title} onClick={() => setIsOpen(true)} />
-        <div className="flex gap-6 px-6 flex-wrap justify-start">
+        <BodyWrapper>
             {props.list.data.map((i: IProject) => <Card key={i.id} style={{ width: '300px' }} className={'px-6'}>
                 <CardTitle className="flex justify-between">
                     <div className="flex gap-1 items-center">
@@ -87,7 +87,7 @@ const Projects = (props: any) => {
 
             {isOpen && <CustomForm onClose={onCloseForm} item={itemToEdit} />}
             {itemToDelete && <DeleteModal onClose={onCloseForm} onClick={onDelete} />}
-        </div>
+        </BodyWrapper>
 
     </>
 }
