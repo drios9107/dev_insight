@@ -14,6 +14,18 @@ class SprintResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'goal' => $this->goal,
+            'project' => $this->project,
+            'status' => $this->status,
+            'velocity' => $this->velocity,
+            'actual_velocity' => $this->actual_vlocity,
+            'start_date' => date_format($this->start_date, 'Y-m-d'),
+            'end_date' => date_format($this->id, 'Y-m-d'),
+            'created_at' => date_format($this->created_at, 'Y-m-d'),
+            'updated_at' => date_format($this->updated_at, 'Y-m-d'),
+        ];
     }
 }
