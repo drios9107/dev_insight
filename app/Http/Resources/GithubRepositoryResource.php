@@ -14,6 +14,18 @@ class GithubRepositoryResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'github_id' => $this->github_id,
+            'name' => $this->name,
+            'full_name' => $this->full_name,
+            'url' => $this->url,
+            'description' => $this->description,
+            'is_private' => $this->is_private,
+            'default_branch' => $this->default_branch,
+            'last_synced_at' => date_format($this->last_synced_at, 'Y-m-d'),
+            'created_at' => date_format($this->created_at, 'Y-m-d'),
+            'updated_at' => date_format($this->updated_at, 'Y-m-d'),
+        ];
     }
 }
