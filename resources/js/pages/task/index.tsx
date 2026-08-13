@@ -12,6 +12,7 @@ import ColData from "@/components/custom/col-data";
 import { ITask } from "@/types/models/task";
 import CustomForm from "@/components/custom/forms/tasks-form";
 import { TaskPriorityEnum, TaskStatusEnum, TTaskPriority, TTaskStatus } from "@/enums/task";
+import RowData from "@/components/custom/row-data";
 
 const Tasks = (props: any) => {
     const [isOpen, setIsOpen] = useState(false)
@@ -76,21 +77,11 @@ const Tasks = (props: any) => {
                     <Badge variant={getBadgeColor(i.status)}>{TaskStatusEnum[i.status]}</Badge>
                 </CardTitle>
                 <CardContent className="flex flex-col flex-1 gap-1">
-                    {i.project && <span>
-                        Project: {i.project?.name}
-                    </span>}
-                    {i.sprint && <span>
-                        Sprint: {i.sprint?.name}
-                    </span>}
-                    {i.assignee && <span>
-                        Assignee: {i.assignee?.name}
-                    </span>}
-                    {i.reporter && <span>
-                        Reporter: {i.reporter?.name}
-                    </span>}
-                    <span>
-                        {i.due_date} - {i.completed_at}
-                    </span>
+                    {i.project && <RowData title="Project" value={i?.project?.name} />}
+                    {i.sprint && <RowData title="Sprint" value={i?.sprint?.name} />}
+                    {i.assignee && <RowData title="Asignee" value={i?.assignee?.name} />}
+                    {i.reporter && <RowData title="Reporter" value={i?.reporter?.name} />}
+                    <RowData title="Reporter" value={`${i.due_date} - ${i.completed_at}`} />
                     <div className="flex flex-wrap gap-2 justify-between">
                         <ColData title="Story points" value={i?.story_points} />
                         <ColData title="Hours estimate" value={i?.hours_estimate} />

@@ -10,6 +10,7 @@ import Header from "@/components/custom/header";
 import { DeleteModal } from "@/components/custom/delete-modal";
 import BodyWrapper from "@/components/custom/body-wrapper";
 import CrudButtons from "@/components/custom/crud-buttons";
+import RowData from "@/components/custom/row-data";
 
 const Notifications = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<INotification | null>(null)
@@ -49,15 +50,9 @@ const Notifications = (props: any) => {
                     <Badge variant={i.is_read ? 'success' : 'default'}>{i.is_read ? 'Read' : 'Unread'}</Badge>
                 </CardTitle>
                 <CardContent className="flex flex-col flex-1 gap-1">
-                    <span>
-                        Owner: {i.user?.name}
-                    </span>
-                    <span>
-                        Link: {i.link}
-                    </span>
-                    <span>
-                        {i.read_at}
-                    </span>
+                    <RowData title="Owner" value={i?.user?.name} />
+                    <RowData title="Link" value={i?.link} href={i?.link} />
+                    <RowData title="Read At" value={i?.read_at} />
                     <CardDescription className="">
                         {i.message}
                     </CardDescription>

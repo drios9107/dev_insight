@@ -10,6 +10,7 @@ import BodyWrapper from "@/components/custom/body-wrapper";
 import { IGithubsIssue, TGithubsIssueState } from "@/types/models/github-issue";
 import { GithubIssueStateEnum } from "@/enums/githubs-issue";
 import githubIssue from "@/routes/github-issue";
+import RowData from "@/components/custom/row-data";
 
 const GithubsIssues = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<IGithubsIssue | null>(null)
@@ -45,18 +46,10 @@ const GithubsIssues = (props: any) => {
                     <Badge variant={getBadgeColor(i.state)}>{GithubIssueStateEnum[i.state]}</Badge>
                 </CardTitle>
                 <CardContent className="flex flex-col flex-1 gap-1">
-                    <span>
-                        Author: {i.author?.name}
-                    </span>
-                    <span>
-                        Github Id: {i.github_id}
-                    </span>
-                    <span>
-                        Number: {i.number}
-                    </span>
-                    <span>
-                        {i.created_at} - {i.closed_at}
-                    </span>
+                    <RowData title="Author" value={i?.author?.name} />
+                    <RowData title="Github Id" value={i?.github_id} />
+                    <RowData title="Number" value={i?.number} />
+                    <RowData title="Closed At" value={i?.closed_at} />
                     <CardDescription className="">
                         {i.body}
                     </CardDescription>

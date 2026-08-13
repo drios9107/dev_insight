@@ -11,6 +11,7 @@ import { IPullRequest, TPullRequestState } from "@/types/models/pull-request";
 import { PullRequestStateEnum } from "@/enums/pull-requests";
 import pullRequest from "@/routes/pull-request";
 import ColData from "@/components/custom/col-data";
+import RowData from "@/components/custom/row-data";
 
 const PullRequests = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<IPullRequest | null>(null)
@@ -47,22 +48,16 @@ const PullRequests = (props: any) => {
                     <Badge variant={getBadgeColor(i.state)}>{PullRequestStateEnum[i.state]}</Badge>
                 </CardTitle>
                 <CardContent className="flex flex-col flex-1 gap-1">
-                    <span>
-                        Task: {i.task?.title}
-                    </span>
-                    <span>
-                        Github Id: {i.github_id}
-                    </span>
-                    <span>
-                        Github Repository: {i.github_repository?.full_name}
-                    </span>
-                    <span>
-                        Number: {i.number}
-                    </span>
-                    <span>
-                        {i.created_at} - {i.closed_at} - {i.merged_at}
-                    </span>
+                    <RowData title="Task" value={i?.task?.title} />
+                    <RowData title="Github Id" value={i?.github_id} />
+                    <RowData title="Repository" value={i?.github_repository?.name} />
+                    <RowData title="Number" value={i?.number} />
+
                     <div className="flex flex-wrap gap-2 justify-between">
+                        <ColData title="Created At" value={i?.created_at} />
+                        <ColData title="Closed At" value={i?.closed_at} />
+                        <ColData title="Merged At" value={i?.merged_at} />
+
                         <ColData title="Author" value={i?.author?.name} />
                         <ColData title="Assignee" value={i?.assignee?.name} />
                         <ColData title="Base Branch" value={i?.base_branch} />

@@ -5,6 +5,7 @@ import { IComment } from "@/types/models/comment";
 import { Head } from "@inertiajs/react";
 import Header from "@/components/custom/header";
 import BodyWrapper from "@/components/custom/body-wrapper";
+import RowData from "@/components/custom/row-data";
 
 const Comments = (props: any) => {
     return <>
@@ -17,15 +18,9 @@ const Comments = (props: any) => {
                     <Badge variant={i.is_internal ? 'success' : 'default'}>{i.is_internal ? 'Is Internal' : 'Is Public'}</Badge>
                 </CardTitle>
                 <CardContent className="flex flex-col flex-1 gap-1">
-                    <span>
-                        User: {i.user?.name}
-                    </span>
-                    <span>
-                        Team: {i.task?.title}
-                    </span>
-                    <span>
-                        {i.created_at}
-                    </span>
+                    <RowData title="User" value={i?.user?.name} />
+                    <RowData title="Task" value={i?.task?.title} />
+                    <RowData title="Created At" value={i?.created_at} />
                     <CardDescription className="">
                         {i.content}
                     </CardDescription>

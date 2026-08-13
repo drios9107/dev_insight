@@ -12,6 +12,8 @@ import CustomForm from "@/components/custom/forms/projects-form";
 import Header from "@/components/custom/header";
 import { DeleteModal } from "@/components/custom/delete-modal";
 import BodyWrapper from "@/components/custom/body-wrapper";
+import RowData from "@/components/custom/row-data";
+import ColData from "@/components/custom/col-data";
 
 const Projects = (props: any) => {
     const [isOpen, setIsOpen] = useState(false)
@@ -69,15 +71,12 @@ const Projects = (props: any) => {
                     <Badge variant={getBadgeColor(i.status)}>{getBadgeText(i.status)}</Badge>
                 </CardTitle>
                 <CardContent className="flex flex-col flex-1 gap-1">
-                    <span>
-                        Owner: {i.owner?.name}
-                    </span>
-                    <span>
-                        Team: {i.team?.name}
-                    </span>
-                    <span>
-                        {i.start_date} - {i.end_date}
-                    </span>
+                    <RowData title="Owner" value={i?.owner?.name} />
+                    <RowData title="Team" value={i?.team?.name} />
+                    <div className="flex flex-wrap gap-2 justify-between">
+                        <ColData title="Start Date" value={i?.start_date} />
+                        <ColData title="End Date" value={i?.end_date} />
+                    </div>
                     <CardDescription className="">
                         {i.description}
                     </CardDescription>

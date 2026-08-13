@@ -9,6 +9,7 @@ import { DeleteModal } from "@/components/custom/delete-modal";
 import BodyWrapper from "@/components/custom/body-wrapper";
 import { IGithubRepository } from "@/types/models/github-repository";
 import githubRepository from "@/routes/github-repository";
+import RowData from "@/components/custom/row-data";
 
 const GithubRepositorys = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<IGithubRepository | null>(null)
@@ -36,18 +37,10 @@ const GithubRepositorys = (props: any) => {
                     </div>
                 </CardTitle>
                 <CardContent className="flex flex-col flex-1 gap-1">
-                    <span>
-                        Github Id: {i.github_id}
-                    </span>
-                    <span>
-                        Branch: {i.default_branch}
-                    </span>
-                    <span>
-                        Url: {i.url}
-                    </span>
-                    <span>
-                        {i.last_synced_at}
-                    </span>
+                    <RowData title="Github Id" value={i?.github_id} />
+                    <RowData title="Branch" value={i?.default_branch} />
+                    <RowData title="Url" value={i?.url} href={i?.url} />
+                    <RowData title="Last Synced At" value={i?.last_synced_at} />
                     <CardDescription className="">
                         {i.description}
                     </CardDescription>

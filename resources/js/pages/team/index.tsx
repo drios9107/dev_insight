@@ -10,6 +10,7 @@ import team from "@/routes/team";
 import Header from "@/components/custom/header";
 import { DeleteModal } from "@/components/custom/delete-modal";
 import BodyWrapper from "@/components/custom/body-wrapper";
+import RowData from "@/components/custom/row-data";
 
 const Teams = (props: any) => {
     const [isOpen, setIsOpen] = useState(false)
@@ -51,12 +52,8 @@ const Teams = (props: any) => {
                     <Badge color={i.is_active ? 'bg-green-600' : 'bg-grey-600'}>{i.is_active ? 'Is Active' : 'Is Not Active'}</Badge>
                 </CardTitle>
                 <CardContent className="flex flex-col flex-1 gap-1">
-                    <span>
-                        Owner: {i.owner?.name}
-                    </span>
-                    <span>
-                        Created: {i.created_at}
-                    </span>
+                    <RowData title="Owner" value={i?.owner?.name} />
+                    <RowData title="Created At" value={i?.created_at} />
                     <CardDescription className="">
                         {i.description}
                     </CardDescription>

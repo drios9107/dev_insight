@@ -11,6 +11,8 @@ import { DeleteModal } from "@/components/custom/delete-modal";
 import BodyWrapper from "@/components/custom/body-wrapper";
 import { SprintStatusEnum } from "@/enums/sprint";
 import { ISprint, TSprintStatus } from "@/types/models/sprint";
+import RowData from "@/components/custom/row-data";
+import ColData from "@/components/custom/col-data";
 
 const Sprints = (props: any) => {
     const [isOpen, setIsOpen] = useState(false)
@@ -66,15 +68,12 @@ const Sprints = (props: any) => {
                     <Badge variant={getBadgeColor(i.status)}>{getBadgeText(i.status)}</Badge>
                 </CardTitle>
                 <CardContent className="flex flex-col flex-1 gap-1">
-                    <span>
-                        Project: {i.project?.name}
-                    </span>
-                    <span>
-                        Velocity/ActualVelocity: {i.velocity}/{i.actual_velocity}
-                    </span>
-                    <span>
-                        {i.start_date} - {i.end_date}
-                    </span>
+                    <RowData title="Project" value={i?.project?.name} />
+                    <div className="flex flex-wrap gap-2 justify-between">
+                        <ColData title="Velocity" value={i?.velocity} />
+                        <ColData title="ActualVelocity" value={i?.actual_velocity} />
+                    </div>
+                    <RowData title="Reporter" value={`${i.start_date} - ${i.end_date}`} />
                     <CardDescription className="">
                         {i.goal}
                     </CardDescription>

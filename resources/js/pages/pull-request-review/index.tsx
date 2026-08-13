@@ -10,6 +10,7 @@ import BodyWrapper from "@/components/custom/body-wrapper";
 import { IPullRequestReview, TPullRequestReviewState } from "@/types/models/pull-request-review";
 import { PullRequestReviewStateEnum } from "@/enums/pull-requests-review";
 import pullRequestReview from "@/routes/pull-request-review";
+import RowData from "@/components/custom/row-data";
 
 const PullRequestReviews = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<IPullRequestReview | null>(null)
@@ -47,15 +48,9 @@ const PullRequestReviews = (props: any) => {
                     <Badge variant={getBadgeColor(i.state)}>{PullRequestReviewStateEnum[i.state]}</Badge>
                 </CardTitle>
                 <CardContent className="flex flex-col flex-1 gap-1">
-                    <span>
-                        Reviewer: {i.reviewer?.name}
-                    </span>
-                    <span>
-                        Github Id: {i.github_id}
-                    </span>
-                    <span>
-                        {i.submitted_at}
-                    </span>
+                    <RowData title="Reviewer" value={i?.reviewer?.name} />
+                    <RowData title="Github Id" value={i?.github_id} />
+                    <RowData title="Submitted At" value={i?.submitted_at} />
                     <CardDescription className="">
                         {i.body}
                     </CardDescription>

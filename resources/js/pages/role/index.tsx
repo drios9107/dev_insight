@@ -9,6 +9,7 @@ import role from "@/routes/role";
 import Header from "@/components/custom/header";
 import { DeleteModal } from "@/components/custom/delete-modal";
 import BodyWrapper from "@/components/custom/body-wrapper";
+import RowData from "@/components/custom/row-data";
 
 const Roles = (props: any) => {
     const [isOpen, setIsOpen] = useState(false)
@@ -48,9 +49,7 @@ const Roles = (props: any) => {
                     {i.name}
                 </CardTitle>
                 <CardContent className="flex flex-col flex-1 gap-1">
-                    <span>
-                        Created: {i.created_at}
-                    </span>
+                    <RowData title="Created At" value={i?.created_at} />
                     <CardDescription className="">
                         {i.description}
                     </CardDescription>
