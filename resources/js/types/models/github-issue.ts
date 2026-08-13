@@ -1,4 +1,5 @@
 import { IUser } from "../user";
+import { IGithubRepository } from "./github-repository";
 
 export interface IGithubsIssue {
     id: number;
@@ -7,8 +8,7 @@ export interface IGithubsIssue {
     title: string;
     body: string;
     state: TGithubsIssueState;
-    // @todo: finish this one
-    // github_repository: IGithubRepository;
+    github_repository: IGithubRepository;
     author: IUser;
     closed_at?: string;
     created_at: string;

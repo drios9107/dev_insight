@@ -20,7 +20,6 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
             TeamSeeder::class,
-            // @todo: good up to this point
             GithubRepositorySeeder::class,
             ProjectSeeder::class,
             GithubIssueSeeder::class,

@@ -2,6 +2,7 @@ import { TTaskPriority, TTaskStatus } from "@/enums/task";
 import { IUser } from "../user";
 import { IProject } from "./project";
 import { ISprint } from "./sprint";
+import { IGithubsIssue } from "./github-issue";
 
 export interface ITask {
     id: number;
@@ -11,9 +12,7 @@ export interface ITask {
     assignee?: IUser;
     sprint?: ISprint;
     reporter: IUser;
-    // @todo: complete missing relations
-    // github_issue_id
-
+    github_issue: IGithubsIssue;
     status: TTaskStatus;
     priority: TTaskPriority;
     due_date: string;
