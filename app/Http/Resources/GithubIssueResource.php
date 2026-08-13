@@ -4,7 +4,6 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Log;
 
 use function PHPUnit\Framework\isNull;
 
@@ -17,8 +16,6 @@ class GithubIssueResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        Log::info('***gi_id: '.$this->id, [(bool) $this->closed_at]);
-
         return [
             'id' => $this->id,
             'github' => $this->github,
