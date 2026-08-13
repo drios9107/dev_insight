@@ -5,6 +5,8 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+use function PHPUnit\Framework\isNull;
+
 class CommitResource extends JsonResource
 {
     /**
@@ -14,6 +16,20 @@ class CommitResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'sha' => $this->sha,
+            'github_repository' => $this->github_repository,
+            'author' => $this->author,
+            'task' => $this->task,
+            'message' => $this->message,
+            'date' => ! isNull($this->date) ? date_format($this->date, 'Y-m-d') : '',
+            'url' => $this->url,
+            'additions' => $this->additions,
+            'deletions' => $this->deletions,
+            'total_changes' => $this->total_changes,
+            'created_at' => date_format($this->created_at, 'Y-m-d'),
+            'updated_at' => date_format($this->updated_at, 'Y-m-d'),
+        ];
     }
 }
