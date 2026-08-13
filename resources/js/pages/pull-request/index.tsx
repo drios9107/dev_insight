@@ -9,7 +9,7 @@ import { DeleteModal } from "@/components/custom/delete-modal";
 import BodyWrapper from "@/components/custom/body-wrapper";
 import { IPullRequest, TPullRequestState } from "@/types/models/pull-request";
 import { PullRequestStateEnum } from "@/enums/pull-requests";
-import githubsIssue from "@/routes/pull-request";
+import pullRequest from "@/routes/pull-request";
 import ColData from "@/components/custom/col-data";
 
 const PullRequests = (props: any) => {
@@ -17,7 +17,7 @@ const PullRequests = (props: any) => {
 
     const onDelete = useCallback(() => {
         if (itemToDelete) {
-            router.delete(githubsIssue.destroy(itemToDelete!.id).url, {
+            router.delete(pullRequest.destroy(itemToDelete!.id).url, {
                 onSuccess: () => toast.success('GithubsIssue deleted successfully'),
                 onError: (error) => toast.error(`GithubsIssue deletion failed: ${error?.message}`),
                 onFinish: () => setItemToDelete(null)
