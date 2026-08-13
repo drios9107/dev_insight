@@ -14,6 +14,16 @@ class PullRequestReviewResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'github_id' => $this->github_id,
+            'reviewer' => $this->reviewer,
+            'pull_request' => $this->pull_request,
+            'state' => $this->state,
+            'body' => $this->body,
+            'submitted_at' => date_format($this->submitted_at, 'Y-m-d'),
+            'created_at' => date_format($this->created_at, 'Y-m-d'),
+            'updated_at' => date_format($this->updated_at, 'Y-m-d'),
+        ];
     }
 }
