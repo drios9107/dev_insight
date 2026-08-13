@@ -14,6 +14,17 @@ class NotificationResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'user_id' => $this->user,
+            'type' => $this->type,
+            'title' => $this->title,
+            'message' => $this->message,
+            'link' => $this->link,
+            'is_read' => $this->is_read,
+            'read_at' => date_format($this->read_at, 'Y-m-d'),
+            'created_at' => date_format($this->created_at, 'Y-m-d'),
+            'updated_at' => date_format($this->updated_at, 'Y-m-d'),
+        ];
     }
 }
