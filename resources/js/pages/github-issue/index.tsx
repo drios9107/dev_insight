@@ -9,33 +9,20 @@ import { DeleteModal } from "@/components/custom/delete-modal";
 import BodyWrapper from "@/components/custom/body-wrapper";
 import { IGithubsIssue, TGithubsIssueState } from "@/types/models/github-issue";
 import { GithubIssueStateEnum } from "@/enums/githubs-issue";
-import githubsIssue from "@/routes/github-issue";
+import githubIssue from "@/routes/github-issue";
 
 const GithubsIssues = (props: any) => {
-    const [isOpen, setIsOpen] = useState(false)
     const [itemToDelete, setItemToDelete] = useState<IGithubsIssue | null>(null)
-    const [itemToEdit, setItemToEdit] = useState<IGithubsIssue | null>(null)
-
-    const onEdit = useCallback((item: IGithubsIssue) => {
-        setItemToEdit(item)
-        setIsOpen(true)
-    }, [setItemToEdit, setIsOpen])
 
     const onDelete = useCallback(() => {
         if (itemToDelete) {
-            router.delete(githubsIssue.destroy(itemToDelete!.id).url, {
+            router.delete(githubIssue.destroy(itemToDelete!.id).url, {
                 onSuccess: () => toast.success('GithubsIssue deleted successfully'),
                 onError: (error) => toast.error(`GithubsIssue deletion failed: ${error?.message}`),
                 onFinish: () => setItemToDelete(null)
             })
         }
     }, [itemToDelete])
-
-    const onCloseForm = () => {
-        setIsOpen(false)
-        setItemToEdit(null)
-        setItemToDelete(null)
-    }
 
     const getBadgeColor = useCallback((status: TGithubsIssueState) => {
         const mapping = {
@@ -48,7 +35,7 @@ const GithubsIssues = (props: any) => {
     return <>
         <Head title={props.title} />
         <h1 className="sr-only">{props.title}</h1>
-        <Header title={props.title} onClick={() => setIsOpen(true)} />
+        <Header title={props.title} />
         <BodyWrapper>
             {props.list.data.map((i: IGithubsIssue) => <Card key={i.id} style={{ width: '300px' }} className={'px-6'}>
                 <CardTitle className="flex justify-between">
@@ -74,10 +61,10 @@ const GithubsIssues = (props: any) => {
                         {i.body}
                     </CardDescription>
                 </CardContent>
-                <CrudButtons onEdit={() => onEdit(i)} onDelete={() => setItemToDelete(i)} />
+                <CrudButtons onDelete={() => setItemToDelete(i)} />
             </Card>)}
 
-            {itemToDelete && <DeleteModal onClose={onCloseForm} onClick={onDelete} />}
+            {itemToDelete && <DeleteModal onClose={() => setItemToDelete(null)} onClick={onDelete} />}
         </BodyWrapper>
 
     </>
