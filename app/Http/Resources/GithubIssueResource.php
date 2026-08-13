@@ -14,6 +14,18 @@ class GithubIssueResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'github' => $this->github,
+            'github_repository' => $this->github_repository,
+            'author' => $this->author,
+            'number' => $this->number,
+            'title' => $this->title,
+            'body' => $this->body,
+            'state' => $this->state,
+            'closed_at' => date_format($this->closed_at, 'Y-m-d'),
+            'created_at' => date_format($this->created_at, 'Y-m-d'),
+            'updated_at' => date_format($this->updated_at, 'Y-m-d'),
+        ];
     }
 }
