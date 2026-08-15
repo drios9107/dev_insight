@@ -7,49 +7,49 @@ use Illuminate\Support\Facades\DB;
 
 class CommitService
 {
-    public function fetchData(GithubService $service)
+    public function fetchData(GithubService $service, string $ownerKey = 'drios9107', string $repoName = 'expenses')
     {
-        $commits = $service->getCommits('drios9107', 'expenses');
-        $repo = $service->getRepository('drios9107', 'expenses');
-        $repoId = $repo['id'];
+        $commits = $service->getCommits($ownerKey, $repoName);
 
-        if (count($commits) > 0) {
-            $data = array_map(function ($commit) use ($repoId) {
-                // $authorId = $service->getAuthorIdFromCommit($commit);
-
-                return [
-                    'sha' => $commit['sha'],
-                    'github_repository_id' => $repoId,
-                    'author_id' => null,
-                    'task_id' => null,
-                    'message' => $commit['commit']['message'],
-                    'date' => date('Y-m-d H:i:s', strtotime($commit['commit']['author']['date'])),
-                    'url' => $commit['html_url'] ?? '',
-                    'additions' => $commit['stats']['additions'] ?? 0,
-                    'deletions' => $commit['stats']['deletions'] ?? 0,
-                    'total_changes' => ($commit['stats']['additions'] ?? 0) + ($commit['stats']['deletions'] ?? 0),
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-            }, $commits);
-
-            foreach ($data as $item) {
-                DB::table('commits')->updateOrInsert(
-                    ['sha' => $item['sha']],
-                    $item
-                );
-            }
-
+        if (empty($commits)) {
             return response()->json([
-                'success' => true,
-                'message' => 'Commits sincronizados',
-                'count' => count($data),
+                'success' => false,
+                'message' => 'No se encontraron commits',
             ]);
         }
 
+        $repo = $service->getRepository($ownerKey, $repoName);
+        $repoId = $repo['id'];
+
+        $data = array_map(function ($commit) use ($repoId) {
+            // $authorId = $service->getAuthorIdFromCommit($commit);
+
+            return [
+                'sha' => $commit['sha'],
+                'github_repository_id' => $repoId,
+                'author_id' => null,
+                'task_id' => null,
+                'message' => $commit['commit']['message'],
+                'date' => date('Y-m-d H:i:s', strtotime($commit['commit']['author']['date'])),
+                'url' => $commit['html_url'] ?? '',
+                'additions' => $commit['stats']['additions'] ?? 0,
+                'deletions' => $commit['stats']['deletions'] ?? 0,
+                'total_changes' => ($commit['stats']['additions'] ?? 0) + ($commit['stats']['deletions'] ?? 0),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }, $commits);
+
+        DB::table('commits')->upsert(
+            $data,
+            ['sha'],
+            ['github_repository_id', 'author_id', 'task_id', 'message', 'date', 'url', 'additions', 'deletions', 'total_changes', 'updated_at']
+        );
+
         return response()->json([
-            'success' => false,
-            'message' => 'No se encontraron commits',
+            'success' => true,
+            'message' => 'Commits sincronizados',
+            'count' => count($data),
         ]);
     }
 

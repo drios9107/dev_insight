@@ -123,5 +123,19 @@ class GithubService
         return null;
     }
 
-    public function getComments() {}
+    /**
+     * Obtener todas las revisiones de un pull request
+     */
+    public function getPullRequestReviews(string $owner, string $repo, int $pullNumber): array
+    {
+        return $this->get("/repos/{$owner}/{$repo}/pulls/{$pullNumber}/reviews");
+    }
+
+    /**
+     * Obtener una revisión específica
+     */
+    public function getPullRequestReview(string $owner, string $repo, int $pullNumber, int $reviewId): array
+    {
+        return $this->get("/repos/{$owner}/{$repo}/pulls/{$pullNumber}/reviews/{$reviewId}");
+    }
 }
