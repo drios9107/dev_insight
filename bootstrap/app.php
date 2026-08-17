@@ -36,6 +36,7 @@ return Application::configure(basePath: dirname(__DIR__))
         );
 
         $exceptions->render(function (QueryException $e, Request $request) {
+            // @todo: what if i need to do something from the db in the catch
             Log::error('***Database error', [
                 'code' => $e->getCode(),
                 'sql' => $e->getSql(),

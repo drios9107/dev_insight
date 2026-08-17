@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Commit;
 use App\Services\CommitService;
 use App\Services\GithubService;
 use Illuminate\Database\Seeder;

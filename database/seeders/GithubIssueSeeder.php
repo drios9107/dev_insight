@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\GithubIssue;
 use App\Services\GithubIssueService;
 use App\Services\GithubService;
 use Illuminate\Database\Seeder;

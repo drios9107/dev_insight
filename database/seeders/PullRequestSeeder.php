@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\PullRequest;
 use App\Services\GithubService;
 use App\Services\PullRequestService;
 use Illuminate\Database\Seeder;
