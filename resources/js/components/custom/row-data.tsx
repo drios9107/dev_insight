@@ -20,7 +20,7 @@ const RowData = ({ title, value, href, onClick }: BaseProps) => {
             {title}:
         </span>
         {href ?
-            <a href={href} className="text-blue-600 font-small">{value}</a> :
+            <a href={href} className="text-blue-600 font-small" style={{ lineBreak: 'anywhere' }}>{value}</a> :
             <span onClick={onClick}>{value}</span>}
     </div>
 }
