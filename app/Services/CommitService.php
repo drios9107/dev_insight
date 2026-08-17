@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Commit;
+use App\Models\GithubRepository;
 use Illuminate\Support\Facades\DB;
 
 class CommitService
@@ -19,15 +20,15 @@ class CommitService
         }
 
         $repo = $service->getRepository($ownerKey, $repoName);
-        $repoId = $repo['id'];
+        $repoId = GithubRepository::whereGithubId($repo['id'])->value('id');
 
-        $data = array_map(function ($commit) use ($repoId) {
-            // $authorId = $service->getAuthorIdFromCommit($commit);
+        $data = array_map(function ($commit) use ($repoId, $service) {
+            $authorId = $service->getAuthorIdFromCommit($commit);
 
             return [
                 'sha' => $commit['sha'],
                 'github_repository_id' => $repoId,
-                'author_id' => null,
+                'author_id' => $authorId,
                 'task_id' => null,
                 'message' => $commit['commit']['message'],
                 'date' => date('Y-m-d H:i:s', strtotime($commit['commit']['author']['date'])),
