@@ -18,14 +18,13 @@ return new class extends Migration
             $table->timestamps();
             $table->string('title');
             $table->string('description')->nullable();
-            $table->foreignId('project_id')->constrained('projects')->nullable();
-            $table->foreignId('sprint_id')->constrained('sprints')->nullable();
-            $table->foreignId('assignee_id')->constrained('users')->nullable();
-            $table->foreignId('github_issue_id')->constrained('github_issues')->nullable();
+            $table->foreignId('project_id')->nullable()->constrained('projects');
+            $table->foreignId('sprint_id')->nullable()->constrained('sprints');
+            $table->foreignId('assignee_id')->nullable()->constrained('users');
+            $table->foreignId('github_issue_id')->nullable()->constrained('github_issues');
             $table->foreignId('reporter_id')->constrained('users');
             $table->enum('status', array_column(TaskStatusEnum::cases(), 'value'))->default(TaskStatusEnum::Backlog->value);
             $table->enum('priority', array_column(TaskPriorityEnum::cases(), 'value'))->default(TaskPriorityEnum::Medium->value);
-            // @todo: whats story_points
             $table->integer('story_points')->default(0)->nullable();
             $table->timestamp('due_date')->nullable();
             $table->timestamp('completed_at')->nullable();

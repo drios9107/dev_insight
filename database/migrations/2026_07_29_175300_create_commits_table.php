@@ -16,8 +16,8 @@ return new class extends Migration
             $table->timestamps();
             $table->string('sha')->unique();
             $table->foreignId('github_repository_id')->constrained('github_repositories');
-            $table->foreignId('author_id')->constrained('users')->nullable();
-            $table->foreignId('task_id')->constrained('tasks')->nullable();
+            $table->foreignId('author_id')->nullable()->constrained('users');
+            $table->foreignId('task_id')->nullable()->constrained('tasks');
             $table->text('message')->nullable();
             $table->timestamp('date')->nullable();
             $table->string('url');

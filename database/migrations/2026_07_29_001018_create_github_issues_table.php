@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('body')->nullable();
             $table->enum('state', array_column(GithubIssueStateEnum::cases(), 'value'));
-            $table->foreignId('author_id')->constrained('users')->nullable();
+            $table->foreignId('author_id')->nullable()->constrained('users');
             $table->timestamp('closed_at')->nullable();
         });
     }

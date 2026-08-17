@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('projects', function (Blueprint $table) {
-            $table->foreignId('github_repository_id')->constrained('github_repositories')->nullable();
+            $table->foreignId('github_repository_id')->nullable()->constrained('github_repositories');
         });
     }
 
