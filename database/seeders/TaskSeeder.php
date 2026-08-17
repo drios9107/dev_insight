@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\GithubIssue;
 use App\Models\Task;
 use Illuminate\Database\Seeder;
 
@@ -12,6 +13,8 @@ class TaskSeeder extends Seeder
      */
     public function run(): void
     {
-        Task::factory(10)->create();
+        if (GithubIssue::count('id') > 0) {
+            Task::factory(10)->create();
+        }
     }
 }

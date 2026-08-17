@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Commit;
+use App\Services\CommitService;
+use App\Services\GithubService;
 use Illuminate\Database\Seeder;
 
 class CommitSeeder extends Seeder
@@ -10,8 +12,10 @@ class CommitSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run(CommitService $service): void
     {
-        Commit::factory(10)->create();
+        $gservice = new GithubService;
+
+        $service->fetchData($gservice);
     }
 }

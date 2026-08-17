@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\ActivityLog;
+use App\Models\Task;
 use Illuminate\Database\Seeder;
 
 class ActivityLogSeeder extends Seeder
@@ -12,6 +13,8 @@ class ActivityLogSeeder extends Seeder
      */
     public function run(): void
     {
-        ActivityLog::factory(10)->create();
+        if (Task::count('id') > 0) {
+            ActivityLog::factory(10)->create();
+        }
     }
 }

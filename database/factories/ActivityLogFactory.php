@@ -22,10 +22,10 @@ class ActivityLogFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => $this->faker->optional()->passthrough(User::inRandomOrder(0)->first()->id),
-            'team_id' => $this->faker->optional()->passthrough(Team::inRandomOrder(0)->first()->id),
-            'project_id' => $this->faker->optional()->passthrough(Project::inRandomOrder(0)->first()->id),
-            'task_id' => $this->faker->optional()->passthrough(Task::inRandomOrder(0)->first()->id),
+            'user_id' => $this->faker->optional()->passthrough(User::inRandomOrder(0)->first()?->id),
+            'team_id' => $this->faker->optional()->passthrough(Team::inRandomOrder(0)->first()?->id),
+            'project_id' => $this->faker->optional()->passthrough(Project::inRandomOrder(0)->first()?->id),
+            'task_id' => $this->faker->optional()->passthrough(Task::inRandomOrder(0)->first()?->id),
             'type' => $this->faker->randomElement(['created', 'updated', 'deleted']),
             'description' => $this->faker->sentence(),
             // @todo: fix json factory data

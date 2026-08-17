@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\GithubIssue;
+use App\Services\GithubIssueService;
+use App\Services\GithubService;
 use Illuminate\Database\Seeder;
 
 class GithubIssueSeeder extends Seeder
@@ -10,8 +12,10 @@ class GithubIssueSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run(GithubIssueService $service): void
     {
-        GithubIssue::factory(10)->create();
+        $gservice = new GithubService;
+
+        $service->fetchData($gservice);
     }
 }

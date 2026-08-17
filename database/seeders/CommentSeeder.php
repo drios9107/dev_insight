@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Comment;
+use App\Models\Task;
 use Illuminate\Database\Seeder;
 
 class CommentSeeder extends Seeder
@@ -12,6 +13,8 @@ class CommentSeeder extends Seeder
      */
     public function run(): void
     {
-        Comment::factory(10)->create();
+        if (Task::count('id') > 0) {
+            Comment::factory(10)->create();
+        }
     }
 }

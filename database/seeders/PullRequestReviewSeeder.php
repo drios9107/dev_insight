@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\PullRequestReview;
+use App\Services\GithubService;
+use App\Services\PullRequestReviewService;
 use Illuminate\Database\Seeder;
 
 class PullRequestReviewSeeder extends Seeder
@@ -10,8 +11,10 @@ class PullRequestReviewSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run(PullRequestReviewService $service): void
     {
-        PullRequestReview::factory(10)->create();
+        $gservice = new GithubService;
+
+        $service->fetchData($gservice);
     }
 }

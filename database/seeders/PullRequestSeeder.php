@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\PullRequest;
+use App\Services\GithubService;
+use App\Services\PullRequestService;
 use Illuminate\Database\Seeder;
 
 class PullRequestSeeder extends Seeder
@@ -10,8 +12,10 @@ class PullRequestSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run(PullRequestService $service): void
     {
-        PullRequest::factory(10)->create();
+        $gservice = new GithubService;
+
+        $service->fetchData($gservice);
     }
 }
