@@ -23,7 +23,7 @@ class CommitResource extends JsonResource
             'author' => $this->author,
             'task' => $this->task,
             'message' => $this->message,
-            'date' => ! isNull($this->date) ? date_format($this->date, 'Y-m-d') : '',
+            'date' => (bool) $this->date ? date_format($this->date, 'Y-m-d') : '',
             'url' => $this->url,
             'additions' => $this->additions,
             'deletions' => $this->deletions,

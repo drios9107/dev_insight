@@ -5,8 +5,6 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-use function PHPUnit\Framework\isNull;
-
 class PullRequestResource extends JsonResource
 {
     /**
@@ -30,8 +28,8 @@ class PullRequestResource extends JsonResource
             'base_branch' => $this->base_branch,
             'head_branch' => $this->head_branch,
             'merge_commit_sha' => $this->merge_commit_sha,
-            'closed_at' => ! isNull($this->closed_at) ? date_format($this->closed_at, 'Y-m-d') : '',
-            'merged_at' => ! isNull($this->merged_at) ? date_format($this->merged_at, 'Y-m-d') : '',
+            'closed_at' => (bool) $this->closed_at ? date_format($this->closed_at, 'Y-m-d') : '',
+            'merged_at' => (bool) $this->merged_at ? date_format($this->merged_at, 'Y-m-d') : '',
             'created_at' => date_format($this->created_at, 'Y-m-d'),
             'updated_at' => date_format($this->updated_at, 'Y-m-d'),
         ];

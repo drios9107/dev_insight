@@ -5,8 +5,6 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-use function PHPUnit\Framework\isNull;
-
 class TaskResource extends JsonResource
 {
     /**
@@ -28,8 +26,8 @@ class TaskResource extends JsonResource
             'status' => $this->status,
             'priority' => $this->priority,
             'story_points' => $this->story_points,
-            'due_date' => ! isNull($this->due_date) ? date_format($this->due_date, 'Y-m-d') : '',
-            'completed_at' => ! isNull($this->completed_at) ? date_format($this->completed_at, 'Y-m-d') : '',
+            'due_date' => (bool) $this->due_date ? date_format($this->due_date, 'Y-m-d') : '',
+            'completed_at' => (bool) $this->completed_at ? date_format($this->completed_at, 'Y-m-d') : '',
             'hours_estimate' => $this->hours_estimate ?? 0,
             'hours_spent' => $this->hours_spent ?? 0,
             'order' => $this->order ?? 0,

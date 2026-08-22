@@ -5,8 +5,6 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-use function PHPUnit\Framework\isNull;
-
 class SprintResource extends JsonResource
 {
     /**
@@ -24,8 +22,8 @@ class SprintResource extends JsonResource
             'status' => $this->status,
             'velocity' => $this->velocity,
             'actual_velocity' => $this->actual_vlocity,
-            'start_date' => ! isNull($this->start_date) ? date_format($this->start_date, 'Y-m-d') : '',
-            'end_date' => ! isNull($this->end_date) ? date_format($this->end_date, 'Y-m-d') : '',
+            'start_date' => (bool) $this->start_date ? date_format($this->start_date, 'Y-m-d') : '',
+            'end_date' => (bool) $this->end_date ? date_format($this->end_date, 'Y-m-d') : '',
             'created_at' => date_format($this->created_at, 'Y-m-d'),
             'updated_at' => date_format($this->updated_at, 'Y-m-d'),
         ];

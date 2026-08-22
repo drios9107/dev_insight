@@ -23,7 +23,7 @@ class PullRequestReviewResource extends JsonResource
             'pull_request' => $this->pull_request,
             'state' => $this->state,
             'body' => $this->body,
-            'submitted_at' => ! isNull($this->submitted_at) ? date_format($this->submitted_at, 'Y-m-d') : '',
+            'submitted_at' => (bool) $this->submitted_at ? date_format($this->submitted_at, 'Y-m-d') : '',
             'created_at' => date_format($this->created_at, 'Y-m-d'),
             'updated_at' => date_format($this->updated_at, 'Y-m-d'),
         ];
