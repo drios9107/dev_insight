@@ -4,6 +4,7 @@ import { DataTableFilters, IFilter } from './data-table-filters';
 import { DataTablePagination } from './data-table-pagination';
 import { TableActions } from './table-actions';
 import { useTable } from '../../../hooks/use-table';
+import { useCallback, useMemo } from 'react';
 
 
 export interface PaginatedData<T = any> {
@@ -44,7 +45,6 @@ interface IDataTableProps {
     columns: IColumn[];
     filters?: IFilter[];
     searchFields?: string[];
-    sortFields?: string[];
     initialFilters?: Record<string, any>;
     onEdit?: (item: any) => void;
     onDelete?: (item: any) => void;
@@ -63,19 +63,16 @@ export function DataTable({
     columns,
     filters = [],
     searchFields = [],
-    sortFields = [],
     initialFilters = {},
     onEdit,
     onDelete,
     onBulkDelete,
     onSync,
-    actions = true,
     selectable = false,
     className = '',
 }: IDataTableProps) {
     const theme = useThemeContext()
     const {
-        filters: currentFilters,
         handleSort,
         handleSearch,
         handlePageChange,
@@ -91,12 +88,14 @@ export function DataTable({
         data,
         filters: initialFilters,
         searchFields,
-        sortFields,
+        sortFields: columns.filter(i => i.sortable).map(i => i.key),
     });
 
     // Determinar si hay datos
     const items = data?.data || [];
     const total = data?.total || 0;
+
+    const hasActions = useMemo(() => onEdit || onDelete || onSync || onBulkDelete, [onEdit, onDelete, onSync, onBulkDelete])
 
     return (
         <ThemeContext value={theme}>
@@ -163,7 +162,7 @@ export function DataTable({
                                 ))}
 
                                 {/* Acciones */}
-                                {actions && (
+                                {hasActions && (
                                     <Table.ColumnHeaderCell className="w-30 text-center bg-blue-100">
                                         Acciones
                                     </Table.ColumnHeaderCell>
@@ -175,7 +174,7 @@ export function DataTable({
                             {items.length === 0 ? (
                                 <Table.Row>
                                     <Table.Cell
-                                        colSpan={columns.length + (actions ? 1 : 0) + (selectable ? 1 : 0)}
+                                        colSpan={columns.length + (hasActions ? 1 : 0) + (selectable ? 1 : 0)}
                                         className="text-center py-8"
                                     >
                                         <Text color="gray" size="2">
@@ -208,7 +207,7 @@ export function DataTable({
                                         ))}
 
                                         {/* Acciones */}
-                                        {actions && (
+                                        {hasActions && (
                                             <Table.Cell align="right" className='px-4 py-3'>
                                                 <TableActions
                                                     item={item}
