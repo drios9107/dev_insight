@@ -29,12 +29,13 @@ export function DataTablePagination({
     if (total === 0) return null
 
     return (
-        <div className="flex flex-wrap items-center justify-between gap-4 mt-6 p-3 border rounded-md bg-white shadow-sm">
+        <div className="flex flex-wrap items-center justify-between mt-6 p-3 border rounded-md bg-white shadow-sm">
             {/* Left side */}
-            <div className="flex justify-start items-center gap-1">
-                <Text size="2" className="text-gray-600">
-                    Mostrando <span className="font-medium text-black">{from} - {to}</span> de {total}
-                </Text>
+            <div className="flex justify-start items-center gap-3">
+                <div className="text-gray-600 flex flex-col flex-1" style={{ width: 'max-content' }}>
+                    <span className="font-medium text-black">{from} - {to}</span>
+                    <span>Total: {total}</span>
+                </div>
 
                 <ShadSelect
                     name="perPage"
@@ -44,7 +45,7 @@ export function DataTablePagination({
                     side='top'
                 />
 
-                <Text size="2" className="text-gray-600">por página</Text>
+                <span className="text-gray-600 flex-1" style={{ width: 'max-content' }}>per page</span>
             </div>
 
             {/* Right side */}

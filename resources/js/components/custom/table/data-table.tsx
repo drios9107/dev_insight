@@ -96,7 +96,7 @@ export function DataTable({
         sortFields: columns.filter(i => i.sortable).map(i => i.key),
     });
 
-    const items = useMemo(() => data?.data || [], []);
+    const items = useMemo(() => data?.data || [], [data?.data]);
 
     const hasActions = useMemo(() => onEdit || onDelete || onSync || onBulkDelete, [onEdit, onDelete, onSync, onBulkDelete])
 
