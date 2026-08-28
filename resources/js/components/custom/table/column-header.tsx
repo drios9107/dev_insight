@@ -24,7 +24,7 @@ export function ColumnHeader({
     return (
         <th
             className={`
-                px-4 py-3 text-${align} bg-blue-100
+                px-4 py-3 text-${align} bg-blue-100 text-gray-600
                 ${!!onSort ? 'cursor-pointer hover:bg-gray-50' : ''}
                 ${className}
             `}

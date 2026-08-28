@@ -102,141 +102,140 @@ export function DataTable({
 
     return (
         <ThemeContext value={theme}>
-            <div className={className}>
-                {/* Filtros */}
-                <DataTableFilters
-                    search={search}
-                    onSearch={handleSearch}
-                    filters={filters}
-                />
+            {/* Filtros */}
+            <DataTableFilters
+                search={search}
+                onSearch={handleSearch}
+                filters={filters}
+            />
 
-                {/* Barra de acciones superiores */}
-                {selectedRows.length > 0 && onBulkDelete && (
-                    <div className="flex items-center gap-3 mb-3 p-2 bg-blue-50 rounded">
-                        <Text size="2">
-                            {selectedRows.length} seleccionados
-                        </Text>
-                        <Button
-                            variant="solid"
-                            color="red"
-                            size="1"
-                            onClick={() => onBulkDelete(selectedRows)}
-                        >
-                            Eliminar seleccionados
-                        </Button>
-                        <Button
-                            variant="ghost"
-                            size="1"
-                            onClick={() => toggleAllRows()}
-                        >
-                            Limpiar selección
-                        </Button>
-                    </div>
-                )}
+            {/* Barra de acciones superiores */}
+            {selectedRows.length > 0 && onBulkDelete && (
+                <div className="flex items-center gap-3 mb-3 p-2 bg-blue-50 rounded">
+                    <Text size="2">
+                        {selectedRows.length} seleccionados
+                    </Text>
+                    <Button
+                        variant="solid"
+                        color="red"
+                        size="1"
+                        onClick={() => onBulkDelete(selectedRows)}
+                    >
+                        Eliminar seleccionados
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        size="1"
+                        onClick={() => toggleAllRows()}
+                    >
+                        Limpiar selección
+                    </Button>
+                </div>
+            )}
 
-                {/* Tabla */}
-                <Box className="overflow-x-auto border rounded-lg">
-                    <Table.Root variant="surface" size="2">
-                        <Table.Header>
-                            <Table.Row>
-                                {/* Selector masivo */}
-                                {selectable && (
-                                    <Table.ColumnHeaderCell className="w-8">
-                                        <input
-                                            type="checkbox"
-                                            checked={items.length > 0 && selectedRows.length === items.length}
-                                            onChange={toggleAllRows}
-                                            className="rounded border-gray-300"
-                                        />
-                                    </Table.ColumnHeaderCell>
-                                )}
-
-                                {/* Columnas */}
-                                {columns.map((col) => (
-                                    <ColumnHeader
-                                        key={col.key}
-                                        field={col.key}
-                                        label={col.label}
-                                        sortField={sortField}
-                                        sortDirection={sortDirection}
-                                        onSort={col.sortable !== false ? handleSort : undefined}
-                                        align={col.align || 'left'}
+            {/* Tabla */}
+            <Box className="overflow-x-auto border rounded-lg w-full">
+                <Table.Root variant="surface" size="2">
+                    <Table.Header>
+                        <Table.Row>
+                            {/* Selector masivo */}
+                            {selectable && (
+                                <Table.ColumnHeaderCell className="w-8">
+                                    <input
+                                        type="checkbox"
+                                        checked={items.length > 0 && selectedRows.length === items.length}
+                                        onChange={toggleAllRows}
+                                        className="rounded border-gray-300"
                                     />
-                                ))}
-
-                                {/* Acciones */}
-                                {hasActions && (
-                                    <Table.ColumnHeaderCell className="w-30 text-center bg-blue-100">
-                                        Acciones
-                                    </Table.ColumnHeaderCell>
-                                )}
-                            </Table.Row>
-                        </Table.Header>
-
-                        <Table.Body>
-                            {items.length === 0 ? (
-                                <Table.Row>
-                                    <Table.Cell
-                                        colSpan={columns.length + (hasActions ? 1 : 0) + (selectable ? 1 : 0)}
-                                        className="text-center py-8"
-                                    >
-                                        <Text color="gray" size="2">
-                                            No hay datos para mostrar
-                                        </Text>
-                                    </Table.Cell>
-                                </Table.Row>
-                            ) : (
-                                items.map((item) => (
-                                    <Table.Row key={item.id}>
-                                        {/* Checkbox de selección */}
-                                        {selectable && (
-                                            <Table.Cell className='px-4 py-3'>
-                                                <input
-                                                    type="checkbox"
-                                                    checked={selectedRows.includes(item.id)}
-                                                    onChange={() => toggleRowSelection(item.id)}
-                                                    className="rounded border-gray-300"
-                                                />
-                                            </Table.Cell>
-                                        )}
-
-                                        {/* Datos de la fila */}
-                                        {columns.map((col) => (
-                                            <Table.Cell key={col.key} align={col.align || 'left'} className='px-4'>
-                                                {col.render
-                                                    ? col.render(item[col.key], item)
-                                                    : item[col.key] ?? '-'}
-                                            </Table.Cell>
-                                        ))}
-
-                                        {/* Acciones */}
-                                        {hasActions && (
-                                            <Table.Cell align="right" className='px-4 py-3'>
-                                                <TableActions
-                                                    item={item}
-                                                    onEdit={onEdit}
-                                                    onDelete={onDelete}
-                                                    onSync={onSync}
-                                                    isGithubItem={item.github_id !== undefined}
-                                                />
-                                            </Table.Cell>
-                                        )}
-                                    </Table.Row>
-                                ))
+                                </Table.ColumnHeaderCell>
                             )}
-                        </Table.Body>
-                    </Table.Root>
-                </Box>
 
-                {/* Paginación */}
-                <DataTablePagination
-                    currentPage={data?.meta?.current_page || 1}
-                    total={data?.meta?.total}
-                    perPage={data?.meta?.per_page}
-                    onPageChange={handlePageChange}
-                    onPerPageChange={handlePerPageChange}
-                />
-            </div>
+                            {/* Columnas */}
+                            {columns.map((col) => (
+                                <ColumnHeader
+                                    key={col.key}
+                                    field={col.key}
+                                    label={col.label}
+                                    sortField={sortField}
+                                    sortDirection={sortDirection}
+                                    onSort={col.sortable !== false ? handleSort : undefined}
+                                    align={col.align || 'left'}
+                                    className={col.className}
+                                />
+                            ))}
+
+                            {/* Acciones */}
+                            {hasActions && (
+                                <Table.ColumnHeaderCell className="w-30 text-center bg-blue-100 text-gray-600">
+                                    Acciones
+                                </Table.ColumnHeaderCell>
+                            )}
+                        </Table.Row>
+                    </Table.Header>
+
+                    <Table.Body>
+                        {items.length === 0 ? (
+                            <Table.Row>
+                                <Table.Cell
+                                    colSpan={columns.length + (hasActions ? 1 : 0) + (selectable ? 1 : 0)}
+                                    className="text-center py-8"
+                                >
+                                    <Text color="gray" size="2">
+                                        No hay datos para mostrar
+                                    </Text>
+                                </Table.Cell>
+                            </Table.Row>
+                        ) : (
+                            items.map((item) => (
+                                <Table.Row key={item.id}>
+                                    {/* Checkbox de selección */}
+                                    {selectable && (
+                                        <Table.Cell className='px-4 py-3'>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedRows.includes(item.id)}
+                                                onChange={() => toggleRowSelection(item.id)}
+                                                className="rounded border-gray-300"
+                                            />
+                                        </Table.Cell>
+                                    )}
+
+                                    {/* Datos de la fila */}
+                                    {columns.map((col) => (
+                                        <Table.Cell key={col.key} align={col.align || 'left'} className='px-4'>
+                                            {col.render
+                                                ? col.render(item[col.key], item)
+                                                : item[col.key] ?? '-'}
+                                        </Table.Cell>
+                                    ))}
+
+                                    {/* Acciones */}
+                                    {hasActions && (
+                                        <Table.Cell align="right" className='px-4 py-3'>
+                                            <TableActions
+                                                item={item}
+                                                onEdit={onEdit}
+                                                onDelete={onDelete}
+                                                onSync={onSync}
+                                                isGithubItem={item.github_id !== undefined}
+                                            />
+                                        </Table.Cell>
+                                    )}
+                                </Table.Row>
+                            ))
+                        )}
+                    </Table.Body>
+                </Table.Root>
+            </Box>
+
+            {/* Paginación */}
+            <DataTablePagination
+                currentPage={data?.meta?.current_page || 1}
+                total={data?.meta?.total}
+                perPage={data?.meta?.per_page}
+                onPageChange={handlePageChange}
+                onPerPageChange={handlePerPageChange}
+            />
         </ThemeContext>
     );
 }

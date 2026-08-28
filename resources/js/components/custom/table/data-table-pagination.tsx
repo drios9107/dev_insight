@@ -29,7 +29,7 @@ export function DataTablePagination({
     if (total === 0) return null
 
     return (
-        <div className="flex flex-wrap items-center justify-between mt-6 p-3 border rounded-md bg-white shadow-sm">
+        <div className="flex flex-wrap w-full items-center justify-between mt-6 p-3 border rounded-md bg-white shadow-sm">
             {/* Left side */}
             <div className="flex justify-start items-center gap-3">
                 <div className="text-gray-600 flex flex-col flex-1" style={{ width: 'max-content' }}>
