@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { Flex, Text } from '@radix-ui/themes'
+import { Text } from '@radix-ui/themes'
 import { Button } from '@/components/ui/button'
 import ShadSelect from '../inputs/shad-select'
 import { useMemo } from 'react'
@@ -26,7 +26,6 @@ export function DataTablePagination({
     const to = Math.min(currentPage * perPage, total)
 
     const options = useMemo(() => perPageOptions.map(opt => ({ value: `${opt}`, label: `${opt}` })), [perPageOptions])
-    console.log('***', { options, perPage })
     if (total === 0) return null
 
     return (

@@ -18,15 +18,18 @@ const ShadSelect = ({
     onChange,
     list = [],
     errors = null,
+    className = '',
+    side = 'bottom',
     ...props
 }: ICustomSelect) => {
-
     return (
-        <div className="flex flex-col gap-2 w-full  ">
-            {label && <Label htmlFor={id ?? name}>
-                {label}
-                {props.required && <span className="text-red-500 ml-1">*</span>}
-            </Label>}
+        <div className={cn("flex flex-col gap-2 w-full", className)}>
+            {label && (
+                <Label htmlFor={id ?? name}>
+                    {label}
+                    {props.required && <span className="text-red-500 ml-1">*</span>}
+                </Label>
+            )}
 
             <Select
                 value={String(value) || ''}
@@ -37,12 +40,14 @@ const ShadSelect = ({
                 <SelectTrigger
                     className={cn(
                         "w-full",
-                        name && errors?.[name] && "border-red-500 focus-visible:ring-red-500 aria-invalid:border-red-500",
+                        name &&
+                        errors?.[name] &&
+                        "border-red-500 focus-visible:ring-red-500 aria-invalid:border-red-500"
                     )}
                 >
-                    <SelectValue placeholder='Select an option...' />
+                    <SelectValue placeholder="Select an option..." />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent side={side}>
                     {list.length === 0 ? (
                         <div className="py-2 px-4 text-sm text-muted-foreground">
                             No options available
@@ -57,7 +62,14 @@ const ShadSelect = ({
                 </SelectContent>
             </Select>
 
-            {name && errors?.[name] && <span className="text-red-600 text-sm px-1" style={{ marginTop: -8 }}>{errors[name]}</span>}
+            {name && errors?.[name] && (
+                <span
+                    className="text-red-600 text-sm px-1"
+                    style={{ marginTop: -8 }}
+                >
+                    {errors[name]}
+                </span>
+            )}
         </div>
     );
 };

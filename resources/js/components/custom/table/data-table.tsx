@@ -103,13 +103,6 @@ export function DataTable({
     return (
         <ThemeContext value={theme}>
             <div className={className}>
-                {/* <DataTablePagination
-                    currentPage={data?.meta?.current_page || 1}
-                    total={data?.meta?.total}
-                    perPage={data?.meta?.per_page}
-                    onPageChange={handlePageChange}
-                    onPerPageChange={handlePerPageChange}
-                /> */}
                 {/* Filtros */}
                 <DataTableFilters
                     search={search}
