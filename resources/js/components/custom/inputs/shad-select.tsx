@@ -20,6 +20,8 @@ const ShadSelect = ({
     errors = null,
     className = '',
     side = 'bottom',
+    placeholder = 'Select an option...',
+    addAll = false,
     ...props
 }: ICustomSelect) => {
     return (
@@ -45,20 +47,25 @@ const ShadSelect = ({
                         "border-red-500 focus-visible:ring-red-500 aria-invalid:border-red-500"
                     )}
                 >
-                    <SelectValue placeholder="Select an option..." />
+                    <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
                 <SelectContent side={side}>
-                    {list.length === 0 ? (
+                    {list.length === 0 ?
                         <div className="py-2 px-4 text-sm text-muted-foreground">
                             No options available
                         </div>
-                    ) : (
-                        list.map((item: ICustomSelectItem) => (
-                            <SelectItem key={item.value} value={String(item.value)}>
-                                {item.label}
-                            </SelectItem>
-                        ))
-                    )}
+                        :
+                        <>
+                            {addAll && <SelectItem value="">
+                                All
+                            </SelectItem>}
+                            {list.map((item: ICustomSelectItem) => (
+                                <SelectItem key={item.value} value={String(item.value)}>
+                                    {item.label}
+                                </SelectItem>
+                            ))}
+                        </>
+                    }
                 </SelectContent>
             </Select>
 
