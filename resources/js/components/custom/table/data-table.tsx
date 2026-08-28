@@ -4,29 +4,35 @@ import { DataTableFilters, IFilter } from './data-table-filters';
 import { DataTablePagination } from './data-table-pagination';
 import { TableActions } from './table-actions';
 import { useTable } from '../../../hooks/use-table';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 
+export interface BaseEntity {
+    id: number;
+    [key: string]: any;
+}
 
-export interface PaginatedData<T = any> {
-    data: any[];
+export interface PaginationMeta {
     current_page: number;
-    first_page_url: string;
     from: number;
     last_page: number;
-    last_page_url: string;
     links: PaginationLink[];
-    next_page_url: string | null;
     path: string;
     per_page: number;
-    prev_page_url: string | null;
     to: number;
     total: number;
 }
 
 export interface PaginationLink {
-    url: string | null;
-    label: string;
-    active: boolean;
+    first: string;
+    last: string;
+    prev: string | null;
+    next: string | null;
+}
+
+export interface PaginatedData {
+    data: BaseEntity[];
+    links: PaginationLink;
+    meta: PaginationMeta;
 }
 
 export interface IColumn<T = any> {
@@ -83,7 +89,6 @@ export function DataTable({
         sortField,
         sortDirection,
         search,
-        perPage,
     } = useTable({
         data,
         filters: initialFilters,
@@ -91,15 +96,20 @@ export function DataTable({
         sortFields: columns.filter(i => i.sortable).map(i => i.key),
     });
 
-    // Determinar si hay datos
-    const items = data?.data || [];
-    const total = data?.total || 0;
+    const items = useMemo(() => data?.data || [], []);
 
     const hasActions = useMemo(() => onEdit || onDelete || onSync || onBulkDelete, [onEdit, onDelete, onSync, onBulkDelete])
 
     return (
         <ThemeContext value={theme}>
             <div className={className}>
+                {/* <DataTablePagination
+                    currentPage={data?.meta?.current_page || 1}
+                    total={data?.meta?.total}
+                    perPage={data?.meta?.per_page}
+                    onPageChange={handlePageChange}
+                    onPerPageChange={handlePerPageChange}
+                /> */}
                 {/* Filtros */}
                 <DataTableFilters
                     search={search}
@@ -227,9 +237,9 @@ export function DataTable({
 
                 {/* Paginación */}
                 <DataTablePagination
-                    currentPage={data?.current_page || 1}
-                    total={total}
-                    perPage={perPage}
+                    currentPage={data?.meta?.current_page || 1}
+                    total={data?.meta?.total}
+                    perPage={data?.meta?.per_page}
                     onPageChange={handlePageChange}
                     onPerPageChange={handlePerPageChange}
                 />

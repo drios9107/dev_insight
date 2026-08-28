@@ -1,12 +1,15 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { Button, Flex, Text, Select } from '@radix-ui/themes';
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { Flex, Text } from '@radix-ui/themes'
+import { Button } from '@/components/ui/button'
+import ShadSelect from '../inputs/shad-select'
+import { useMemo } from 'react'
 
 interface IDataTablePagination {
-    currentPage: number;
-    total: number;
-    perPage: number;
-    onPageChange: (v: any) => void
-    onPerPageChange: (v: any) => void
+    currentPage: number
+    total: number
+    perPage: number
+    onPageChange: (v: number) => void
+    onPerPageChange: (v: number) => void
     perPageOptions?: number[]
 }
 
@@ -16,59 +19,59 @@ export function DataTablePagination({
     perPage,
     onPageChange,
     onPerPageChange,
-    perPageOptions = [10, 25, 50, 100],
+    perPageOptions = [5, 10, 25, 50, 100],
 }: IDataTablePagination) {
-    const totalPages = Math.ceil(total / perPage);
-    const from = (currentPage - 1) * perPage + 1;
-    const to = Math.min(currentPage * perPage, total);
+    const totalPages = Math.ceil(total / perPage)
+    const from = (currentPage - 1) * perPage + 1
+    const to = Math.min(currentPage * perPage, total)
 
-    if (total === 0) return null;
+    const options = useMemo(() => perPageOptions.map(opt => ({ value: `${opt}`, label: `${opt}` })), [perPageOptions])
+    console.log('***', { options, perPage })
+    if (total === 0) return null
 
     return (
-        <div className="flex flex-wrap items-center justify-between gap-4 mt-4">
-            <Flex align="center" gap="2">
-                <Text size="2" color="gray">
-                    Mostrando {from} - {to} de {total}
+        <div className="flex flex-wrap items-center justify-between gap-4 mt-6 p-3 border rounded-md bg-white shadow-sm">
+            {/* Left side */}
+            <div className="flex justify-start items-center gap-1">
+                <Text size="2" className="text-gray-600">
+                    Mostrando <span className="font-medium text-black">{from} - {to}</span> de {total}
                 </Text>
-                <Select.Root
-                    value={String(perPage)}
-                    onValueChange={(value) => onPerPageChange(Number(value))}
-                >
-                    <Select.Trigger className="w-20" />
-                    <Select.Content>
-                        {perPageOptions.map((option) => (
-                            <Select.Item key={option} value={String(option)}>
-                                {option}
-                            </Select.Item>
-                        ))}
-                    </Select.Content>
-                </Select.Root>
-                <Text size="2" color="gray">por página</Text>
-            </Flex>
 
-            <Flex align="center" gap="2">
+                <ShadSelect
+                    name="perPage"
+                    value={String(perPage)}
+                    onChange={(val: string) => onPerPageChange(parseInt(val))}
+                    list={options}
+                    side='top'
+                />
+
+                <Text size="2" className="text-gray-600">por página</Text>
+            </div>
+
+            {/* Right side */}
+            <div className="flex items-center gap-3">
                 <Button
                     variant="outline"
-                    size="1"
+                    size="sm"
                     disabled={currentPage <= 1}
                     onClick={() => onPageChange(currentPage - 1)}
                 >
                     <ChevronLeft className="w-4 h-4" />
                 </Button>
 
-                <Text size="2">
-                    Página {currentPage} de {totalPages || 1}
+                <Text size="2" className="text-black">
+                    Página <span className="font-medium">{currentPage}</span> de {totalPages || 1}
                 </Text>
 
                 <Button
                     variant="outline"
-                    size="1"
+                    size="sm"
                     disabled={currentPage >= totalPages}
                     onClick={() => onPageChange(currentPage + 1)}
                 >
                     <ChevronRight className="w-4 h-4" />
                 </Button>
-            </Flex>
+            </div>
         </div>
-    );
+    )
 }
