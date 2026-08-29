@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SprintRequest;
 use App\Http\Resources\SprintResource;
 use App\Services\SprintService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class SprintController extends Controller
@@ -27,9 +28,9 @@ class SprintController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = SprintResource::collection($this->service->index());
+        $data = SprintResource::collection($this->service->index($request));
 
         return Inertia::render('sprint/index', [
             'list' => $data,

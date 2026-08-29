@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\GithubRepositoryRequest;
 use App\Http\Resources\GithubRepositoryResource;
 use App\Services\GithubRepositoryService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class GithubRepositoryController extends Controller
@@ -27,9 +28,9 @@ class GithubRepositoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = GithubRepositoryResource::collection($this->service->index());
+        $data = GithubRepositoryResource::collection($this->service->index($request));
 
         return Inertia::render('github-repository/index', [
             'list' => $data,

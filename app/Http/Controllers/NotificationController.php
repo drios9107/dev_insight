@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\NotificationRequest;
 use App\Http\Resources\NotificationResource;
 use App\Services\NotificationService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class NotificationController extends Controller
@@ -27,9 +28,9 @@ class NotificationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = NotificationResource::collection($this->service->index());
+        $data = NotificationResource::collection($this->service->index($request));
 
         return Inertia::render('notification/index', [
             'list' => $data,

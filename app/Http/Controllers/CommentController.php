@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CommentRequest;
 use App\Http\Resources\CommentResource;
 use App\Services\CommentService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CommentController extends Controller
@@ -27,9 +28,9 @@ class CommentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = CommentResource::collection($this->service->index());
+        $data = CommentResource::collection($this->service->index($request));
 
         return Inertia::render('comment/index', [
             'list' => $data,

@@ -6,6 +6,7 @@ use App\Http\Requests\Project\ProjectStoreRequest;
 use App\Http\Requests\Project\ProjectUpdateRequest;
 use App\Http\Resources\ProjectResource;
 use App\Services\ProjectService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ProjectController extends Controller
@@ -28,9 +29,9 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = ProjectResource::collection($this->service->index());
+        $data = ProjectResource::collection($this->service->index($request));
 
         return Inertia::render('project/index', [
             'list' => $data,

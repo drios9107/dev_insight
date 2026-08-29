@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\GithubIssueRequest;
 use App\Http\Resources\GithubIssueResource;
 use App\Services\GithubIssueService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class GithubIssueController extends Controller
@@ -27,9 +28,9 @@ class GithubIssueController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = GithubIssueResource::collection($this->service->index());
+        $data = GithubIssueResource::collection($this->service->index($request));
 
         return Inertia::render('github-issue/index', [
             'list' => $data,
