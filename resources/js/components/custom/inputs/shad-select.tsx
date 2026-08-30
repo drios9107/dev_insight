@@ -56,7 +56,7 @@ const ShadSelect = ({
                         </div>
                         :
                         <>
-                            {addAll && <SelectItem value="">
+                            {addAll && <SelectItem value="all">
                                 All
                             </SelectItem>}
                             {list.map((item: ICustomSelectItem) => (

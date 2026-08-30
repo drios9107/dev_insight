@@ -69,7 +69,7 @@ export function DataTable({
     columns,
     filters = [],
     searchFields = [],
-    initialFilters = {},
+    // initialFilters = {},
     onEdit,
     onDelete,
     onBulkDelete,
@@ -91,7 +91,6 @@ export function DataTable({
         search,
     } = useTable({
         data,
-        filters: initialFilters,
         searchFields,
         sortFields: columns.filter(i => i.sortable).map(i => i.key),
     });

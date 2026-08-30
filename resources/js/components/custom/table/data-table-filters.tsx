@@ -12,6 +12,7 @@ export interface IFilter {
     onChange: (v: string) => void;
     label: string;
     options: ICustomSelectItem[];
+    addAll?: boolean
 }
 
 export interface IDataTableFilters {
@@ -77,6 +78,7 @@ export function DataTableFilters({
                         onChange={filter.onChange}
                         list={filter.options}
                         placeholder={filter.label}
+                        addAll={filter.addAll}
                     />
                 </div>
             ))}

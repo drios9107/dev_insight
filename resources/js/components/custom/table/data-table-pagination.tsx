@@ -31,10 +31,10 @@ export function DataTablePagination({
     return (
         <div className="flex flex-wrap w-full items-center justify-between mt-6 p-3 border rounded-md bg-white shadow-sm">
             {/* Left side */}
-            <div className="flex justify-start items-center gap-3">
+            <div className="flex justify-start items-center gap-3" style={{ width: 250 }}>
                 <div className="text-gray-600 flex flex-col flex-1" style={{ width: 'max-content' }}>
                     <span className="font-medium text-black">{from} - {to}</span>
-                    <span>Total: {total}</span>
+                    <span className="whitespace-nowrap">Total: {total}</span>
                 </div>
 
                 <ShadSelect
@@ -45,7 +45,7 @@ export function DataTablePagination({
                     side='top'
                 />
 
-                <span className="text-gray-600 flex-1" style={{ width: 'max-content' }}>per page</span>
+                <span className="text-gray-600 flex-1 whitespace-nowrap" style={{ width: 'max-content' }}>per page</span>
             </div>
 
             {/* Right side */}
