@@ -32,9 +32,19 @@ class TaskController extends Controller
     {
         $data = TaskResource::collection($this->service->index($request));
 
+        $filters = [];
+        if ($request->has('status')) {
+            $filters['status'] = $request->status;
+        }
+
+        if ($request->has('priority')) {
+            $filters['priority'] = $request->priority;
+        }
+
         return Inertia::render('task/index', [
             'list' => $data,
             'title' => 'Tasks',
+            'filters' => $filters,
         ]);
     }
 
