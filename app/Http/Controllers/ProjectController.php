@@ -33,9 +33,15 @@ class ProjectController extends Controller
     {
         $data = ProjectResource::collection($this->service->index($request));
 
+        $filters = [];
+        if ($request->has('status')) {
+            $filters['status'] = $request->status;
+        }
+
         return Inertia::render('project/index', [
             'list' => $data,
             'title' => 'Projects',
+            'filters' => $filters,
         ]);
     }
 
