@@ -32,9 +32,15 @@ class SprintController extends Controller
     {
         $data = SprintResource::collection($this->service->index($request));
 
+        $filters = [];
+        if ($request->has('status')) {
+            $filters['status'] = $request->status;
+        }
+
         return Inertia::render('sprint/index', [
             'list' => $data,
             'title' => 'Sprints',
+            'filters' => $filters,
         ]);
     }
 
