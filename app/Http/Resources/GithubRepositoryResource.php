@@ -23,7 +23,7 @@ class GithubRepositoryResource extends JsonResource
             'description' => $this->description,
             'is_private' => $this->is_private,
             'default_branch' => $this->default_branch,
-            'last_synced_at' => (bool) $this->last_synced_at ? date_format($this->last_synced_at, 'Y-m-d') : '',
+            'last_synced_at' => $this->last_synced_at ? date('Y-m-d', strtotime($this->last_synced_at)) : null,
             'created_at' => date_format($this->created_at, 'Y-m-d'),
             'updated_at' => date_format($this->updated_at, 'Y-m-d'),
         ];

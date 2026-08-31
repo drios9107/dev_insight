@@ -22,10 +22,11 @@ class SprintResource extends JsonResource
             'status' => $this->status,
             'velocity' => $this->velocity,
             'actual_velocity' => $this->actual_vlocity,
-            'start_date' => (bool) $this->start_date ? date_format($this->start_date, 'Y-m-d') : '',
-            'end_date' => (bool) $this->end_date ? date_format($this->end_date, 'Y-m-d') : '',
-            'created_at' => date_format($this->created_at, 'Y-m-d'),
-            'updated_at' => date_format($this->updated_at, 'Y-m-d'),
+            'start_date' => $this->start_date ? date('Y-m-d', strtotime($this->start_date)) : null,
+            'end_date' => $this->end_date ? date('Y-m-d', strtotime($this->end_date)) : null,
+            'created_at' => $this->created_at ? date('Y-m-d', strtotime($this->created_at)) : null,
+            'updated_at' => $this->updated_at ? date('Y-m-d', strtotime($this->updated_at)) : null,
+
         ];
     }
 }

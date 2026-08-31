@@ -23,7 +23,7 @@ class GithubIssueResource extends JsonResource
             'title' => $this->title,
             'body' => $this->body,
             'state' => $this->state,
-            'closed_at' => (bool) $this->closed_at ? date_format($this->closed_at, 'Y-m-d') : '',
+            'closed_at' => $this->closed_at ? date('Y-m-d', strtotime($this->closed_at)) : null,
             'created_at' => date_format($this->created_at, 'Y-m-d'),
             'updated_at' => date_format($this->updated_at, 'Y-m-d'),
         ];
