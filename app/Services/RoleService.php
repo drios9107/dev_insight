@@ -3,12 +3,23 @@
 namespace App\Services;
 
 use App\Models\Role;
+use Illuminate\Http\Request;
 
 class RoleService
 {
-    public function index()
+    public function index(?Request $request = null)
     {
-        return Role::all();
+        $query = Role::query()->withCount('users');
+
+        if ($request->filled('search')) {
+            $search = '%'.$request->search.'%';
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'ilike', $search)
+                    ->orWhere('description', 'ilike', $search);
+            });
+        }
+
+        return $query->latest()->paginate($request->per_page ?? 10);
     }
 
     /**
