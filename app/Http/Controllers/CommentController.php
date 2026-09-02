@@ -30,7 +30,7 @@ class CommentController extends Controller
      */
     public function index(Request $request)
     {
-        $data = CommentResource::collection($this->service->index($request));
+        $data = CommentResource::collection($this->service->index());
 
         return Inertia::render('comment/index', [
             'list' => $data,
