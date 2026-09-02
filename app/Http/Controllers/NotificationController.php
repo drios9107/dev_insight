@@ -32,9 +32,18 @@ class NotificationController extends Controller
     {
         $data = NotificationResource::collection($this->service->index($request));
 
+        $filters = [];
+        if ($request->has('type')) {
+            $filters['type'] = $request->type;
+        }
+        if ($request->has('is_read')) {
+            $filters['is_read'] = $request->is_read;
+        }
+
         return Inertia::render('notification/index', [
             'list' => $data,
             'title' => 'Notifications',
+            'filters' => $filters,
         ]);
     }
 
