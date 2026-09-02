@@ -3,12 +3,30 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class UserService
 {
-    public function index()
+    public function index(?Request $request = null)
     {
-        return User::all();
+        $query = User::query()->with('role');
+
+        if ($request->filled('search')) {
+            $search = '%'.$request->search.'%';
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'ilike', $search)
+                    ->orWhere('email', 'ilike', $search)
+                    ->orWhereHas('role', function ($r) use ($search) {
+                        $r->where('name', 'ilike', $search);
+                    });
+            });
+        }
+
+        if ($request->filled('role_id') && $request->role_id !== 'all') {
+            $query->where('role_id', $request->role_id);
+        }
+
+        return $query->latest()->paginate($request->per_page ?? 10);
     }
 
     /**

@@ -26,11 +26,7 @@ const Roles = (props: any) => {
             key: 'name',
             label: 'Name',
             sortable: true,
-            render: (value: string) => (
-                <Badge variant="outline" className="font-mono">
-                    {value}
-                </Badge>
-            ),
+            render: (value: string) => value
         },
         {
             key: 'users_count',
