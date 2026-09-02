@@ -3,12 +3,34 @@
 namespace App\Services;
 
 use App\Models\ActivityLog;
+use Illuminate\Http\Request;
 
 class ActivityLogService
 {
-    public function index()
+    public function index(?Request $request = null)
     {
-        return ActivityLog::all();
+        $query = ActivityLog::query()->with(['user', 'team', 'project', 'task']);
+
+        if ($request->filled('search')) {
+            $search = '%'.$request->search.'%';
+            $query->where(function ($q) use ($search) {
+                $q->where('type', 'ilike', $search)
+                    ->orWhere('description', 'ilike', $search)
+                    ->orWhereHas('user', function ($u) use ($search) {
+                        $u->where('name', 'ilike', $search);
+                    });
+            });
+        }
+
+        if ($request->filled('type') && $request->type !== 'all') {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->filled('user_id') && $request->user_id !== 'all') {
+            $query->where('user_id', $request->user_id);
+        }
+
+        return $query->latest()->paginate($request->per_page ?? 10);
     }
 
     /**
