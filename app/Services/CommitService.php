@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Commit;
 use App\Models\GithubRepository;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class CommitService
@@ -54,9 +55,29 @@ class CommitService
         ]);
     }
 
-    public function index()
+    public function index(?Request $request = null)
     {
-        return Commit::all();
+        $query = Commit::query();
+
+        if ($request->filled('search')) {
+            $search = '%'.$request->search.'%';
+            $query->where(function ($q) use ($search) {
+                $q->where('message', 'ilike', $search)
+                    ->orWhere('sha', 'ilike', $search)
+                    ->orWhereHas('author', function ($a) use ($search) {
+                        $a->where('name', 'ilike', $search);
+                    })
+                    ->orWhereHas('githubRepository', function ($r) use ($search) {
+                        $r->where('full_name', 'ilike', $search);
+                    });
+            });
+        }
+
+        if ($request->filled('repository_id') && $request->repository_id !== 'all') {
+            $query->where('github_repository_id', $request->repository_id);
+        }
+
+        return $query->latest('date')->paginate($request->per_page ?? 10);
     }
 
     /**

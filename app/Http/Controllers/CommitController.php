@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CommitRequest;
 use App\Http\Resources\CommitResource;
+use App\Models\GithubRepository;
 use App\Services\CommitService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -29,14 +30,24 @@ class CommitController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        $data = CommitResource::collection($this->service->index($request));
+{
+    $data = CommitResource::collection($this->service->index($request));
 
-        return Inertia::render('commit/index', [
-            'list' => $data,
-            'title' => 'Commits',
-        ]);
+    $filters = [];
+    if ($request->has('repository_id')) {
+        $filters['repository_id'] = $request->repository_id;
     }
+
+    // Para el filtro de repositorios en el frontend
+    $repositories = GithubRepository::select('id', 'full_name')->get();
+
+    return Inertia::render('commit/index', [
+        'list' => $data,
+        'title' => 'Commits',
+        'filters' => $filters,
+        'repositories' => $repositories,
+    ]);
+}
 
     /**
      * Store a newly created resource in storage.
