@@ -32,9 +32,18 @@ class GithubRepositoryController extends Controller
     {
         $data = GithubRepositoryResource::collection($this->service->index($request));
 
+        $filters = [];
+        if ($request->has('is_private')) {
+            $filters['is_private'] = $request->is_private;
+        }
+        if ($request->has('language')) {
+            $filters['language'] = $request->language;
+        }
+
         return Inertia::render('github-repository/index', [
             'list' => $data,
-            'title' => 'Github Repositories',
+            'title' => 'GitHub Repositories',
+            'filters' => $filters,
         ]);
     }
 
