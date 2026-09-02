@@ -119,8 +119,7 @@ const footerNavItems: NavItem[] = [
 
 export function AppSidebar() {
     const { props } = usePage()
-    console.log('***props', props)
-    const isAdmin = useMemo(() => props.auth.user?.role?.name === 'Admin', [])
+    const isAdmin = useMemo(() => props.auth.user?.role?.name === 'Admin', [props.auth.user?.role?.name])
 
     return (
         <Sidebar collapsible="icon" variant="inset">
