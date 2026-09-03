@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('pull_request_reviews', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->integer('github_id')->unique();
+            $table->bigInteger('github_id')->unique();
             $table->foreignId('reviewer_id')->nullable()->constrained('users');
             $table->foreignId('pull_request_id')->nullable()->constrained('pull_requests');
             $table->enum('state', array_column(PullRequestReviewStateEnum::cases(), 'value'));

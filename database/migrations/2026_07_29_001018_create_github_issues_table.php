@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('github_issues', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->integer('github_id')->unique();
+            $table->bigInteger('github_id')->unique();
             $table->foreignId('github_repository_id')->constrained('github_repositories');
             $table->integer('number');
             $table->string('title');

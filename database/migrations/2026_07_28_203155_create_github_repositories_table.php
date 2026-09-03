@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('github_repositories', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->integer('github_id')->unique();
+            $table->bigInteger('github_id')->unique();
             $table->string('name');
             $table->string('full_name');
             $table->string('url');
