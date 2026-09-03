@@ -33,10 +33,6 @@ export interface ICustomSelect extends React.ComponentProps<typeof SelectPrimiti
     list: ICustomSelectItem[]
     errors?: any
     onChange: (v: string) => void
-    className?: string
-    side?: 'top' | 'right' | 'bottom' | 'left',
-    placeholder?: string
-    addAll?: boolean
 }
 
 export interface ICustomSelectItem {

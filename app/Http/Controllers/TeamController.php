@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TeamRequest;
 use App\Http\Resources\TeamResource;
 use App\Services\TeamService;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class TeamController extends Controller
@@ -28,19 +27,13 @@ class TeamController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-        $data = TeamResource::collection($this->service->index($request));
-
-        $filters = [];
-        if ($request->has('is_active')) {
-            $filters['is_active'] = $request->is_active;
-        }
+        $data = TeamResource::collection($this->service->index());
 
         return Inertia::render('team/index', [
             'list' => $data,
             'title' => 'Teams',
-            'filters' => $filters,
         ]);
     }
 

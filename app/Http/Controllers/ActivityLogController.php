@@ -4,10 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ActivityLogRequest;
 use App\Http\Resources\ActivityLogResource;
-use App\Models\ActivityLog;
-use App\Models\User;
 use App\Services\ActivityLogService;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ActivityLogController extends Controller
@@ -30,27 +27,13 @@ class ActivityLogController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-        $data = ActivityLogResource::collection($this->service->index($request));
-
-        $filters = [];
-        if ($request->has('type')) {
-            $filters['type'] = $request->type;
-        }
-        if ($request->has('user_id')) {
-            $filters['user_id'] = $request->user_id;
-        }
-
-        $types = ActivityLog::distinct()->pluck('type')->toArray();
-        $users = User::select('id', 'name')->get();
+        $data = ActivityLogResource::collection($this->service->index());
 
         return Inertia::render('activity-log/index', [
             'list' => $data,
             'title' => 'Activity Logs',
-            'filters' => $filters,
-            'types' => $types,
-            'users' => $users,
         ]);
     }
 

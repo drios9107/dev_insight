@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\GithubIssueRequest;
 use App\Http\Resources\GithubIssueResource;
-use App\Models\GithubRepository;
 use App\Services\GithubIssueService;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class GithubIssueController extends Controller
@@ -29,25 +27,13 @@ class GithubIssueController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-        $data = GithubIssueResource::collection($this->service->index($request));
-
-        $filters = [];
-        if ($request->has('state')) {
-            $filters['state'] = $request->state;
-        }
-        if ($request->has('repository_id')) {
-            $filters['repository_id'] = $request->repository_id;
-        }
-
-        $repositories = GithubRepository::select('id', 'full_name')->get();
+        $data = GithubIssueResource::collection($this->service->index());
 
         return Inertia::render('github-issue/index', [
             'list' => $data,
-            'title' => 'GitHub Issues',
-            'filters' => $filters,
-            'repositories' => $repositories,
+            'title' => 'Github Issues',
         ]);
     }
 

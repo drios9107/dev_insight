@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\GithubRepository;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class GithubRepositoryService
@@ -44,24 +43,9 @@ class GithubRepositoryService
         ]);
     }
 
-    public function index(?Request $request = null)
+    public function index()
     {
-        $query = GithubRepository::query();
-
-        if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
-            $query->where(function ($q) use ($search) {
-                $q->where('full_name', 'ilike', $search)
-                    ->orWhere('name', 'ilike', $search)
-                    ->orWhere('description', 'ilike', $search);
-            });
-        }
-
-        if ($request && $request->has('is_private') && $request->is_private !== 'all') {
-            $query->where('is_private', $request->is_private === '1');
-        }
-
-        return $query->latest()->paginate($request->per_page ?? 10);
+        return GithubRepository::all();
     }
 
     /**
