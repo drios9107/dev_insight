@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PullRequestRequest;
 use App\Http\Resources\PullRequestResource;
 use App\Services\PullRequestService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class PullRequestController extends Controller
@@ -27,9 +28,9 @@ class PullRequestController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = PullRequestResource::collection($this->service->index());
+        $data = PullRequestResource::collection($this->service->index($request));
 
         return Inertia::render('pull-request/index', [
             'list' => $data,

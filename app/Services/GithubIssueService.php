@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\GithubIssue;
+use App\Models\GithubRepository;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class GithubIssueService
@@ -19,8 +21,10 @@ class GithubIssueService
         }
 
         $repo = $service->getRepository($ownerKey, $repoName);
-        $repoId = $repo['id'];
+
+        $repoId = GithubRepository::whereGithubId($repo['id'])->first()->id;
         $data = array_map(function ($issue) use ($repoId) {
+
             return [
                 'github_id' => $issue['id'],
                 'github_repository_id' => $repoId,
@@ -35,7 +39,7 @@ class GithubIssueService
             ];
         }, $issues);
 
-        DB::table('issues')->upsert(
+        DB::table('github_issues')->upsert(
             $data,
             ['github_id'],
             ['github_repository_id', 'number', 'title', 'body', 'state', 'author_id', 'closed_at', 'updated_at']
@@ -48,9 +52,33 @@ class GithubIssueService
         ]);
     }
 
-    public function index()
+    public function index(?Request $request = null)
     {
-        return GithubIssue::all();
+        $query = GithubIssue::query();
+
+        if ($request && $request->filled('search')) {
+            $search = '%'.$request->search.'%';
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'ilike', $search)
+                    ->orWhere('body', 'ilike', $search)
+                    ->orWhereHas('author', function ($a) use ($search) {
+                        $a->where('name', 'ilike', $search);
+                    })
+                    ->orWhereHas('githubRepository', function ($r) use ($search) {
+                        $r->where('full_name', 'ilike', $search);
+                    });
+            });
+        }
+
+        if ($request && $request->filled('state') && $request->state !== 'all') {
+            $query->where('state', $request->state);
+        }
+
+        if ($request && $request->filled('repository_id') && $request->repository_id !== 'all') {
+            $query->where('github_repository_id', $request->repository_id);
+        }
+
+        return $query->latest()->paginate($request->per_page ?? 10);
     }
 
     /**

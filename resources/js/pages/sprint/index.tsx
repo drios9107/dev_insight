@@ -1,24 +1,93 @@
-import CrudButtons from "@/components/custom/crud-buttons";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
+import { DataTable, IColumn } from "@/components/custom/table/data-table";
+import { ISprint, TSprintStatus } from "@/types/models/sprint";
 import { Head, router } from "@inertiajs/react";
 import { useCallback, useState } from "react";
 import sprint from "@/routes/sprint";
 import { toast } from "sonner";
+import { SprintStatusEnum } from "@/enums/sprint";
 import CustomForm from "@/components/custom/forms/sprints-form";
 import Header from "@/components/custom/header";
 import { DeleteModal } from "@/components/custom/delete-modal";
 import BodyWrapper from "@/components/custom/body-wrapper";
-import { SprintStatusEnum } from "@/enums/sprint";
-import { ISprint, TSprintStatus } from "@/types/models/sprint";
-import RowData from "@/components/custom/row-data";
-import ColData from "@/components/custom/col-data";
+import { Badge } from "@/components/ui/badge";
 
 const Sprints = (props: any) => {
     const [isOpen, setIsOpen] = useState(false)
     const [itemToDelete, setItemToDelete] = useState<ISprint | null>(null)
     const [itemToEdit, setItemToEdit] = useState<ISprint | null>(null)
-    const onDetails = () => { }
+
+    const columns: IColumn[] = [
+        {
+            key: 'id',
+            label: '#',
+            sortable: true,
+            align: 'center',
+        },
+        {
+            key: 'name',
+            label: 'Name',
+            sortable: true,
+        },
+        {
+            key: 'project',
+            label: 'Project',
+            render: (value) => value?.name || '-',
+        },
+        {
+            key: 'status',
+            label: 'Status',
+            sortable: true,
+            render: (value: TSprintStatus) => (
+                <Badge variant={getBadgeColor(value)}>
+                    {SprintStatusEnum[value]}
+                </Badge>
+            ),
+        },
+        {
+            key: 'start_date',
+            label: 'Start Date',
+            sortable: true,
+            render: (value) => value || '-',
+        },
+        {
+            key: 'end_date',
+            label: 'End Date',
+            sortable: true,
+            render: (value) => value || '-',
+        },
+        {
+            key: 'velocity',
+            label: 'Velocity',
+            align: 'center',
+            render: (value) => value ?? '-',
+        },
+        {
+            key: 'actual_velocity',
+            label: 'Actual Velocity',
+            align: 'center',
+            render: (value) => value ?? '-',
+        },
+    ];
+
+    const filterOptions = [
+        {
+            key: 'status',
+            label: 'Status',
+            value: props?.filters?.status ?? 'all',
+            onChange: (value: string) => {
+                router.get(
+                    sprint.index().url,
+                    { ...props?.filters, status: value, page: 1 },
+                    { preserveState: true, preserveScroll: true }
+                );
+            },
+            options: Object.keys(SprintStatusEnum).map(i => ({
+                value: i,
+                label: SprintStatusEnum[i as TSprintStatus]
+            })),
+            addAll: true
+        },
+    ];
 
     const onEdit = useCallback((item: ISprint) => {
         setItemToEdit(item)
@@ -51,40 +120,23 @@ const Sprints = (props: any) => {
         return mapping[status] as "warning" | "info" | "success" | "destructive"
     }, [])
 
-    const getBadgeText = useCallback((status: TSprintStatus) => {
-        return SprintStatusEnum[status]
-    }, [])
-
     return <>
         <Head title={props.title} />
         <h1 className="sr-only">{props.title}</h1>
         <Header title={props.title} onClick={() => setIsOpen(true)} />
         <BodyWrapper>
-            {props.list.data.map((i: ISprint) => <Card key={i.id} style={{ width: '300px' }} className={'px-6'}>
-                <CardTitle className="flex justify-between">
-                    <div className="flex gap-1 items-center">
-                        {i.name}
-                    </div>
-                    <Badge variant={getBadgeColor(i.status)}>{getBadgeText(i.status)}</Badge>
-                </CardTitle>
-                <CardContent className="flex flex-col flex-1 gap-1">
-                    <RowData title="Project" value={i?.project?.name} />
-                    <div className="flex flex-wrap gap-2 justify-between">
-                        <ColData title="Velocity" value={i?.velocity} />
-                        <ColData title="ActualVelocity" value={i?.actual_velocity} />
-                    </div>
-                    <RowData title="Reporter" value={`${i.start_date} - ${i.end_date}`} />
-                    <CardDescription className="">
-                        {i.goal}
-                    </CardDescription>
-                </CardContent>
-                <CrudButtons onEdit={() => onEdit(i)} onDelete={() => setItemToDelete(i)} />
-            </Card>)}
+            <DataTable
+                data={props.list}
+                columns={columns}
+                filters={filterOptions}
+                initialFilters={props.filters}
+                onEdit={onEdit}
+                onDelete={setItemToDelete}
+            />
 
             {isOpen && <CustomForm onClose={onCloseForm} item={itemToEdit} />}
             {itemToDelete && <DeleteModal onClose={onCloseForm} onClick={onDelete} />}
         </BodyWrapper>
-
     </>
 }
 

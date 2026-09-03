@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Services\TaskService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class TaskController extends Controller
@@ -27,13 +28,23 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = TaskResource::collection($this->service->index());
+        $data = TaskResource::collection($this->service->index($request));
+
+        $filters = [];
+        if ($request->has('status')) {
+            $filters['status'] = $request->status;
+        }
+
+        if ($request->has('priority')) {
+            $filters['priority'] = $request->priority;
+        }
 
         return Inertia::render('task/index', [
             'list' => $data,
             'title' => 'Tasks',
+            'filters' => $filters,
         ]);
     }
 

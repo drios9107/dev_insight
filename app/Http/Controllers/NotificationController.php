@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\NotificationRequest;
 use App\Http\Resources\NotificationResource;
 use App\Services\NotificationService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class NotificationController extends Controller
@@ -27,13 +28,22 @@ class NotificationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = NotificationResource::collection($this->service->index());
+        $data = NotificationResource::collection($this->service->index($request));
+
+        $filters = [];
+        if ($request->has('type')) {
+            $filters['type'] = $request->type;
+        }
+        if ($request->has('is_read')) {
+            $filters['is_read'] = $request->is_read;
+        }
 
         return Inertia::render('notification/index', [
             'list' => $data,
             'title' => 'Notifications',
+            'filters' => $filters,
         ]);
     }
 

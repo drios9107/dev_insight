@@ -1,6 +1,4 @@
-import CrudButtons from "@/components/custom/crud-buttons";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
+import { DataTable, IColumn } from "@/components/custom/table/data-table";
 import { ITeam } from "@/types/models/team";
 import { Head, router } from "@inertiajs/react";
 import { useCallback, useState } from "react";
@@ -10,14 +8,83 @@ import team from "@/routes/team";
 import Header from "@/components/custom/header";
 import { DeleteModal } from "@/components/custom/delete-modal";
 import BodyWrapper from "@/components/custom/body-wrapper";
-import RowData from "@/components/custom/row-data";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ImageOff } from "lucide-react";
 
 const Teams = (props: any) => {
     const [isOpen, setIsOpen] = useState(false)
     const [itemToDelete, setItemToDelete] = useState<ITeam | null>(null)
     const [itemToEdit, setItemToEdit] = useState<ITeam | null>(null)
 
-    const onDetails = () => { }
+    const columns: IColumn[] = [
+        {
+            key: 'id',
+            label: '#',
+            sortable: true,
+            align: 'center',
+        },
+        {
+            key: 'avatar_url',
+            label: 'Avatar',
+            align: 'center',
+            render: (value: string) => (
+                <Avatar className="w-8 h-8">
+                    <AvatarImage src={value || undefined} />
+                    <AvatarFallback>
+                        <ImageOff />
+                    </AvatarFallback>
+                </Avatar>
+            ),
+        },
+        {
+            key: 'name',
+            label: 'Name',
+            sortable: true,
+        },
+        {
+            key: 'owner',
+            label: 'Owner',
+            render: (value) => value?.name || '-',
+        },
+        {
+            key: 'is_active',
+            label: 'Status',
+            sortable: true,
+            render: (value: boolean) => (
+                <Badge variant={value ? 'success' : 'secondary'}>
+                    {value ? 'Active' : 'Inactive'}
+                </Badge>
+            ),
+        },
+        {
+            key: 'created_at',
+            label: 'Created At',
+            sortable: true,
+            render: (value) => value ? new Date(value).toLocaleDateString() : '-',
+        },
+    ];
+
+    const filterOptions = [
+        {
+            key: 'is_active',
+            label: 'Status',
+            value: props?.filters?.is_active ?? 'all',
+            onChange: (value: string) => {
+                router.get(
+                    team.index().url,
+                    { ...props?.filters, is_active: value, page: 1 },
+                    { preserveState: true, preserveScroll: true }
+                );
+            },
+            options: [
+                { value: 'all', label: 'All' },
+                { value: '1', label: 'Active' },
+                { value: '0', label: 'Inactive' },
+            ],
+            addAll: false
+        },
+    ];
 
     const onEdit = useCallback((item: ITeam) => {
         setItemToEdit(item)
@@ -45,26 +112,18 @@ const Teams = (props: any) => {
         <h1 className="sr-only">{props.title}</h1>
         <Header title={props.title} onClick={() => setIsOpen(true)} />
         <BodyWrapper>
-            {props.list.data.map((i: ITeam) => <Card key={i.id} style={{ width: '300px' }} className="px-6">
-                <CardTitle className="flex justify-between">
-                    {i.name}
-                    <img src={i.avatar_url} width={'26px'} height={'26px'} />
-                    <Badge color={i.is_active ? 'bg-green-600' : 'bg-grey-600'}>{i.is_active ? 'Is Active' : 'Is Not Active'}</Badge>
-                </CardTitle>
-                <CardContent className="flex flex-col flex-1 gap-1">
-                    <RowData title="Owner" value={i?.owner?.name} />
-                    <RowData title="Created At" value={i?.created_at} />
-                    <CardDescription className="">
-                        {i.description}
-                    </CardDescription>
-                </CardContent>
-                <CrudButtons onEdit={() => onEdit(i)} onDelete={() => setItemToDelete(i)} />
-            </Card>)}
+            <DataTable
+                data={props.list}
+                columns={columns}
+                filters={filterOptions}
+                initialFilters={props.filters}
+                onEdit={onEdit}
+                onDelete={setItemToDelete}
+            />
 
             {isOpen && <CustomForm onClose={onCloseForm} item={itemToEdit} />}
             {itemToDelete && <DeleteModal onClose={onCloseForm} onClick={onDelete} />}
         </BodyWrapper>
-
     </>
 }
 

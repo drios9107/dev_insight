@@ -3,12 +3,34 @@
 namespace App\Services;
 
 use App\Models\Notification;
+use Illuminate\Http\Request;
 
 class NotificationService
 {
-    public function index()
+    public function index(?Request $request = null)
     {
-        return Notification::all();
+        $query = Notification::query();
+
+        if ($request && $request->filled('search')) {
+            $search = '%'.$request->search.'%';
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'ilike', $search)
+                    ->orWhere('message', 'ilike', $search)
+                    ->orWhereHas('user', function ($u) use ($search) {
+                        $u->where('name', 'ilike', $search);
+                    });
+            });
+        }
+
+        if ($request && $request->filled('type') && $request->type !== 'all') {
+            $query->where('type', $request->type);
+        }
+
+        if ($request && $request->has('is_read') && $request->is_read !== 'all') {
+            $query->where('is_read', $request->is_read === '1');
+        }
+
+        return $query->latest()->paginate($request->per_page ?? 10);
     }
 
     /**
