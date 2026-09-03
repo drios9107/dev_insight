@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\GithubRepository;
 use App\Models\PullRequest;
 use App\Models\PullRequestReview;
 use Illuminate\Support\Facades\DB;
@@ -11,7 +12,7 @@ class PullRequestReviewService
     public function fetchData(GithubService $service, string $ownerKey = 'drios9107', string $repoName = 'expenses')
     {
         $repo = $service->getRepository($ownerKey, $repoName);
-        $repoId = $repo['id'];
+        $repoId = GithubRepository::whereGithubId($repo['id'])->value('id');
 
         $prs = PullRequest::whereGithubRepositoryId($repoId)->get();
 

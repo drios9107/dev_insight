@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\GithubIssue;
+use App\Models\GithubRepository;
 use Illuminate\Support\Facades\DB;
 
 class GithubIssueService
@@ -19,7 +20,8 @@ class GithubIssueService
         }
 
         $repo = $service->getRepository($ownerKey, $repoName);
-        $repoId = $repo['id'];
+        $repoId = GithubRepository::whereGithubId($repo['id'])->value('id');
+
         $data = array_map(function ($issue) use ($repoId) {
             return [
                 'github_id' => $issue['id'],
@@ -35,7 +37,7 @@ class GithubIssueService
             ];
         }, $issues);
 
-        DB::table('issues')->upsert(
+        DB::table('github_issues')->upsert(
             $data,
             ['github_id'],
             ['github_repository_id', 'number', 'title', 'body', 'state', 'author_id', 'closed_at', 'updated_at']

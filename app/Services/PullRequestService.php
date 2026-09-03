@@ -2,14 +2,15 @@
 
 namespace App\Services;
 
+use App\Models\GithubRepository;
 use App\Models\PullRequest;
 use Illuminate\Support\Facades\DB;
 
 class PullRequestService
 {
-    public function fetchData(GithubService $service, string $ownerKey = 'drios9107', string $repoName = 'expenses')
+    public function fetchData(GithubService $service, string $state = 'all', string $ownerKey = 'drios9107', string $repoName = 'expenses')
     {
-        $prs = $service->getPullRequests($ownerKey, $repoName);
+        $prs = $service->getPullRequests($ownerKey, $repoName, $state);
 
         if (empty($prs)) {
             return response()->json([
@@ -19,7 +20,7 @@ class PullRequestService
         }
 
         $repo = $service->getRepository($ownerKey, $repoName);
-        $repoId = $repo['id'];
+        $repoId = GithubRepository::whereGithubId($repo['id'])->value('id');
 
         $data = array_map(function ($pr) use ($repoId) {
             return [
