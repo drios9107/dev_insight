@@ -3,12 +3,30 @@
 namespace App\Services;
 
 use App\Models\Sprint;
+use Illuminate\Http\Request;
 
 class SprintService
 {
-    public function index()
+    public function index(?Request $request = null)
     {
-        return Sprint::all();
+        $query = Sprint::query();
+
+        if ($request && $request->filled('search')) {
+            $search = '%'.$request->search.'%';
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'ilike', $search)
+                    ->orWhere('goal', 'ilike', $search)
+                    ->orWhereHas('project', function ($p) use ($search) {
+                        $p->where('name', 'ilike', $search);
+                    });
+            });
+        }
+
+        if ($request && $request->filled('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+
+        return $query->latest()->paginate($request->per_page ?? 10);
     }
 
     /**

@@ -31,9 +31,7 @@ const defaultData = {
     story_points: 0,
     hours_estimate: 0,
     hours_spent: 0,
-    order: 0,
-    start_date: new Date().toISOString().slice(0, 10),
-    end_date: new Date().toISOString().slice(0, 10),
+    order: 0
 }
 
 const CustomForm = ({ item, onClose }: { item?: any, onClose: () => void }) => {
@@ -72,24 +70,21 @@ const CustomForm = ({ item, onClose }: { item?: any, onClose: () => void }) => {
 
     useEffect(() => {
         if (item) {
-            console.log('***item', item)
             setData({
                 title: item?.title,
                 description: item?.description,
-                project_id: item?.project_id?.id.toString(),
-                assignee_id: item?.assignee_id?.id.toString(),
-                sprint_id: item?.sprint_id?.id.toString(),
-                reporter_id: item?.reporter_id?.id.toString(),
-                status: TaskStatusEnum[item.status as TTaskStatus],
-                priority: TaskPriorityEnum[item.priority as TTaskPriority],
+                project_id: item?.project?.id?.toString(),
+                assignee_id: item?.assignee?.id?.toString(),
+                sprint_id: item?.sprint?.id?.toString(),
+                reporter_id: item?.reporter?.id?.toString(),
+                status: item.status,
+                priority: item.priority,
                 due_date: item?.due_date,
                 completed_at: item?.completed_at,
                 story_points: item?.story_points,
                 hours_estimate: item?.hours_estimate,
                 hours_spent: item?.hours_spent,
                 order: item?.order,
-                start_date: item?.start_date,
-                end_date: item?.end_date,
             })
         }
     }, [item, setData])
@@ -136,7 +131,7 @@ const CustomForm = ({ item, onClose }: { item?: any, onClose: () => void }) => {
         })
     }, [item, data, setData])
 
-    return <SimpleModal onClick={onSubmit} onClose={onClose} title="Create Project" description="Create a new project" isLoading={processing || usersLoading || projectsLoading || sprintsLoading}><>
+    return <SimpleModal onClick={onSubmit} onClose={onClose} title="Create Task" description="Create a new task" isLoading={processing || usersLoading || projectsLoading || sprintsLoading}><>
 
         <ShadInput required label="Title" name="title" value={data.title} onChange={(e) => setData('title', e.target.value)} errors={errors} />
         <ShadSelect required label="Assignee" name="assignee_id" value={data.assignee_id} onChange={(e: string) => setData('assignee_id', e)} list={users} errors={errors} />
@@ -147,11 +142,6 @@ const CustomForm = ({ item, onClose }: { item?: any, onClose: () => void }) => {
         <div className="flex justify-between gap-3">
             <ShadSelect required label="Status" name="status" value={data.status} onChange={(e: string) => setData('status', e)} list={statuses} errors={errors} />
             <ShadSelect required label="Priority" name="priority" value={data.priority} onChange={(e: string) => setData('priority', e)} list={priorities} errors={errors} />
-        </div>
-
-        <div className="flex justify-between gap-3">
-            <ShadDate required label="Start Date" name="start_date" value={data.start_date} onChange={(e) => setData('start_date', e.target.value)} errors={errors} />
-            <ShadDate required label="End Date" name="end_date" value={data.end_date} onChange={(e) => setData('end_date', e.target.value)} errors={errors} />
         </div>
 
         <div className="flex justify-between gap-3">

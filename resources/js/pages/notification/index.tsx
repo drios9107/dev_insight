@@ -1,5 +1,4 @@
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
+import { DataTable, IColumn } from "@/components/custom/table/data-table";
 import { INotification, TNotificationType } from "@/types/models/notification";
 import { Head, router } from "@inertiajs/react";
 import { useCallback, useState } from "react";
@@ -9,11 +8,117 @@ import { NotificationTypeEnum } from "@/enums/notification";
 import Header from "@/components/custom/header";
 import { DeleteModal } from "@/components/custom/delete-modal";
 import BodyWrapper from "@/components/custom/body-wrapper";
-import CrudButtons from "@/components/custom/crud-buttons";
-import RowData from "@/components/custom/row-data";
+import { Badge } from "@/components/ui/badge";
+import { ExternalLink } from "lucide-react";
 
 const Notifications = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<INotification | null>(null)
+
+    const columns: IColumn[] = [
+        {
+            key: 'id',
+            label: '#',
+            sortable: true,
+            align: 'center',
+        },
+        {
+            key: 'title',
+            label: 'Title',
+            sortable: true,
+        },
+        {
+            key: 'type',
+            label: 'Type',
+            sortable: true,
+            render: (value: TNotificationType) => (
+                <Badge variant={getBadgeVariant(value)}>
+                    {NotificationTypeEnum[value]}
+                </Badge>
+            ),
+        },
+        {
+            key: 'is_read',
+            label: 'Status',
+            sortable: true,
+            render: (value: boolean) => (
+                <Badge variant={value ? 'success' : 'default'}>
+                    {value ? 'Read' : 'Unread'}
+                </Badge>
+            ),
+        },
+        {
+            key: 'user',
+            label: 'User',
+            render: (value) => value?.name || '-',
+        },
+        {
+            key: 'link',
+            label: 'Link',
+            align: 'center',
+            render: (value: string) => (
+                value ? (
+                    <a
+                        href={value}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800"
+                    >
+                        <ExternalLink className="w-4 h-4 inline" />
+                    </a>
+                ) : '-'
+            ),
+        },
+        {
+            key: 'created_at',
+            label: 'Created',
+            sortable: true,
+            render: (value) => value ? new Date(value).toLocaleDateString() : '-',
+        },
+        {
+            key: 'read_at',
+            label: 'Read At',
+            sortable: true,
+            render: (value) => value ? new Date(value).toLocaleDateString() : '-',
+        },
+    ];
+
+    const filterOptions = [
+        {
+            key: 'type',
+            label: 'Type',
+            value: props?.filters?.type ?? 'all',
+            onChange: (value: string) => {
+                router.get(
+                    notification.index().url,
+                    { ...props?.filters, type: value, page: 1 },
+                    { preserveState: true, preserveScroll: true }
+                );
+            },
+            options: Object.keys(NotificationTypeEnum).map(i => ({
+                value: i,
+                label: NotificationTypeEnum[i as TNotificationType]
+            })),
+            addAll: true
+        },
+        {
+            key: 'is_read',
+            label: 'Status',
+            value: props?.filters?.is_read ?? 'all',
+            onChange: (value: string) => {
+                router.get(
+                    notification.index().url,
+                    { ...props?.filters, is_read: value, page: 1 },
+                    { preserveState: true, preserveScroll: true }
+                );
+            },
+            options: [
+                { value: 'all', label: 'All' },
+                { value: '1', label: 'Read' },
+                { value: '0', label: 'Unread' },
+            ],
+            addAll: false
+        },
+    ];
 
     const onDelete = useCallback(() => {
         if (itemToDelete) {
@@ -25,6 +130,8 @@ const Notifications = (props: any) => {
         }
     }, [itemToDelete])
 
+    const onClose = () => setItemToDelete(null)
+
     const getBadgeVariant = useCallback((item: TNotificationType) => {
         const mapping = {
             info: 'info',
@@ -35,34 +142,21 @@ const Notifications = (props: any) => {
         return mapping[item] as "info" | "warning" | "destructive" | "success"
     }, [])
 
-
     return <>
         <Head title={props.title} />
         <h1 className="sr-only">{props.title}</h1>
         <Header title={props.title} />
         <BodyWrapper>
-            {props.list.data.map((i: INotification) => <Card key={i.id} style={{ width: '300px' }} className={'px-6'}>
-                <CardTitle className="flex justify-between">
-                    <div className="flex gap-1 items-center">
-                        {i.title}
-                    </div>
-                    <Badge variant={getBadgeVariant(i.type)}>{NotificationTypeEnum[i.type as TNotificationType]}</Badge>
-                    <Badge variant={i.is_read ? 'success' : 'default'}>{i.is_read ? 'Read' : 'Unread'}</Badge>
-                </CardTitle>
-                <CardContent className="flex flex-col flex-1 gap-1">
-                    <RowData title="Owner" value={i?.user?.name} />
-                    <RowData title="Link" value={i?.link} href={i?.link} />
-                    <RowData title="Read At" value={i?.read_at} />
-                    <CardDescription className="">
-                        {i.message}
-                    </CardDescription>
-                </CardContent>
-                <CrudButtons onDelete={() => setItemToDelete(i)} />
-            </Card>)}
+            <DataTable
+                data={props.list}
+                columns={columns}
+                filters={filterOptions}
+                initialFilters={props.filters}
+                onDelete={setItemToDelete}
+            />
 
-            {itemToDelete && <DeleteModal onClose={() => setItemToDelete(null)} onClick={onDelete} />}
+            {itemToDelete && <DeleteModal onClose={onClose} onClick={onDelete} />}
         </BodyWrapper>
-
     </>
 }
 
