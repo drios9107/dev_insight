@@ -30,6 +30,7 @@ class CommitService
                 'sha' => $commit['sha'],
                 'github_repository_id' => $repoId,
                 'author_id' => $authorId,
+                // @todo: define task source
                 'task_id' => null,
                 'message' => $commit['commit']['message'],
                 'date' => date('Y-m-d H:i:s', strtotime($commit['commit']['author']['date'])),

@@ -121,7 +121,6 @@ const Commits = (props: any) => {
                 filters={filterOptions}
                 initialFilters={props.filters}
                 onDelete={setItemToDelete}
-                actions={true}
             />
 
             {itemToDelete && <DeleteModal onClose={onClose} onClick={onDelete} />}
