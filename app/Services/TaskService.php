@@ -11,7 +11,7 @@ class TaskService
     {
         $query = Task::query();
 
-        if ($request->filled('search')) {
+        if ($request && $request->filled('search')) {
             $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
@@ -31,19 +31,19 @@ class TaskService
             });
         }
 
-        if ($request->filled('status') && $request->status !== 'all') {
+        if ($request && $request->filled('status') && $request->status !== 'all') {
             $query->where('status', $request->status);
         }
 
-        if ($request->filled('priority') && $request->priority !== 'all') {
+        if ($request && $request->filled('priority') && $request->priority !== 'all') {
             $query->where('priority', $request->priority);
         }
 
-        if ($request->filled('project_id')) {
+        if ($request && $request->filled('project_id')) {
             $query->where('project_id', $request->project_id);
         }
 
-        if ($request->filled('assignee_id')) {
+        if ($request && $request->filled('assignee_id')) {
             $query->where('assignee_id', $request->assignee_id);
         }
 

@@ -59,7 +59,7 @@ class CommitService
     {
         $query = Commit::query();
 
-        if ($request->filled('search')) {
+        if ($request && $request->filled('search')) {
             $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('message', 'ilike', $search)
@@ -73,7 +73,7 @@ class CommitService
             });
         }
 
-        if ($request->filled('repository_id') && $request->repository_id !== 'all') {
+        if ($request && $request->filled('repository_id') && $request->repository_id !== 'all') {
             $query->where('github_repository_id', $request->repository_id);
         }
 

@@ -56,7 +56,7 @@ class GithubIssueService
     {
         $query = GithubIssue::query();
 
-        if ($request->filled('search')) {
+        if ($request && $request->filled('search')) {
             $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
@@ -70,11 +70,11 @@ class GithubIssueService
             });
         }
 
-        if ($request->filled('state') && $request->state !== 'all') {
+        if ($request && $request->filled('state') && $request->state !== 'all') {
             $query->where('state', $request->state);
         }
 
-        if ($request->filled('repository_id') && $request->repository_id !== 'all') {
+        if ($request && $request->filled('repository_id') && $request->repository_id !== 'all') {
             $query->where('github_repository_id', $request->repository_id);
         }
 

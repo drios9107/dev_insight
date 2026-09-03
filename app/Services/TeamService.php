@@ -11,7 +11,7 @@ class TeamService
     {
         $query = Team::query();
 
-        if ($request->filled('search')) {
+        if ($request && $request->filled('search')) {
             $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
@@ -22,7 +22,7 @@ class TeamService
             });
         }
 
-        if ($request->has('is_active') && $request->is_active !== 'all') {
+        if ($request && $request->has('is_active') && $request->is_active !== 'all') {
             $query->where('is_active', $request->is_active === '1');
         }
 

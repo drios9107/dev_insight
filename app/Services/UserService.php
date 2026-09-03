@@ -11,7 +11,7 @@ class UserService
     {
         $query = User::query()->with('role');
 
-        if ($request->filled('search')) {
+        if ($request && $request->filled('search')) {
             $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
@@ -22,7 +22,7 @@ class UserService
             });
         }
 
-        if ($request->filled('role_id') && $request->role_id !== 'all') {
+        if ($request && $request->filled('role_id') && $request->role_id !== 'all') {
             $query->where('role_id', $request->role_id);
         }
 

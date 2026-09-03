@@ -11,7 +11,7 @@ class SprintService
     {
         $query = Sprint::query();
 
-        if ($request->filled('search')) {
+        if ($request && $request->filled('search')) {
             $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
@@ -22,7 +22,7 @@ class SprintService
             });
         }
 
-        if ($request->filled('status') && $request->status !== 'all') {
+        if ($request && $request->filled('status') && $request->status !== 'all') {
             $query->where('status', $request->status);
         }
 

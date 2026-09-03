@@ -11,7 +11,7 @@ class ActivityLogService
     {
         $query = ActivityLog::query()->with(['user', 'team', 'project', 'task']);
 
-        if ($request->filled('search')) {
+        if ($request && $request->filled('search')) {
             $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('type', 'ilike', $search)
@@ -22,11 +22,11 @@ class ActivityLogService
             });
         }
 
-        if ($request->filled('type') && $request->type !== 'all') {
+        if ($request && $request->filled('type') && $request->type !== 'all') {
             $query->where('type', $request->type);
         }
 
-        if ($request->filled('user_id') && $request->user_id !== 'all') {
+        if ($request && $request->filled('user_id') && $request->user_id !== 'all') {
             $query->where('user_id', $request->user_id);
         }
 

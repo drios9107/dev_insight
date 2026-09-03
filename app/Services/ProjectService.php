@@ -10,7 +10,7 @@ class ProjectService
     public function index(?Request $request = null)
     {
         $query = Project::query();
-        if ($request->search) {
+        if ($request && $request->search) {
             $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
@@ -24,7 +24,7 @@ class ProjectService
 
         }
 
-        if ($request->status && $request->status !== 'all') {
+        if ($request && $request->status && $request->status !== 'all') {
             $query->whereStatus($request->status);
         }
 

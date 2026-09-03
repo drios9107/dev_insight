@@ -11,7 +11,7 @@ class RoleService
     {
         $query = Role::query()->withCount('users');
 
-        if ($request->filled('search')) {
+        if ($request && $request->filled('search')) {
             $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)

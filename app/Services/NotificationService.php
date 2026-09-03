@@ -11,7 +11,7 @@ class NotificationService
     {
         $query = Notification::query();
 
-        if ($request->filled('search')) {
+        if ($request && $request->filled('search')) {
             $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
@@ -22,11 +22,11 @@ class NotificationService
             });
         }
 
-        if ($request->filled('type') && $request->type !== 'all') {
+        if ($request && $request->filled('type') && $request->type !== 'all') {
             $query->where('type', $request->type);
         }
 
-        if ($request->has('is_read') && $request->is_read !== 'all') {
+        if ($request && $request->has('is_read') && $request->is_read !== 'all') {
             $query->where('is_read', $request->is_read === '1');
         }
 

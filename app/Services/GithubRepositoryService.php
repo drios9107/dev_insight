@@ -48,7 +48,7 @@ class GithubRepositoryService
     {
         $query = GithubRepository::query();
 
-        if ($request->filled('search')) {
+        if ($request && $request->filled('search')) {
             $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('full_name', 'ilike', $search)
@@ -57,7 +57,7 @@ class GithubRepositoryService
             });
         }
 
-        if ($request->has('is_private') && $request->is_private !== 'all') {
+        if ($request && $request->has('is_private') && $request->is_private !== 'all') {
             $query->where('is_private', $request->is_private === '1');
         }
 
