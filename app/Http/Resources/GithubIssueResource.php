@@ -16,8 +16,8 @@ class GithubIssueResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'github' => $this->github,
-            'github_repository' => $this->github_repository,
+            'github_id' => $this->github_id,
+            'github_repository' => $this->githubRepository,
             'author' => $this->author,
             'number' => $this->number,
             'title' => $this->title,

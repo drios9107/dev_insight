@@ -15,17 +15,10 @@ const GithubsIssues = (props: any) => {
 
     const columns: IColumn[] = [
         {
-            key: 'id',
-            label: '#',
-            sortable: true,
-            align: 'center',
-        },
-        {
             key: 'number',
             label: '#',
             sortable: true,
             align: 'center',
-            render: (value: number) => `#${value}`,
         },
         {
             key: 'title',
@@ -51,11 +44,6 @@ const GithubsIssues = (props: any) => {
             key: 'author',
             label: 'Author',
             render: (value) => value?.name || '-',
-        },
-        {
-            key: 'github_repository',
-            label: 'Repository',
-            render: (value) => value?.full_name || '-',
         },
         {
             key: 'github_id',
