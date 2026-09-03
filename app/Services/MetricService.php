@@ -3,11 +3,10 @@
 namespace App\Services;
 
 use App\Models\Metric;
-use Illuminate\Http\Request;
 
 class MetricService
 {
-    public function index(?Request $request = null)
+    public function index()
     {
         return Metric::all();
     }

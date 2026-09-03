@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Commit;
 use App\Models\GithubRepository;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class CommitService
@@ -30,7 +29,6 @@ class CommitService
                 'sha' => $commit['sha'],
                 'github_repository_id' => $repoId,
                 'author_id' => $authorId,
-                // @todo: define task source
                 'task_id' => null,
                 'message' => $commit['commit']['message'],
                 'date' => date('Y-m-d H:i:s', strtotime($commit['commit']['author']['date'])),
@@ -56,29 +54,9 @@ class CommitService
         ]);
     }
 
-    public function index(?Request $request = null)
+    public function index()
     {
-        $query = Commit::query();
-
-        if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
-            $query->where(function ($q) use ($search) {
-                $q->where('message', 'ilike', $search)
-                    ->orWhere('sha', 'ilike', $search)
-                    ->orWhereHas('author', function ($a) use ($search) {
-                        $a->where('name', 'ilike', $search);
-                    })
-                    ->orWhereHas('githubRepository', function ($r) use ($search) {
-                        $r->where('full_name', 'ilike', $search);
-                    });
-            });
-        }
-
-        if ($request && $request->filled('repository_id') && $request->repository_id !== 'all') {
-            $query->where('github_repository_id', $request->repository_id);
-        }
-
-        return $query->latest('date')->paginate($request->per_page ?? 10);
+        return Commit::all();
     }
 
     /**

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\MetricRequest;
 use App\Http\Resources\MetricResource;
 use App\Services\MetricService;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class MetricController extends Controller
@@ -28,9 +27,9 @@ class MetricController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-        $data = MetricResource::collection($this->service->index($request));
+        $data = MetricResource::collection($this->service->index());
 
         return Inertia::render('metric/index', [
             'list' => $data,

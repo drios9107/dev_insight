@@ -5,6 +5,8 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+use function PHPUnit\Framework\isNull;
+
 class PullRequestReviewResource extends JsonResource
 {
     /**
@@ -21,7 +23,7 @@ class PullRequestReviewResource extends JsonResource
             'pull_request' => $this->pull_request,
             'state' => $this->state,
             'body' => $this->body,
-            'submitted_at' => $this->submitted_at ? date('Y-m-d', strtotime($this->submitted_at)) : null,
+            'submitted_at' => ! isNull($this->submitted_at) ? date_format($this->submitted_at, 'Y-m-d') : '',
             'created_at' => date_format($this->created_at, 'Y-m-d'),
             'updated_at' => date_format($this->updated_at, 'Y-m-d'),
         ];

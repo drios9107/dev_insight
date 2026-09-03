@@ -1,5 +1,5 @@
-import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Bug, CheckSquare, Cloud, DiamondPercent, FolderGit2, GitCommit, Group, History, LayoutDashboard, LayoutGrid, ListCheck, ListStart, Notebook, ReceiptPoundSterling, Shield, Users2, Workflow } from 'lucide-react';
+import { Link } from '@inertiajs/react';
+import { BookOpen, Bug, CheckSquare, Cloud, DiamondPercent, FolderGit2, GitCommit, Group, LayoutDashboard, LayoutGrid, ListCheck, ListStart, Notebook, ReceiptPoundSterling, Shield, Users2, Workflow } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -29,24 +29,6 @@ import pullRequestReview from '@/routes/pull-request-review';
 import sprint from '@/routes/sprint';
 import task from '@/routes/task';
 import role from '@/routes/role';
-import activityLog from '@/routes/activity-log';
-import { useMemo } from 'react';
-
-const adminNavItems: NavItem[] = [
-    {
-        title: 'Logs',
-        href: activityLog.index(),
-        icon: History,
-    }, {
-        title: 'Roles',
-        href: role.index(),
-        icon: Shield,
-    }, {
-        title: 'Users',
-        href: user.index(),
-        icon: Users2,
-    }
-]
 
 const mainNavItems: NavItem[] = [
     {
@@ -101,7 +83,15 @@ const mainNavItems: NavItem[] = [
         title: 'Teams',
         href: team.index(),
         icon: Group,
-    }
+    }, {
+        title: 'Roles',
+        href: role.index(),
+        icon: Shield,
+    }, {
+        title: 'Users',
+        href: user.index(),
+        icon: Users2,
+    },
 ];
 
 const footerNavItems: NavItem[] = [
@@ -118,9 +108,6 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
-    const { props } = usePage()
-    const isAdmin = useMemo(() => props.auth.user?.role?.name === 'Admin', [props.auth.user?.role?.name])
-
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -137,7 +124,6 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain items={mainNavItems} />
-                {isAdmin && <NavMain items={adminNavItems} title='Admin' />}
             </SidebarContent>
 
             <SidebarFooter>

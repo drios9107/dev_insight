@@ -47,11 +47,12 @@ const CustomForm = ({ item, onClose }: { item?: any, onClose: () => void }) => {
 
     useEffect(() => {
         if (item) {
+            console.log('***item', item)
             setData({
                 name: item?.name,
                 goal: item?.goal,
                 project_id: item?.project?.id?.toString(),
-                status: item?.status,
+                status: SprintStatusEnum[item.status as TSprintStatus],
                 velocity: item?.velocity ?? 0,
                 actual_velocity: item?.actual_velocity ?? 0,
                 start_date: item?.start_date,

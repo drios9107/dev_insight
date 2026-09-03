@@ -1,11 +1,8 @@
-import { IRole } from "./models/role";
-
 export type User = {
     id: number;
     name: string;
     email: string;
     avatar?: string;
-    role?: IRole;
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;

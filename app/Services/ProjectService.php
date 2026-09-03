@@ -3,32 +3,12 @@
 namespace App\Services;
 
 use App\Models\Project;
-use Illuminate\Http\Request;
 
 class ProjectService
 {
-    public function index(?Request $request = null)
+    public function index()
     {
-        $query = Project::query();
-        if ($request && $request->search) {
-            $search = '%'.$request->search.'%';
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'ilike', $search)
-                    ->orWhere('description', 'ilike', $search)
-                    ->orWhere('color', 'ilike', $search)
-                    ->orWhereHas('team', fn ($sub) => $sub->where('name', 'ilike', $search))
-                    ->orWhereHas('owner', fn ($sub) => $sub->where('name', 'ilike', $search))
-                    ->orWhereHas('githubRepository', fn ($sub) => $sub->where('name', 'ilike', $search)
-                        ->orWhere('full_name', 'ilike', $search));
-            });
-
-        }
-
-        if ($request && $request->status && $request->status !== 'all') {
-            $query->whereStatus($request->status);
-        }
-
-        return $query->latest(null)->paginate($request->per_page ?? 10);
+        return Project::all();
     }
 
     /**

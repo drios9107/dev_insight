@@ -1,102 +1,19 @@
-import { DataTable, IColumn } from "@/components/custom/table/data-table";
-import { ICommit } from "@/types/models/commit";
+import CrudButtons from "@/components/custom/crud-buttons";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { Head, router } from "@inertiajs/react";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import Header from "@/components/custom/header";
 import { DeleteModal } from "@/components/custom/delete-modal";
 import BodyWrapper from "@/components/custom/body-wrapper";
+import { ICommit } from "@/types/models/commit";
 import commit from "@/routes/commit";
-import { Badge } from "@/components/ui/badge";
+import ColData from "@/components/custom/col-data";
+import RowData from "@/components/custom/row-data";
 
 const Commits = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<ICommit | null>(null)
-
-    const columns: IColumn[] = [
-        {
-            key: 'id',
-            label: '#',
-            sortable: true,
-            align: 'center',
-        },
-        {
-            key: 'sha',
-            label: 'SHA',
-            render: (value: string) => (
-                <span className="font-mono text-xs">
-                    {value.substring(0, 7)}
-                </span>
-            ),
-        },
-        {
-            key: 'message',
-            label: 'Message',
-            render: (value: string) => (
-                <span className="truncate max-w-[200px] block">
-                    {value}
-                </span>
-            ),
-        },
-        {
-            key: 'author',
-            label: 'Author',
-            render: (value) => value?.name || '-',
-        },
-        {
-            key: 'github_repository',
-            label: 'Repository',
-            render: (value) => value?.full_name || '-',
-        },
-        {
-            key: 'date',
-            label: 'Date',
-            sortable: true,
-            render: (value) => value ? new Date(value).toLocaleDateString() : '-',
-        },
-        {
-            key: 'additions',
-            label: '+',
-            align: 'center',
-            render: (value) => value ?? 0,
-        },
-        {
-            key: 'deletions',
-            label: '-',
-            align: 'center',
-            render: (value) => value ?? 0,
-        },
-        {
-            key: 'total_changes',
-            label: 'Changes',
-            align: 'center',
-            render: (value) => value ?? 0,
-        },
-        {
-            key: 'task',
-            label: 'Task',
-            render: (value) => value?.title ? `#${value.id}` : '-',
-        },
-    ];
-
-    const filterOptions = [
-        {
-            key: 'repository_id',
-            label: 'Repository',
-            value: props?.filters?.repository_id ?? 'all',
-            onChange: (value: string) => {
-                router.get(
-                    commit.index().url,
-                    { ...props?.filters, repository_id: value, page: 1 },
-                    { preserveState: true, preserveScroll: true }
-                );
-            },
-            options: props?.repositories?.map((repo: any) => ({
-                value: String(repo.id),
-                label: repo.full_name,
-            })) || [],
-            addAll: true
-        },
-    ];
 
     const onDelete = useCallback(() => {
         if (itemToDelete) {
@@ -108,23 +25,40 @@ const Commits = (props: any) => {
         }
     }, [itemToDelete])
 
-    const onClose = () => setItemToDelete(null)
-
     return <>
         <Head title={props.title} />
         <h1 className="sr-only">{props.title}</h1>
         <Header title={props.title} />
         <BodyWrapper>
-            <DataTable
-                data={props.list}
-                columns={columns}
-                filters={filterOptions}
-                initialFilters={props.filters}
-                onDelete={setItemToDelete}
-            />
+            {props.list.data.map((i: ICommit) => <Card key={i.id} style={{ width: '300px' }} className={'px-6'}>
+                <CardTitle className="flex justify-between">
+                    {/* @todo check this wordwrap syntax */}
+                    <div className="flex gap-1 items-center" style={{ wordWrap: 'anywhere' as unknown as 'normal' }}>
+                        {i.sha}
+                    </div>
+                </CardTitle>
+                <CardContent className="flex flex-col flex-1 gap-1">
+                    <RowData title="Task" value={i?.task?.title} />
+                    <RowData title="Author" value={i?.author?.name} />
+                    <RowData title="Github Repository" value={i?.github_repository?.full_name} />
+                    <RowData title="Url" value={i?.url} href={i?.url} />
+                    <RowData title="Date" value={i?.date} />
 
-            {itemToDelete && <DeleteModal onClose={onClose} onClick={onDelete} />}
+                    <div className="flex flex-wrap gap-2 justify-between">
+                        <ColData title="Additions" value={i?.additions} />
+                        <ColData title="Deletions" value={i?.deletions} />
+                        <ColData title="Total Changes" value={i?.total_changes} />
+                    </div>
+                    <CardDescription className="">
+                        {i.message}
+                    </CardDescription>
+                </CardContent>
+                <CrudButtons onDelete={() => setItemToDelete(i)} />
+            </Card>)}
+
+            {itemToDelete && <DeleteModal onClose={() => setItemToDelete(null)} onClick={onDelete} />}
         </BodyWrapper>
+
     </>
 }
 

@@ -9,7 +9,7 @@ export function useFetch() {
                     setItems(data.data.map((i: any) => ({ value: i.id, label: i?.[labelField] })))
                 }
             })
-            .catch(err => console.log('***fetch error', err))
+            .catch(err => console.log('***users error', err))
     }
 
     return { get }

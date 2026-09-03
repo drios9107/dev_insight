@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\RoleRequest;
 use App\Http\Resources\RoleResource;
 use App\Services\RoleService;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class RoleController extends Controller
@@ -28,21 +27,15 @@ class RoleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
-{
-    $data = RoleResource::collection($this->service->index($request));
+    public function index()
+    {
+        $data = RoleResource::collection($this->service->index());
 
-    $filters = [];
-    if ($request->has('search')) {
-        $filters['search'] = $request->search;
+        return Inertia::render('role/index', [
+            'list' => $data,
+            'title' => 'Roles',
+        ]);
     }
-
-    return Inertia::render('role/index', [
-        'list' => $data,
-        'title' => 'Roles',
-        'filters' => $filters,
-    ]);
-}
 
     /**
      * Store a newly created resource in storage.

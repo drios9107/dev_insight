@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
-use App\Models\Role;
 use App\Services\UserService;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -29,25 +27,13 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-        $data = UserResource::collection($this->service->index($request));
-
-        $filters = [];
-        if ($request->has('role_id')) {
-            $filters['role_id'] = $request->role_id;
-        }
-        if ($request->has('email_verified_at')) {
-            $filters['email_verified_at'] = $request->email_verified_at;
-        }
-
-        $roles = Role::select('id', 'name')->get();
+        $data = UserResource::collection($this->service->index());
 
         return Inertia::render('user/index', [
             'list' => $data,
             'title' => 'Users',
-            'filters' => $filters,
-            'roles' => $roles,
         ]);
     }
 
