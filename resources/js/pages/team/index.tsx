@@ -9,7 +9,8 @@ import Header from "@/components/custom/header";
 import { DeleteModal } from "@/components/custom/delete-modal";
 import BodyWrapper from "@/components/custom/body-wrapper";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ImageOff } from "lucide-react";
 
 const Teams = (props: any) => {
     const [isOpen, setIsOpen] = useState(false)
@@ -28,15 +29,12 @@ const Teams = (props: any) => {
             label: 'Avatar',
             align: 'center',
             render: (value: string) => (
-                value ? (
-                    <Avatar className="w-8 h-8">
-                        <AvatarImage src={value} />
-                    </Avatar>
-                ) : (
-                    <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-xs text-gray-500">
-                        N/A
-                    </div>
-                )
+                <Avatar className="w-8 h-8">
+                    <AvatarImage src={value || undefined} />
+                    <AvatarFallback>
+                        <ImageOff />
+                    </AvatarFallback>
+                </Avatar>
             ),
         },
         {
