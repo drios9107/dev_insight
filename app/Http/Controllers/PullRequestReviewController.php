@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PullRequestReviewRequest;
 use App\Http\Resources\PullRequestReviewResource;
+use App\Models\User;
 use App\Services\PullRequestReviewService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -32,9 +33,21 @@ class PullRequestReviewController extends Controller
     {
         $data = PullRequestReviewResource::collection($this->service->index($request));
 
+        $filters = [];
+        if ($request->has('state')) {
+            $filters['state'] = $request->state;
+        }
+        if ($request->has('reviewer_id')) {
+            $filters['reviewer_id'] = $request->reviewer_id;
+        }
+
+        $reviewers = User::select('id', 'name')->get();
+
         return Inertia::render('pull-request-review/index', [
             'list' => $data,
             'title' => 'PR Reviews',
+            'filters' => $filters,
+            'reviewers' => $reviewers,
         ]);
     }
 

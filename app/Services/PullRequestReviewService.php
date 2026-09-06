@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\GithubRepository;
 use App\Models\PullRequest;
 use App\Models\PullRequestReview;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PullRequestReviewService
@@ -63,9 +64,32 @@ class PullRequestReviewService
         ]);
     }
 
-    public function index()
+    public function index(?Request $request = null)
     {
-        return PullRequestReview::all();
+        $query = PullRequestReview::query()->with(['pullRequest', 'reviewer']);
+
+        if ($request && $request->filled('search')) {
+            $search = '%'.$request->search.'%';
+            $query->where(function ($q) use ($search) {
+                $q->where('body', 'ilike', $search)
+                    ->orWhereHas('reviewer', function ($r) use ($search) {
+                        $r->where('name', 'ilike', $search);
+                    })
+                    ->orWhereHas('pullRequest', function ($p) use ($search) {
+                        $p->where('title', 'ilike', $search);
+                    });
+            });
+        }
+
+        if ($request && $request->filled('state') && $request->state !== 'all') {
+            $query->where('state', $request->state);
+        }
+
+        if ($request && $request->filled('reviewer_id') && $request->reviewer_id !== 'all') {
+            $query->where('reviewer_id', $request->reviewer_id);
+        }
+
+        return $query->latest()->paginate($request->per_page ?? 10);
     }
 
     /**

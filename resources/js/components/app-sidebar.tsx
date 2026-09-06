@@ -86,7 +86,7 @@ const mainNavItems: NavItem[] = [
         href: pullRequest.index(),
         icon: DiamondPercent,
     }, {
-        title: 'PR Reviewers',
+        title: 'PR Reviews',
         href: pullRequestReview.index(),
         icon: CheckSquare,
     }, {

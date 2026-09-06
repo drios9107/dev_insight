@@ -17,8 +17,14 @@ class PullRequestReviewResource extends JsonResource
         return [
             'id' => $this->id,
             'github_id' => $this->github_id,
-            'reviewer' => $this->reviewer,
-            'pull_request' => $this->pull_request,
+            'pull_request' => $this->whenLoaded('pullRequest', fn () => [
+                'id' => $this->pullRequest->id,
+                'title' => $this->pullRequest->title,
+            ]),
+            'reviewer' => $this->whenLoaded('reviewer', fn () => [
+                'id' => $this->reviewer->id,
+                'name' => $this->reviewer->name,
+            ]),
             'state' => $this->state,
             'body' => $this->body,
             'submitted_at' => $this->submitted_at ? date('Y-m-d', strtotime($this->submitted_at)) : null,

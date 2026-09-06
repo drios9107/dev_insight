@@ -1,19 +1,89 @@
-import CrudButtons from "@/components/custom/crud-buttons";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
+import { DataTable, IColumn } from "@/components/custom/table/data-table";
+import { IPullRequestReview, TPullRequestReviewState } from "@/types/models/pull-request-review";
 import { Head, router } from "@inertiajs/react";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import Header from "@/components/custom/header";
 import { DeleteModal } from "@/components/custom/delete-modal";
 import BodyWrapper from "@/components/custom/body-wrapper";
-import { IPullRequestReview, TPullRequestReviewState } from "@/types/models/pull-request-review";
 import { PullRequestReviewStateEnum } from "@/enums/pull-requests-review";
 import pullRequestReview from "@/routes/pull-request-review";
-import RowData from "@/components/custom/row-data";
+import { Badge } from "@/components/ui/badge";
 
 const PullRequestReviews = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<IPullRequestReview | null>(null)
+
+    const columns: IColumn[] = [
+        {
+            key: 'pull_request',
+            label: 'PR',
+            render: (value) => value?.title ? `#${value.id}` : '-',
+        },
+        {
+            key: 'reviewer',
+            label: 'Reviewer',
+            render: (value) => value?.name || '-',
+        },
+        {
+            key: 'state',
+            label: 'State',
+            sortable: true,
+            render: (value: TPullRequestReviewState) => (
+                <Badge variant={getBadgeColor(value)}>
+                    {PullRequestReviewStateEnum[value]}
+                </Badge>
+            ),
+        },
+        {
+            key: 'submitted_at',
+            label: 'Submitted',
+            sortable: true,
+            render: (value) => value ? new Date(value).toLocaleDateString() : '-',
+        },
+        {
+            key: 'created_at',
+            label: 'Created',
+            sortable: true,
+            render: (value) => value ? new Date(value).toLocaleDateString() : '-',
+        },
+    ];
+
+    const filterOptions = [
+        {
+            key: 'state',
+            label: 'State',
+            value: props?.filters?.state ?? 'all',
+            onChange: (value: string) => {
+                router.get(
+                    pullRequestReview.index().url,
+                    { ...props?.filters, state: value, page: 1 },
+                    { preserveState: true, preserveScroll: true }
+                );
+            },
+            options: Object.keys(PullRequestReviewStateEnum).map(i => ({
+                value: i,
+                label: PullRequestReviewStateEnum[i as TPullRequestReviewState]
+            })),
+            addAll: true
+        },
+        {
+            key: 'reviewer_id',
+            label: 'Reviewer',
+            value: props?.filters?.reviewer_id ?? 'all',
+            onChange: (value: string) => {
+                router.get(
+                    pullRequestReview.index().url,
+                    { ...props?.filters, reviewer_id: value, page: 1 },
+                    { preserveState: true, preserveScroll: true }
+                );
+            },
+            options: props?.reviewers?.map((user: any) => ({
+                value: String(user.id),
+                label: user.name,
+            })) || [],
+            addAll: true
+        },
+    ];
 
     const onDelete = useCallback(() => {
         if (itemToDelete) {
@@ -24,6 +94,8 @@ const PullRequestReviews = (props: any) => {
             })
         }
     }, [itemToDelete])
+
+    const onClose = () => setItemToDelete(null)
 
     const getBadgeColor = useCallback((item: TPullRequestReviewState) => {
         const mapping = {
@@ -40,27 +112,16 @@ const PullRequestReviews = (props: any) => {
         <h1 className="sr-only">{props.title}</h1>
         <Header title={props.title} />
         <BodyWrapper>
-            {props.list.data.map((i: IPullRequestReview) => <Card key={i.id} style={{ width: '300px' }} className={'px-6'}>
-                <CardTitle className="flex justify-between">
-                    <div className="flex gap-1 items-center">
-                        {i.pull_request?.title}
-                    </div>
-                    <Badge variant={getBadgeColor(i.state)}>{PullRequestReviewStateEnum[i.state]}</Badge>
-                </CardTitle>
-                <CardContent className="flex flex-col flex-1 gap-1">
-                    <RowData title="Reviewer" value={i?.reviewer?.name} />
-                    <RowData title="Github Id" value={i?.github_id} />
-                    <RowData title="Submitted At" value={i?.submitted_at} />
-                    <CardDescription className="">
-                        {i.body}
-                    </CardDescription>
-                </CardContent>
-                <CrudButtons onDelete={() => setItemToDelete(i)} />
-            </Card>)}
+            <DataTable
+                data={props.list}
+                columns={columns}
+                filters={filterOptions}
+                initialFilters={props.filters}
+                onDelete={setItemToDelete}
+            />
 
-            {itemToDelete && <DeleteModal onClose={() => setItemToDelete(null)} onClick={onDelete} />}
+            {itemToDelete && <DeleteModal onClose={onClose} onClick={onDelete} />}
         </BodyWrapper>
-
     </>
 }
 
