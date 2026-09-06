@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PullRequestRequest;
 use App\Http\Resources\PullRequestResource;
+use App\Models\GithubRepository;
 use App\Services\PullRequestService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -32,9 +33,21 @@ class PullRequestController extends Controller
     {
         $data = PullRequestResource::collection($this->service->index($request));
 
+        $filters = [];
+        if ($request->has('state')) {
+            $filters['state'] = $request->state;
+        }
+        if ($request->has('repository_id')) {
+            $filters['repository_id'] = $request->repository_id;
+        }
+
+        $repositories = GithubRepository::select('id', 'name', 'full_name')->get();
+
         return Inertia::render('pull-request/index', [
             'list' => $data,
-            'title' => 'PRs',
+            'title' => 'Pull Requests',
+            'filters' => $filters,
+            'repositories' => $repositories,
         ]);
     }
 

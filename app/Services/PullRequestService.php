@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\GithubRepository;
 use App\Models\PullRequest;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PullRequestService
@@ -23,6 +25,9 @@ class PullRequestService
         $repoId = GithubRepository::whereGithubId($repo['id'])->value('id');
 
         $data = array_map(function ($pr) use ($repoId) {
+            $authorId = User::whereGithubId($pr['user']['id'] ?? null)->first()->value('id');
+            $assigneeId = User::whereGithubId($pr['assignees'][0]['id'] ?? null)->first()->value('id');
+
             return [
                 'github_id' => $pr['id'],
                 'github_repository_id' => $repoId,
@@ -30,8 +35,9 @@ class PullRequestService
                 'title' => $pr['title'],
                 'body' => $pr['body'] ?? null,
                 'state' => $pr['state'],
-                'author_id' => null,
-                'assignee_id' => null,
+                // @todo:find assignee and author
+                'author_id' => $authorId,
+                'assignee_id' => $assigneeId,
                 'base_branch' => $pr['base']['ref'] ?? 'main',
                 'head_branch' => $pr['head']['ref'] ?? 'feature',
                 'task_id' => null,
@@ -56,9 +62,33 @@ class PullRequestService
         ]);
     }
 
-    public function index()
+    public function index(?Request $request = null)
     {
-        return PullRequest::all();
+        $query = PullRequest::query()->with(['author', 'assignee', 'githubRepository', 'task']);
+
+        if ($request && $request->filled('search')) {
+            $search = '%'.$request->search.'%';
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'ilike', $search)
+                    ->orWhere('body', 'ilike', $search)
+                    ->orWhereHas('author', function ($a) use ($search) {
+                        $a->where('name', 'ilike', $search);
+                    })
+                    ->orWhereHas('githubRepository', function ($r) use ($search) {
+                        $r->where('full_name', 'ilike', $search);
+                    });
+            });
+        }
+
+        if ($request && $request->filled('state') && $request->state !== 'all') {
+            $query->where('state', $request->state);
+        }
+
+        if ($request && $request->filled('repository_id') && $request->repository_id !== 'all') {
+            $query->where('github_repository_id', $request->repository_id);
+        }
+
+        return $query->latest()->paginate($request->per_page ?? 10);
     }
 
     /**

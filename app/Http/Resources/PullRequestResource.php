@@ -21,7 +21,7 @@ class PullRequestResource extends JsonResource
             'title' => $this->title,
             'body' => $this->body,
             'state' => $this->state,
-            'github_repository' => $this->github_repository,
+            'github_repository' => $this->githubRepository,
             'author' => $this->author,
             'assignee' => $this->assignee,
             'task' => $this->task,
