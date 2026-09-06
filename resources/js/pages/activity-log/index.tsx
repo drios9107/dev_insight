@@ -9,12 +9,6 @@ import activityLog from "@/routes/activity-log";
 const ActivityLogs = (props: any) => {
     const columns: IColumn[] = [
         {
-            key: 'id',
-            label: '#',
-            sortable: true,
-            align: 'center',
-        },
-        {
             key: 'type',
             label: 'Type',
             sortable: true,

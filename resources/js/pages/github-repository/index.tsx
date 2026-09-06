@@ -15,12 +15,6 @@ const GithubRepositorys = (props: any) => {
 
     const columns: IColumn[] = [
         {
-            key: 'id',
-            label: '#',
-            sortable: true,
-            align: 'center',
-        },
-        {
             key: 'full_name',
             label: 'Repository',
             sortable: true,

@@ -14,12 +14,6 @@ const Commits = (props: any) => {
 
     const columns: IColumn[] = [
         {
-            key: 'id',
-            label: '#',
-            sortable: true,
-            align: 'center',
-        },
-        {
             key: 'sha',
             label: 'SHA',
             render: (value: string) => (

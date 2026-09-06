@@ -17,12 +17,6 @@ const Roles = (props: any) => {
 
     const columns: IColumn[] = [
         {
-            key: 'id',
-            label: '#',
-            sortable: true,
-            align: 'center',
-        },
-        {
             key: 'name',
             label: 'Name',
             sortable: true,

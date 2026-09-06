@@ -16,12 +16,6 @@ const Notifications = (props: any) => {
 
     const columns: IColumn[] = [
         {
-            key: 'id',
-            label: '#',
-            sortable: true,
-            align: 'center',
-        },
-        {
             key: 'title',
             label: 'Title',
             sortable: true,

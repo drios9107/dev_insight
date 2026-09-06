@@ -9,12 +9,6 @@ import { IUser } from "@/types/user";
 const Users = (props: any) => {
     const columns: IColumn[] = [
         {
-            key: 'id',
-            label: '#',
-            sortable: true,
-            align: 'center',
-        },
-        {
             key: 'avatar_url',
             label: 'Avatar',
             align: 'center',
