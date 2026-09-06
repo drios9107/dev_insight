@@ -25,46 +25,103 @@ class PullRequestService
         $repoId = GithubRepository::whereGithubId($repo['id'])->value('id');
 
         $data = array_map(function ($pr) use ($repoId) {
-            $authorId = User::whereGithubId($pr['user']['id'] ?? null)->first()->value('id');
-            $assigneeId = User::whereGithubId($pr['assignees'][0]['id'] ?? null)->first()->value('id');
+            // Author
+            $authorId = null;
+            if (isset($pr['user']['id'])) {
+                $authorId = User::whereGithubId($pr['user']['id'])->value('id');
+            }
+
+            // Assignees
+            $assigneeIds = [];
+            if (isset($pr['assignees']) && is_array($pr['assignees'])) {
+                foreach ($pr['assignees'] as $assignee) {
+                    if (isset($assignee['id'])) {
+                        $userId = User::whereGithubId($assignee['id'])->value('id');
+                        if ($userId) {
+                            $assigneeIds[] = $userId;
+                        }
+                    }
+                }
+            }
 
             return [
-                'github_id' => $pr['id'],
-                'github_repository_id' => $repoId,
-                'number' => $pr['number'],
-                'title' => $pr['title'],
-                'body' => $pr['body'] ?? null,
-                'state' => $pr['state'],
-                // @todo:find assignee and author
-                'author_id' => $authorId,
-                'assignee_id' => $assigneeId,
-                'base_branch' => $pr['base']['ref'] ?? 'main',
-                'head_branch' => $pr['head']['ref'] ?? 'feature',
-                'task_id' => null,
-                'closed_at' => $pr['closed_at'] ?? null,
-                'merged_at' => $pr['merged_at'] ?? null,
-                'merge_commit_sha' => $pr['merge_commit_sha'] ?? null,
-                'created_at' => date('Y-m-d H:i:s', strtotime($pr['created_at'])),
-                'updated_at' => date('Y-m-d H:i:s', strtotime($pr['updated_at'])),
+                'pull_request_data' => [
+                    'github_id' => $pr['id'],
+                    'github_repository_id' => $repoId,
+                    'number' => $pr['number'],
+                    'title' => $pr['title'],
+                    'body' => $pr['body'] ?? null,
+                    'state' => $pr['state'],
+                    'author_id' => $authorId,
+                    'base_branch' => $pr['base']['ref'] ?? 'main',
+                    'head_branch' => $pr['head']['ref'] ?? 'feature',
+                    'task_id' => null,
+                    'closed_at' => $pr['closed_at'] ?? null,
+                    'merged_at' => $pr['merged_at'] ?? null,
+                    'merge_commit_sha' => $pr['merge_commit_sha'] ?? null,
+                    'created_at' => date('Y-m-d H:i:s', strtotime($pr['created_at'])),
+                    'updated_at' => date('Y-m-d H:i:s', strtotime($pr['updated_at'])),
+                ],
+                'assignee_ids' => $assigneeIds,
             ];
         }, $prs);
 
-        DB::table('pull_requests')->upsert(
-            $data,
-            ['github_id'],
-            ['github_repository_id', 'number', 'title', 'body', 'state', 'author_id', 'assignee_id', 'base_branch', 'head_branch', 'task_id', 'closed_at', 'merged_at', 'merge_commit_sha', 'updated_at']
-        );
+        DB::beginTransaction();
 
-        return response()->json([
-            'success' => true,
-            'message' => count($data).' pull requests sincronizados',
-            'count' => count($data),
-        ]);
+        try {
+            foreach ($data as $item) {
+                $prData = $item['pull_request_data'];
+
+                // Insertar o actualizar PR
+                DB::table('pull_requests')->updateOrInsert(
+                    ['github_id' => $prData['github_id']],
+                    $prData
+                );
+
+                // Sincronizar assignees
+                if (! empty($item['assignee_ids'])) {
+                    $prId = DB::table('pull_requests')
+                        ->where('github_id', $prData['github_id'])
+                        ->value('id');
+
+                    if ($prId) {
+                        DB::table('pull_request_assignees')
+                            ->where('pull_request_id', $prId)
+                            ->delete();
+
+                        foreach ($item['assignee_ids'] as $userId) {
+                            DB::table('pull_request_assignees')->insert([
+                                'pull_request_id' => $prId,
+                                'user_id' => $userId,
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => count($data).' pull requests sincronizados',
+                'count' => count($data),
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al sincronizar: '.$e->getMessage(),
+            ], 500);
+        }
     }
 
     public function index(?Request $request = null)
     {
-        $query = PullRequest::query()->with(['author', 'assignee', 'githubRepository', 'task']);
+        $query = PullRequest::query()->with(['author', 'assignees', 'githubRepository', 'task']);
 
         if ($request && $request->filled('search')) {
             $search = '%'.$request->search.'%';
@@ -72,6 +129,9 @@ class PullRequestService
                 $q->where('title', 'ilike', $search)
                     ->orWhere('body', 'ilike', $search)
                     ->orWhereHas('author', function ($a) use ($search) {
+                        $a->where('name', 'ilike', $search);
+                    })
+                    ->orWhereHas('assignees', function ($a) use ($search) {
                         $a->where('name', 'ilike', $search);
                     })
                     ->orWhereHas('githubRepository', function ($r) use ($search) {

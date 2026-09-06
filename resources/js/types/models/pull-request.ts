@@ -10,8 +10,8 @@ export interface IPullRequest {
     body: string;
     state: TPullRequestState;
     github_repository?: IGithubRepository;
-    author: IUser;
-    assignee?: IUser;
+    author: Pick<IUser, 'id' | 'name'>;
+    assignee?: Pick<IUser, 'id' | 'name'>[];
     task: ITask;
     base_branch: string;
     head_branch: string;

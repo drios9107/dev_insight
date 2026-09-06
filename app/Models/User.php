@@ -64,7 +64,7 @@ class User extends Authenticatable
 
     public function assignedPullRequests()
     {
-        return $this->hasMany(PullRequest::class, 'assignee_id');
+        return $this->belongsToMany(PullRequest::class, 'pull_request_assignees');
     }
 
     public function pullRequestReviews()

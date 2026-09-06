@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['github_id', 'github_repository_id', 'number', 'title', 'body', 'state', 'author_id', 'assignee_id', 'base_branch', 'head_branch', 'task_id', 'closed_at', 'merged_at', 'merge_commit_sha'])]
+#[Fillable(['github_id', 'github_repository_id', 'number', 'title', 'body', 'state', 'author_id', 'base_branch', 'head_branch', 'task_id', 'closed_at', 'merged_at', 'merge_commit_sha'])]
 #[Hidden(['merge_commit_sha'])]
 class PullRequest extends Model
 {
@@ -24,9 +24,9 @@ class PullRequest extends Model
         return $this->belongsTo(User::class, 'author_id');
     }
 
-    public function assignee(): BelongsTo
+    public function assignees()
     {
-        return $this->belongsTo(User::class, 'assignee_id');
+        return $this->belongsToMany(User::class, 'pull_request_assignees');
     }
 
     public function task(): BelongsTo
@@ -37,5 +37,17 @@ class PullRequest extends Model
     public function reviews()
     {
         return $this->hasMany(PullRequestReview::class, 'pull_request_id');
+    }
+
+    public function reviewers()
+    {
+        return $this->hasManyThrough(
+            User::class,
+            PullRequestReview::class,
+            'pull_request_id',
+            'id',
+            'id',
+            'reviewer_id'
+        );
     }
 }

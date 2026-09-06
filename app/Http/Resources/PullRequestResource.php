@@ -21,10 +21,21 @@ class PullRequestResource extends JsonResource
             'title' => $this->title,
             'body' => $this->body,
             'state' => $this->state,
-            'github_repository' => $this->githubRepository,
+            'github_repository' => $this->whenLoaded('githubRepository', fn () => [
+                'id' => $this->githubRepository->id,
+                'name' => $this->githubRepository->name,
+                'full_name' => $this->githubRepository->full_name,
+            ]),
             'author' => $this->author,
-            'assignee' => $this->assignee,
-            'task' => $this->task,
+            'assignees' => $this->whenLoaded('assignees', fn () => $this->assignees->map(fn ($user) => [
+                'id' => $user->id,
+                'name' => $user->name,
+            ])
+            ),
+            'task' => $this->whenLoaded('task', fn () => [
+                'id' => $this->task->id,
+                'title' => $this->task->title,
+            ]),
             'base_branch' => $this->base_branch,
             'head_branch' => $this->head_branch,
             'merge_commit_sha' => $this->merge_commit_sha,
