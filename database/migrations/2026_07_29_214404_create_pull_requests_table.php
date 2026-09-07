@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('body')->nullable();
             $table->enum('state', array_column(PullRequestStateEnum::cases(), 'value'));
-            $table->foreignId('author_id')->nullable()->constrained('users');
+            $table->foreignId('author_id')->nullable()->constrained('github_users');
             $table->string('base_branch');
             $table->string('head_branch');
             $table->foreignId('task_id')->nullable()->constrained('tasks');

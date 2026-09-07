@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pull_request_assignees', function (Blueprint $table) {
+        Schema::create('github_users', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pull_request_id')->constrained('pull_requests')->onDelete('cascade');
-            $table->foreignId('github_user_id')->constrained('github_users')->onDelete('cascade');
+            $table->bigInteger('github_id')->unique();
+            $table->string('username');
+            $table->string('email')->nullable();
+            $table->string('name')->nullable();
+            $table->string('avatar_url')->nullable();
             $table->timestamps();
-
-            $table->unique(['pull_request_id', 'github_user_id']);
         });
     }
 
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pull_request_assignees');
+        Schema::dropIfExists('github_users');
     }
 };

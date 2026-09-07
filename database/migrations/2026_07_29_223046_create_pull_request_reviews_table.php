@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->bigInteger('github_id')->unique();
-            $table->foreignId('reviewer_id')->nullable()->constrained('users');
+            $table->foreignId('reviewer_id')->nullable()->constrained('github_users');
             $table->foreignId('pull_request_id')->nullable()->constrained('pull_requests');
             $table->enum('state', array_column(PullRequestReviewStateEnum::cases(), 'value'));
             $table->text('body')->nullable();
