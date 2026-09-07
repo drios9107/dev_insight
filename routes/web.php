@@ -5,6 +5,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CommitController;
 use App\Http\Controllers\GithubIssueController;
 use App\Http\Controllers\GithubRepositoryController;
+use App\Http\Controllers\GithubUserController;
 use App\Http\Controllers\MetricController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProjectController;
@@ -42,6 +43,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('all-tasks', [TaskController::class, 'all'])->name('task.all');
     Route::get('all-teams', [TeamController::class, 'all'])->name('team.all');
     Route::get('all-users', [UserController::class, 'all'])->name('user.all');
+    Route::get('all-github-users', [GithubUserController::class, 'all'])->name('github-user.all');
 
     Route::resource('/comment', CommentController::class)->only($apiRoutes);
     Route::resource('/commit', CommitController::class)->only($apiRoutes);
@@ -57,6 +59,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/task', TaskController::class)->only($apiRoutes);
     Route::resource('/team', TeamController::class)->only($apiRoutes);
     Route::resource('/user', UserController::class)->only($apiRoutes);
+    Route::resource('/github-user', UserController::class)->only($apiRoutes);
 });
 
 require __DIR__.'/settings.php';
