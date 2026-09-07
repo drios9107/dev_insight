@@ -30,14 +30,18 @@ class CommitService
         $repo = $service->getRepository($ownerKey, $repoName);
         $repoId = GithubRepository::whereGithubId($repo['id'])->value('id');
 
-        $data = array_map(function ($commit) use ($repoId) {
+        $data = array_map(function ($commit) use ($service, $ownerKey, $repoName, $repoId) {
             $author = null;
             if (isset($commit['author']) && isset($commit['author']['id'])) {
                 $author = $this->githubUserService->findOrCreate($commit['author']);
             }
 
+            $sha = $commit['sha'];
+            $fullCommit = $service->getCommit($ownerKey, $repoName, $sha);
+            $stats = $fullCommit['stats'] ?? ['additions' => 0, 'deletions' => 0];
+
             return [
-                'sha' => $commit['sha'],
+                'sha' => $sha,
                 'github_repository_id' => $repoId,
                 'author_id' => $author?->id,
                 // @todo: define task source
@@ -45,9 +49,9 @@ class CommitService
                 'message' => $commit['commit']['message'],
                 'date' => date('Y-m-d H:i:s', strtotime($commit['commit']['author']['date'])),
                 'url' => $commit['html_url'] ?? '',
-                'additions' => $commit['stats']['additions'] ?? 0,
-                'deletions' => $commit['stats']['deletions'] ?? 0,
-                'total_changes' => ($commit['stats']['additions'] ?? 0) + ($commit['stats']['deletions'] ?? 0),
+                'additions' => $stats['additions'] ?? 0,
+                'deletions' => $stats['deletions'] ?? 0,
+                'total_changes' => ($stats['additions'] ?? 0) + ($stats['deletions'] ?? 0),
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
@@ -68,7 +72,8 @@ class CommitService
 
     public function index(?Request $request = null)
     {
-        $query = Commit::query();
+        $query = Commit::query()
+            ->with(['author', 'githubRepository', 'task']);
 
         if ($request && $request->filled('search')) {
             $search = '%'.$request->search.'%';

@@ -51,13 +51,13 @@ const Commits = (props: any) => {
             key: 'additions',
             label: '+',
             align: 'center',
-            render: (value) => value ?? 0,
+            render: (value) => <span className={'text-green-600'}>{value ?? 0}</span>,
         },
         {
             key: 'deletions',
             label: '-',
             align: 'center',
-            render: (value) => value ?? 0,
+            render: (value) => <span className={'text-red-600'}>{value ?? 0}</span>,
         },
         {
             key: 'total_changes',

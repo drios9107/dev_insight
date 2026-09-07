@@ -17,8 +17,11 @@ class CommitResource extends JsonResource
         return [
             'id' => $this->id,
             'sha' => $this->sha,
-            'github_repository' => $this->github_repository,
-            'author' => $this->author,
+            'github_repository' => $this->githubRepository,
+            'author' => $this->whenLoaded('author', fn () => [
+                'id' => $this->author->id,
+                'name' => $this->author->displayName,
+            ]),
             'task' => $this->task,
             'message' => $this->message,
             'date' => $this->date ? date('Y-m-d', strtotime($this->date)) : null,

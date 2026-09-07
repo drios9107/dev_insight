@@ -55,4 +55,9 @@ class GithubUser extends Model
     {
         return $this->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($this->username);
     }
+
+    public function getDisplayNameAttribute(): string
+    {
+        return $this->name ?? $this->username;
+    }
 }
