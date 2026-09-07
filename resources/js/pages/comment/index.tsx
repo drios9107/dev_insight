@@ -18,7 +18,7 @@ const Comments = (props: any) => {
                     <Badge variant={i.is_internal ? 'success' : 'default'}>{i.is_internal ? 'Is Internal' : 'Is Public'}</Badge>
                 </CardTitle>
                 <CardContent className="flex flex-col flex-1 gap-1">
-                    <RowData title="User" value={i?.user?.name} />
+                    <RowData title="User" value={i?.github_user?.username} />
                     <RowData title="Task" value={i?.task?.title} />
                     <RowData title="Created At" value={i?.created_at} />
                     <CardDescription className="">

@@ -1,10 +1,10 @@
-import { IUser } from "../user";
+import { IGithubUser } from "../github-user";
 import { ITask } from "./task";
 
 export interface IComment {
     id: number;
     content: string;
-    user: IUser;
+    github_user: IGithubUser;
     task: ITask;
     parent?: IComment;
     is_internal: boolean;
