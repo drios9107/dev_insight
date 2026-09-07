@@ -4,12 +4,18 @@ namespace App\Services;
 
 use App\Models\GithubRepository;
 use App\Models\PullRequest;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PullRequestService
 {
+    private GithubUserService $githubUserService;
+
+    public function __construct(GithubUserService $githubUserService)
+    {
+        $this->githubUserService = $githubUserService;
+    }
+
     public function fetchData(GithubService $service, string $state = 'all', string $ownerKey = 'drios9107', string $repoName = 'expenses')
     {
         $prs = $service->getPullRequests($ownerKey, $repoName, $state);
@@ -26,20 +32,19 @@ class PullRequestService
 
         $data = array_map(function ($pr) use ($repoId) {
             // Author
-            $authorId = null;
-            if (isset($pr['user']['id'])) {
-                $authorId = User::whereGithubId($pr['user']['id'])->value('id');
+            $author = null;
+            if (isset($pr['user']) && isset($pr['user']['id'])) {
+                $author = $this->githubUserService->findOrCreate($pr['user']);
             }
+            // dd($pr['assignees']);
 
             // Assignees
             $assigneeIds = [];
             if (isset($pr['assignees']) && is_array($pr['assignees'])) {
-                foreach ($pr['assignees'] as $assignee) {
-                    if (isset($assignee['id'])) {
-                        $userId = User::whereGithubId($assignee['id'])->value('id');
-                        if ($userId) {
-                            $assigneeIds[] = $userId;
-                        }
+                foreach ($pr['assignees'] as $assigneeData) {
+                    if (isset($assigneeData['id'])) {
+                        $assignee = $this->githubUserService->findOrCreate($assigneeData);
+                        $assigneeIds[] = $assignee->id;
                     }
                 }
             }
@@ -52,7 +57,7 @@ class PullRequestService
                     'title' => $pr['title'],
                     'body' => $pr['body'] ?? null,
                     'state' => $pr['state'],
-                    'author_id' => $authorId,
+                    'author_id' => $author?->id,
                     'base_branch' => $pr['base']['ref'] ?? 'main',
                     'head_branch' => $pr['head']['ref'] ?? 'feature',
                     'task_id' => null,
@@ -65,7 +70,7 @@ class PullRequestService
                 'assignee_ids' => $assigneeIds,
             ];
         }, $prs);
-
+        // dd($data);
         DB::beginTransaction();
 
         try {
@@ -122,7 +127,6 @@ class PullRequestService
     public function index(?Request $request = null)
     {
         $query = PullRequest::query()->with(['author', 'assignees', 'githubRepository', 'task']);
-
         if ($request && $request->filled('search')) {
             $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {

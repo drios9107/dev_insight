@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 #[Fillable(['github_id', 'github_repository_id', 'number', 'title', 'body', 'state', 'author_id', 'base_branch', 'head_branch', 'task_id', 'closed_at', 'merged_at', 'merge_commit_sha'])]
 #[Hidden(['merge_commit_sha'])]
@@ -21,12 +22,17 @@ class PullRequest extends Model
 
     public function author(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'author_id');
+        return $this->belongsTo(GithubUser::class, 'author_id');
     }
 
-    public function assignees()
+    public function assignees(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'pull_request_assignees');
+        return $this->belongsToMany(
+            GithubUser::class,
+            'pull_request_assignees',
+            'pull_request_id',
+            'github_user_id'
+        );
     }
 
     public function task(): BelongsTo
@@ -42,7 +48,7 @@ class PullRequest extends Model
     public function reviewers()
     {
         return $this->hasManyThrough(
-            User::class,
+            GithubUser::class,
             PullRequestReview::class,
             'pull_request_id',
             'id',

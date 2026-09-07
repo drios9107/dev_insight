@@ -14,7 +14,7 @@ class PullRequestReview extends Model
 
     public function reviewer(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'reviewer_id');
+        return $this->belongsTo(GithubUser::class, 'reviewer_id');
     }
 
     public function pullRequest(): BelongsTo

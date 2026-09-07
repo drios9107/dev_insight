@@ -37,9 +37,6 @@ class UserController extends Controller
         if ($request->has('role_id')) {
             $filters['role_id'] = $request->role_id;
         }
-        if ($request->has('email_verified_at')) {
-            $filters['email_verified_at'] = $request->email_verified_at;
-        }
 
         $roles = Role::select('id', 'name')->get();
 

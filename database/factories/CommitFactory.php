@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Commit;
 use App\Models\GithubRepository;
+use App\Models\GithubUser;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -26,7 +27,7 @@ class CommitFactory extends Factory
         return [
             'sha' => $this->faker->unique()->sha1(),
             'github_repository_id' => GithubRepository::inRandomOrder(0)->first()->id,
-            'author_id' => User::inRandomOrder(0)->first()->id,
+            'author_id' => GithubUser::inRandomOrder(0)->first()->id,
             'task_id' => Task::inRandomOrder(0)->first()->id,
             'message' => $this->faker->sentence(6),
             'date' => $this->faker->dateTimeBetween('-60 days', 'now'),

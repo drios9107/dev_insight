@@ -16,9 +16,9 @@ class GithubIssue extends Model
         return $this->belongsTo(GithubRepository::class);
     }
 
-    public function user()
+    public function author()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(GithubUser::class);
     }
 
     public function task()

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\PullRequestReviewStateEnum;
+use App\Models\GithubUser;
 use App\Models\PullRequest;
 use App\Models\PullRequestReview;
 use App\Models\User;
@@ -25,7 +26,7 @@ class PullRequestReviewFactory extends Factory
         return [
             'github_id' => $this->faker->unique()->randomNumber(8),
             'pull_request_id' => PullRequest::inRandomOrder(0)->first()->id,
-            'reviewer_id' => $this->faker->optional()->passthrough(User::inRandomOrder(0)->first()->id),
+            'reviewer_id' => $this->faker->optional()->passthrough(GithubUser::inRandomOrder(0)->first()->id),
             'state' => $this->faker->randomElement($states),
             'body' => $this->faker->optional()->paragraph(),
             'submitted_at' => $this->faker->dateTimeBetween('-30 days', 'now'),

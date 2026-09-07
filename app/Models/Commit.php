@@ -18,7 +18,7 @@ class Commit extends Model
 
     public function author()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(GithubUser::class);
     }
 
     public function task()

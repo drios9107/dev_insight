@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Enums\GithubIssueStateEnum;
 use App\Models\GithubIssue;
 use App\Models\GithubRepository;
+use App\Models\GithubUser;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -29,7 +30,7 @@ class GithubIssueFactory extends Factory
             'title' => $this->faker->sentence(5),
             'body' => $this->faker->optional()->paragraph(),
             'state' => $state,
-            'author_id' => User::inRandomOrder(0)->first()->id,
+            'author_id' => GithubUser::inRandomOrder(0)->first()->id,
             'closed_at' => $state === 'closed' ? $this->faker->dateTimeBetween('-30 days', 'now') : null,
             'created_at' => $this->faker->dateTimeBetween('-60 days', 'now'),
             'updated_at' => $this->faker->dateTimeBetween('-60 days', 'now'),

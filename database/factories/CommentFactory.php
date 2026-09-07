@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Comment;
+use App\Models\GithubUser;
 use App\Models\Task;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,7 +21,7 @@ class CommentFactory extends Factory
     {
         return [
             'task_id' => Task::inRandomOrder(0)->first()->id,
-            'user_id' => User::inRandomOrder(0)->first()->id,
+            'github_user_id' => GithubUser::inRandomOrder(0)->first()->id,
             'parent_id' => null,
             'content' => $this->faker->paragraph(2),
             'is_internal' => $this->faker->boolean(20),

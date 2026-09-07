@@ -33,8 +33,6 @@ class GithubUserService
                 'email' => $githubData['email'] ?? $user->email,
                 'name' => $githubData['name'] ?? $user->name,
                 'avatar_url' => $githubData['avatar_url'] ?? $user->avatar_url,
-                'meta' => $githubData,
-                'last_synced_at' => now(),
             ]);
 
             return $user;
@@ -47,8 +45,6 @@ class GithubUserService
                     'github_id' => $githubData['id'],
                     'username' => $githubData['login'],
                     'avatar_url' => $githubData['avatar_url'] ?? null,
-                    'meta' => $githubData,
-                    'last_synced_at' => now(),
                 ]);
 
                 return $user;
@@ -61,8 +57,6 @@ class GithubUserService
             'email' => $githubData['email'] ?? null,
             'name' => $githubData['name'] ?? null,
             'avatar_url' => $githubData['avatar_url'] ?? null,
-            'meta' => $githubData,
-            'last_synced_at' => now(),
         ]);
     }
 

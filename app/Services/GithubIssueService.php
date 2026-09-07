@@ -9,6 +9,13 @@ use Illuminate\Support\Facades\DB;
 
 class GithubIssueService
 {
+    private GithubUserService $githubUserService;
+
+    public function __construct(GithubUserService $githubUserService)
+    {
+        $this->githubUserService = $githubUserService;
+    }
+
     public function fetchData(GithubService $service, string $ownerKey = 'drios9107', string $repoName = 'expenses')
     {
         $issues = $service->getIssues($ownerKey, $repoName);
@@ -24,6 +31,10 @@ class GithubIssueService
         $repoId = GithubRepository::whereGithubId($repo['id'])->value('id');
 
         $data = array_map(function ($issue) use ($repoId) {
+            $author = null;
+            if (isset($issue['user']) && isset($issue['user']['id'])) {
+                $author = $this->githubUserService->findOrCreate($issue['user']);
+            }
 
             return [
                 'github_id' => $issue['id'],
@@ -32,7 +43,7 @@ class GithubIssueService
                 'title' => $issue['title'],
                 'body' => $issue['body'] ?? null,
                 'state' => $issue['state'],
-                'author_id' => null,
+                'author_id' => $author?->id,
                 'closed_at' => $issue['closed_at'] ?? null,
                 'created_at' => date('Y-m-d H:i:s', strtotime($issue['created_at'])),
                 'updated_at' => date('Y-m-d H:i:s', strtotime($issue['updated_at'])),

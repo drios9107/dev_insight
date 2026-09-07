@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -37,54 +39,34 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
-    public function teams()
+    public function activityLogs()
     {
-        return $this->belongsToMany(Team::class, 'team_user');
+        return $this->hasMany(ActivityLog::class, 'user_id');
     }
 
-    public function projects()
-    {
-        return $this->hasMany(Project::class, 'owner_id');
-    }
-
-    public function githubIssues()
-    {
-        return $this->hasMany(GithubIssue::class, 'author_id');
-    }
-
-    public function commits()
-    {
-        return $this->hasMany(Commit::class, 'author_id');
-    }
-
-    public function pullRequests()
-    {
-        return $this->hasMany(PullRequest::class, 'author_id');
-    }
-
-    public function assignedPullRequests()
-    {
-        return $this->belongsToMany(PullRequest::class, 'pull_request_assignees');
-    }
-
-    public function pullRequestReviews()
-    {
-        return $this->hasMany(PullRequestReview::class, 'reviewer_id');
-    }
-
-    public function comments()
-    {
-        return $this->hasMany(Comment::class, 'user_id');
-    }
-
-    public function notifications()
+    public function notifications(): HasMany
     {
         return $this->hasMany(Notification::class, 'user_id');
     }
 
-    public function activityLogs()
+    public function teams(): BelongsToMany
     {
-        return $this->hasMany(ActivityLog::class, 'user_id');
+        return $this->belongsToMany(Team::class, 'team_user');
+    }
+
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class, 'owner_id');
+    }
+
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class, 'assignee_id');
+    }
+
+    public function reportedTasks(): HasMany
+    {
+        return $this->hasMany(Task::class, 'reporter_id');
     }
 
     public function isAdmin(): bool

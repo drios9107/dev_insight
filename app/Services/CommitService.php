@@ -9,6 +9,13 @@ use Illuminate\Support\Facades\DB;
 
 class CommitService
 {
+    private GithubUserService $githubUserService;
+
+    public function __construct(GithubUserService $githubUserService)
+    {
+        $this->githubUserService = $githubUserService;
+    }
+
     public function fetchData(GithubService $service, string $ownerKey = 'drios9107', string $repoName = 'expenses')
     {
         $commits = $service->getCommits($ownerKey, $repoName);
@@ -23,13 +30,16 @@ class CommitService
         $repo = $service->getRepository($ownerKey, $repoName);
         $repoId = GithubRepository::whereGithubId($repo['id'])->value('id');
 
-        $data = array_map(function ($commit) use ($repoId, $service) {
-            $authorId = $service->getAuthorIdFromCommit($commit);
+        $data = array_map(function ($commit) use ($repoId) {
+            $author = null;
+            if (isset($commit['author']) && isset($commit['author']['id'])) {
+                $author = $this->githubUserService->findOrCreate($commit['author']);
+            }
 
             return [
                 'sha' => $commit['sha'],
                 'github_repository_id' => $repoId,
-                'author_id' => $authorId,
+                'author_id' => $author?->id,
                 // @todo: define task source
                 'task_id' => null,
                 'message' => $commit['commit']['message'],

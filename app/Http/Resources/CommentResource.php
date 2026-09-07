@@ -17,7 +17,7 @@ class CommentResource extends JsonResource
         return [
             'id' => $this->id,
             'content' => $this->content,
-            'user' => $this->user,
+            'github_user' => $this->githubUser,
             'task' => $this->task,
             'parent' => $this->parent,
             'is_internal' => $this->is_internal,

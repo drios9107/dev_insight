@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\DB;
 
 class PullRequestReviewService
 {
+    private GithubUserService $githubUserService;
+
+    public function __construct(GithubUserService $githubUserService)
+    {
+        $this->githubUserService = $githubUserService;
+    }
+
     public function fetchData(GithubService $service, string $ownerKey = 'drios9107', string $repoName = 'expenses')
     {
         $repo = $service->getRepository($ownerKey, $repoName);
@@ -30,10 +37,15 @@ class PullRequestReviewService
             $reviews = $service->getPullRequestReviews($ownerKey, $repoName, $pr->number);
 
             foreach ($reviews as $review) {
+                $reviewer = null;
+                if (isset($review['user']) && isset($review['user']['id'])) {
+                    $reviewer = $this->githubUserService->findOrCreate($review['user']);
+                }
+
                 $allReviews[] = [
                     'github_id' => $review['id'],
                     'pull_request_id' => $pr->id,
-                    'reviewer_id' => null,
+                    'reviewer_id' => $reviewer?->id,
                     'state' => strtolower($review['state']),
                     'body' => $review['body'] ?? null,
                     'submitted_at' => $review['submitted_at'] ?? null,

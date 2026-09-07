@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Enums\PullRequestStateEnum;
 use App\Models\GithubRepository;
+use App\Models\GithubUser;
 use App\Models\PullRequest;
 use App\Models\Task;
 use App\Models\User;
@@ -30,8 +31,8 @@ class PullRequestFactory extends Factory
             'title' => $this->faker->sentence(5),
             'body' => $this->faker->optional()->paragraph(),
             'state' => $state,
-            'author_id' => $this->faker->optional()->passthrough(User::inRandomOrder(0)->first()->id),
-            'assignee_id' => $this->faker->optional()->passthrough(User::inRandomOrder(0)->first()->id),
+            'author_id' => $this->faker->optional()->passthrough(GithubUser::inRandomOrder(0)->first()->id),
+            'assignee_id' => $this->faker->optional()->passthrough(GithubUser::inRandomOrder(0)->first()->id),
             'base_branch' => $this->faker->randomElement(['main', 'master', 'develop']),
             'head_branch' => 'feature/'.$this->faker->word(),
             'task_id' => $this->faker->optional()->passthrough(Task::inRandomOrder(0)->first()->id),
