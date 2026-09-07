@@ -35,6 +35,12 @@ const Projects = (props: any) => {
             render: (value) => value?.name,
             className: 'w-full'
         },
+
+        {
+            key: 'owner',
+            label: 'Owner',
+            render: (value) => value?.name || '-',
+        },
         {
             key: 'color',
             label: 'Color',

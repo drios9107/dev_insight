@@ -35,23 +35,6 @@ const GithubRepositorys = (props: any) => {
             render: (value: string) => value || 'main',
         },
         {
-            key: 'stars_count',
-            label: '⭐',
-            align: 'center',
-            render: (value: number) => value ?? 0,
-        },
-        {
-            key: 'forks_count',
-            label: '🍴',
-            align: 'center',
-            render: (value: number) => value ?? 0,
-        },
-        {
-            key: 'project',
-            label: 'Project',
-            render: (value) => value?.name || '-',
-        },
-        {
             key: 'last_synced_at',
             label: 'Last Synced',
             sortable: true,
