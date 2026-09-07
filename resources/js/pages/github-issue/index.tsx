@@ -65,7 +65,7 @@ const GithubsIssues = (props: any) => {
         {
             key: 'task',
             label: 'Task',
-            render: (value) => value?.title ? `#${value.id}` : '-',
+            render: (value) => value?.title ?? '-',
         },
     ];
 

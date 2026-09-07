@@ -18,7 +18,11 @@ class GithubIssueResource extends JsonResource
             'id' => $this->id,
             'github_id' => $this->github_id,
             'github_repository' => $this->githubRepository,
-            'author' => $this->author,
+            'author' => $this->whenLoaded('author', fn () => [
+                'id' => $this->author->id,
+                'name' => $this->author->displayName,
+            ]),
+            'task'=>$this->task,
             'number' => $this->number,
             'title' => $this->title,
             'body' => $this->body,

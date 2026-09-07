@@ -65,7 +65,8 @@ class GithubIssueService
 
     public function index(?Request $request = null)
     {
-        $query = GithubIssue::query();
+        $query = GithubIssue::query()
+            ->with('author', 'githubRepository', 'task');
 
         if ($request && $request->filled('search')) {
             $search = '%'.$request->search.'%';
