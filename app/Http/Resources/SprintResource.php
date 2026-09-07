@@ -21,7 +21,7 @@ class SprintResource extends JsonResource
             'project' => $this->project,
             'status' => $this->status,
             'velocity' => $this->velocity,
-            'actual_velocity' => $this->actual_vlocity,
+            'actual_velocity' => $this->actual_velocity,
             'start_date' => $this->start_date ? date('Y-m-d', strtotime($this->start_date)) : null,
             'end_date' => $this->end_date ? date('Y-m-d', strtotime($this->end_date)) : null,
             'created_at' => $this->created_at ? date('Y-m-d', strtotime($this->created_at)) : null,

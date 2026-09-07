@@ -9,7 +9,7 @@ class TeamService
 {
     public function index(?Request $request = null)
     {
-        $query = Team::query();
+        $query = Team::query()->with('owner');
 
         if ($request && $request->filled('search')) {
             $search = '%'.$request->search.'%';
