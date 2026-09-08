@@ -10,6 +10,8 @@ import { PullRequestStateEnum } from "@/enums/pull-requests";
 import pullRequest from "@/routes/pull-request";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tooltip } from "@/components/ui/tooltip";
+import { CustomTooltip } from "@/components/custom/tooltip";
 
 const PullRequests = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<IPullRequest | null>(null)
@@ -45,7 +47,7 @@ const PullRequests = (props: any) => {
         {
             key: 'author',
             label: 'Author',
-            render: (value) => value?.name || '-',
+            render: (value) => value?.username || '-',
         },
         {
             key: 'assignees',
@@ -55,11 +57,13 @@ const PullRequests = (props: any) => {
                 return (
                     <div className="flex -space-x-2">
                         {value.slice(0, 3).map((user: any) => (
-                            <Avatar key={user.id} className="w-6 h-6 border-2 border-white">
-                                <AvatarFallback className="text-xs">
-                                    {user.name?.charAt(0).toUpperCase() || 'U'}
-                                </AvatarFallback>
-                            </Avatar>
+                            <CustomTooltip key={user.id} text={user.name}>
+                                <Avatar key={user.id} className="w-6 h-6 border-2 border-white">
+                                    <AvatarFallback className="text-xs">
+                                        {user.name?.charAt(0).toUpperCase() || 'U'}
+                                    </AvatarFallback>
+                                </Avatar>
+                            </CustomTooltip>
                         ))}
                         {value.length > 3 && (
                             <span className="text-xs text-gray-500 ml-1">

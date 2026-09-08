@@ -36,7 +36,6 @@ class PullRequestService
             if (isset($pr['user']) && isset($pr['user']['id'])) {
                 $author = $this->githubUserService->findOrCreate($pr['user']);
             }
-            // dd($pr['assignees']);
 
             // Assignees
             $assigneeIds = [];
@@ -60,6 +59,7 @@ class PullRequestService
                     'author_id' => $author?->id,
                     'base_branch' => $pr['base']['ref'] ?? 'main',
                     'head_branch' => $pr['head']['ref'] ?? 'feature',
+                    // @todo: define task source
                     'task_id' => null,
                     'closed_at' => $pr['closed_at'] ?? null,
                     'merged_at' => $pr['merged_at'] ?? null,
@@ -70,7 +70,6 @@ class PullRequestService
                 'assignee_ids' => $assigneeIds,
             ];
         }, $prs);
-        // dd($data);
         DB::beginTransaction();
 
         try {
@@ -85,6 +84,7 @@ class PullRequestService
 
                 // Sincronizar assignees
                 if (! empty($item['assignee_ids'])) {
+
                     $prId = DB::table('pull_requests')
                         ->where('github_id', $prData['github_id'])
                         ->value('id');
@@ -97,7 +97,7 @@ class PullRequestService
                         foreach ($item['assignee_ids'] as $userId) {
                             DB::table('pull_request_assignees')->insert([
                                 'pull_request_id' => $prId,
-                                'user_id' => $userId,
+                                'github_user_id' => $userId,
                                 'created_at' => now(),
                                 'updated_at' => now(),
                             ]);

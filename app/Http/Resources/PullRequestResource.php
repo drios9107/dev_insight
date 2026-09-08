@@ -29,7 +29,7 @@ class PullRequestResource extends JsonResource
             'author' => $this->author,
             'assignees' => $this->whenLoaded('assignees', fn () => $this->assignees->map(fn ($user) => [
                 'id' => $user->id,
-                'name' => $user->name,
+                'name' => $user->displayName,
             ])
             ),
             'task' => $this->whenLoaded('task', fn () => [
