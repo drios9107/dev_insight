@@ -50,29 +50,13 @@ const adminNavItems: NavItem[] = [
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    }, {
-        title: 'Comment',
-        href: comment.index(),
-        icon: Notebook,
-    }, {
-        title: 'Commit',
-        href: commit.index(),
-        icon: GitCommit,
-    }, {
-        title: 'Issues',
-        href: githubIssue.index(),
-        icon: Bug,
-    }, {
-        title: 'Repositories',
-        href: githubRepository.index(),
-        icon: FolderGit2,
-    }, {
         title: 'Metrics',
         href: metric.index(),
         icon: LayoutDashboard,
+    }, {
+        title: 'Dashboard',
+        href: dashboard(),
+        icon: LayoutGrid,
     }, {
         title: 'Notifications',
         href: notification.index(),
@@ -81,14 +65,6 @@ const mainNavItems: NavItem[] = [
         title: 'Projects',
         href: project.index(),
         icon: Workflow,
-    }, {
-        title: 'PRs',
-        href: pullRequest.index(),
-        icon: DiamondPercent,
-    }, {
-        title: 'PR Reviews',
-        href: pullRequestReview.index(),
-        icon: CheckSquare,
     }, {
         title: 'Sprints',
         href: sprint.index(),
@@ -101,6 +77,31 @@ const mainNavItems: NavItem[] = [
         title: 'Teams',
         href: team.index(),
         icon: Group,
+    }
+];
+
+
+const githubNavItems: NavItem[] = [
+    {
+        title: 'Commit',
+        href: commit.index(),
+        icon: GitCommit,
+    }, {
+        title: 'Issues',
+        href: githubIssue.index(),
+        icon: Bug,
+    }, {
+        title: 'Repositories',
+        href: githubRepository.index(),
+        icon: FolderGit2,
+    }, {
+        title: 'PRs',
+        href: pullRequest.index(),
+        icon: DiamondPercent,
+    }, {
+        title: 'Reviews',
+        href: pullRequestReview.index(),
+        icon: CheckSquare,
     }
 ];
 
@@ -137,11 +138,12 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain items={mainNavItems} />
+                <NavMain items={githubNavItems} title='Github' />
                 {isAdmin && <NavMain items={adminNavItems} title='Admin' />}
             </SidebarContent>
 
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
+                {/* <NavFooter items={footerNavItems} className="mt-auto" /> */}
                 <NavUser />
             </SidebarFooter>
         </Sidebar>

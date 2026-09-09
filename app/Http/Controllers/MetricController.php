@@ -2,75 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\MetricRequest;
-use App\Http\Resources\MetricResource;
+use App\Models\GithubRepository;
 use App\Services\MetricService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class MetricController extends Controller
 {
-    private MetricService $service;
+    private MetricService $metricService;
 
-    public function __construct(MetricService $service)
+    public function __construct(MetricService $metricService)
     {
-        $this->service = $service;
+        $this->metricService = $metricService;
     }
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function all()
-    {
-        return MetricResource::collection($this->service->index());
-    }
-
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
-        $data = MetricResource::collection($this->service->index($request));
+        $repositoryId = $request->get('repository_id');
+
+        $metrics = $this->metricService->getDashboardMetrics($repositoryId);
+
+        // Repositorios para el filtro
+        $repositories = GithubRepository::select('id', 'full_name')->get();
 
         return Inertia::render('metric/index', [
-            'list' => $data,
+            'metrics' => $metrics,
+            'repositories' => $repositories,
+            'selected_repository' => $repositoryId,
             'title' => 'Metrics',
         ]);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(MetricRequest $request)
-    {
-        $validated = $request->validated();
-
-        $this->service->store($validated);
-
-        return redirect()->route('metric.index')
-            ->with('success', 'Metric created successfully!');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(MetricRequest $request, int $id)
-    {
-        $validated = $request->validated();
-
-        $this->service->update($id, $validated);
-
-        return redirect()->route('metric.index')
-            ->with('success', 'Metric updated successfully!');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(int $id)
-    {
-        $this->service->destroy($id);
-
-        return redirect()->back()->with('success', 'Metric deleted successfully!');
     }
 }

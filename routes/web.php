@@ -33,7 +33,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('all-commits', [CommitController::class, 'all'])->name('commit.all');
     Route::get('all-githubs-issue', [GithubIssueController::class, 'all'])->name('github-issue.all');
     Route::get('all-githubs-repository', [GithubRepositoryController::class, 'all'])->name('github-repository.all');
-    Route::get('all-metrics', [MetricController::class, 'all'])->name('metric.all');
     Route::get('all-notifications', [NotificationController::class, 'all'])->name('notification.all');
     Route::get('all-projects', [ProjectController::class, 'all'])->name('project.all');
     Route::get('all-pulls-request', [PullRequestController::class, 'all'])->name('pull-request.all');
@@ -49,7 +48,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/commit', CommitController::class)->only($apiRoutes);
     Route::resource('/github-issue', GithubIssueController::class)->only($apiRoutes);
     Route::resource('/github-repository', GithubRepositoryController::class)->only($apiRoutes);
-    Route::resource('/metric', MetricController::class)->only($apiRoutes);
     Route::resource('/notification', NotificationController::class)->only($apiRoutes);
     Route::resource('/project', ProjectController::class)->only($apiRoutes);
     Route::resource('/pull-request', PullRequestController::class)->only($apiRoutes);
@@ -60,6 +58,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/team', TeamController::class)->only($apiRoutes);
     Route::resource('/user', UserController::class)->only($apiRoutes);
     Route::resource('/github-user', UserController::class)->only($apiRoutes);
+
+    Route::get('metric', [MetricController::class, 'index'])->name('metric.index');
 });
 
 require __DIR__.'/settings.php';

@@ -30,15 +30,17 @@ class CommitService
         $repo = $service->getRepository($ownerKey, $repoName);
         $repoId = GithubRepository::whereGithubId($repo['id'])->value('id');
 
-        $data = array_map(function ($commit) use ($service, $ownerKey, $repoName, $repoId) {
+        $data = array_map(function ($commit) use ($repoId) {
             $author = null;
             if (isset($commit['author']) && isset($commit['author']['id'])) {
                 $author = $this->githubUserService->findOrCreate($commit['author']);
             }
 
             $sha = $commit['sha'];
-            $fullCommit = $service->getCommit($ownerKey, $repoName, $sha);
-            $stats = $fullCommit['stats'] ?? ['additions' => 0, 'deletions' => 0];
+            // @todo: optimize this fetch somehow
+            // $fullCommit = $service->getCommit($ownerKey, $repoName, $sha);
+            // $stats = $fullCommit['stats'] ?? ['additions' => 0, 'deletions' => 0];
+            $stats = ['additions' => 0, 'deletions' => 0];
 
             return [
                 'sha' => $sha,
