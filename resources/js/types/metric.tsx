@@ -1,4 +1,4 @@
-import { IGithubRepository } from "./models/github-repository";
+// types/metrics.ts
 
 export interface MetricCard {
     label: string;
@@ -58,7 +58,6 @@ export interface CodeChurn {
     total: number;
 }
 
-
 export interface DeveloperStats {
     name: string;
     username: string;
@@ -108,6 +107,42 @@ export interface DeveloperRanking {
     highest_productivity: DeveloperStats | null;
 }
 
+// =============================================
+// NUEVOS TIPOS PARA LAS NUEVAS MÉTRICAS
+// =============================================
+
+export interface TeamMember {
+    name: string;
+    username: string;
+    avatar: string | null;
+    commits: number;
+    prs: number;
+    reviews: number;
+    last_active: string;
+    status: 'active' | 'idle' | 'away';
+}
+
+export interface TopContributor {
+    name: string;
+    username: string;
+    avatar: string | null;
+    score: number;
+    commits: number;
+    prs: number;
+    reviews: number;
+}
+
+export interface TopCommitter {
+    name: string;
+    username: string;
+    avatar: string | null;
+    commits: number;
+}
+
+// =============================================
+// DASHBOARD METRICS COMPLETO
+// =============================================
+
 export interface DashboardMetrics {
     // Cards
     cards: MetricCard[];
@@ -136,11 +171,49 @@ export interface DashboardMetrics {
     code_quality: CodeQualityMetrics;
     pr_cycle_time: PrCycleTime;
     developer_ranking: DeveloperRanking;
+
+    // =============================================
+    // NUEVAS MÉTRICAS
+    // =============================================
+
+    /** Lista de miembros del equipo con estado */
+    team_members: TeamMember[];
+
+    /** PRs sin actividad en más de 7 días */
+    stale_prs: number;
+
+    /** PRs abiertos sin ninguna review */
+    prs_needing_review: number;
+
+    /** Desarrolladores sin commits en más de 7 días */
+    inactive_developers: number;
+
+    /** Porcentaje de PRs que fueron mergeados */
+    pr_merge_rate: number;
+
+    /** Total de PRs mergeados */
+    prs_merged: number;
+
+    /** Total de PRs */
+    prs_total: number;
+
+    /** Top contribuyentes (commits + PRs + reviews) */
+    top_contributors: TopContributor[];
+
+    /** Top committers */
+    top_committers: TopCommitter[];
 }
+
+// =============================================
+// PROPS DE LA PÁGINA
+// =============================================
 
 export interface MetricsPageProps {
     metrics: DashboardMetrics;
-    repositories: Pick<IGithubRepository, 'id' | 'full_name'>[];
+    repositories: Array<{
+        id: number;
+        full_name: string;
+    }>;
     selected_repository: number | null;
     title: string;
 }

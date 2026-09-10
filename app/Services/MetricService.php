@@ -51,6 +51,25 @@ class MetricService
             'code_quality' => $this->getCodeQualityMetrics($repositoryId),
             'pr_cycle_time' => $this->getPrCycleTime($repositoryId),
             'developer_ranking' => $this->getDeveloperRanking($repositoryId),
+
+            // =============================================
+            // NUEVAS MÉTRICAS
+            // =============================================
+
+            // 👥 Team Members
+            'team_members' => $this->getTeamMembers($repositoryId),
+
+            // ⚡ Action Cards
+            'stale_prs' => $this->getStalePrs($repositoryId),
+            'prs_needing_review' => $this->getPrsNeedingReview($repositoryId),
+            'inactive_developers' => $this->getInactiveDevelopers($repositoryId, 7),
+            'pr_merge_rate' => $this->getPrMergeRate($repositoryId),
+            'prs_merged' => $this->getPrsMerged($repositoryId),
+            'prs_total' => $this->getPrsTotal($repositoryId),
+
+            // 🏆 Rankings
+            'top_contributors' => $this->getTopContributors($repositoryId, 5),
+            'top_committers' => $this->getTopCommitters($repositoryId, 5),
         ];
     }
 
@@ -123,7 +142,7 @@ class MetricService
     }
 
     // =============================================
-    // GRÁFICOS - COMMITS POR DÍA
+    // GRÁFICOS
     // =============================================
 
     private function getCommitsByDay(?int $repositoryId, int $days): array
@@ -151,10 +170,6 @@ class MetricService
             ->toArray();
     }
 
-    // =============================================
-    // GRÁFICOS - COMMITS POR SEMANA
-    // =============================================
-
     private function getCommitsByWeek(?int $repositoryId, int $weeks): array
     {
         $query = Commit::select(
@@ -177,10 +192,6 @@ class MetricService
             ->toArray();
     }
 
-    // =============================================
-    // GRÁFICOS - PRS POR ESTADO
-    // =============================================
-
     private function getPrsByState(?int $repositoryId): array
     {
         $query = PullRequest::select(
@@ -196,10 +207,6 @@ class MetricService
         return $query->pluck('count', 'state')->toArray();
     }
 
-    // =============================================
-    // GRÁFICOS - ISSUES POR ESTADO
-    // =============================================
-
     private function getIssuesByState(?int $repositoryId): array
     {
         $query = GithubIssue::select(
@@ -214,10 +221,6 @@ class MetricService
 
         return $query->pluck('count', 'state')->toArray();
     }
-
-    // =============================================
-    // GRÁFICOS - REVIEWS POR ESTADO
-    // =============================================
 
     private function getReviewsByState(?int $repositoryId): array
     {
@@ -235,7 +238,7 @@ class MetricService
     }
 
     // =============================================
-    // TABLAS - TOP DESARROLLADORES
+    // TABLAS
     // =============================================
 
     private function getTopDevelopers(?int $repositoryId, int $limit): array
@@ -265,10 +268,6 @@ class MetricService
             ])
             ->toArray();
     }
-
-    // =============================================
-    // TABLAS - TOP REVISORES
-    // =============================================
 
     private function getTopReviewers(?int $repositoryId, int $limit): array
     {
@@ -302,15 +301,10 @@ class MetricService
             ->toArray();
     }
 
-    // =============================================
-    // TABLAS - ACTIVIDAD RECIENTE
-    // =============================================
-
     private function getRecentActivity(?int $repositoryId, int $limit): array
     {
         $activities = [];
 
-        // Últimos commits
         $commits = Commit::with(['author', 'githubRepository'])
             ->when($repositoryId, fn ($q) => $q->where('github_repository_id', $repositoryId))
             ->latest('date')
@@ -321,13 +315,10 @@ class MetricService
                 'message' => $item->message,
                 'author' => $item->author?->displayName ?? 'Unknown',
                 'repository' => $item->githubRepository?->full_name ?? '',
-                // @todo: fix diffForHumans()
-                // 'date' => $item->date?$item->date?->diffForHumans() : '',
-                'date' => $item->date ?? '',
+                'date' => $item->date ? Carbon::parse($item->date)->diffForHumans() : 'Never',
                 'url' => $item->url,
             ]);
 
-        // Últimos PRs
         $prs = PullRequest::with(['author', 'githubRepository'])
             ->when($repositoryId, fn ($q) => $q->where('github_repository_id', $repositoryId))
             ->latest('created_at')
@@ -344,7 +335,6 @@ class MetricService
 
         $activities = array_merge($commits->toArray(), $prs->toArray());
 
-        // Ordenar por fecha y limitar
         usort($activities, fn ($a, $b) => strtotime($b['date']) <=> strtotime($a['date']));
 
         return array_slice($activities, 0, $limit);
@@ -434,7 +424,10 @@ class MetricService
         ];
     }
 
-    // ✅ getDeveloperStats devuelve Collection
+    // =============================================
+    // DEVELOPER STATS
+    // =============================================
+
     private function getDeveloperStats(?int $repositoryId): Collection
     {
         $query = Commit::query()
@@ -456,12 +449,10 @@ class MetricService
 
         $developers = $query->get();
 
-        // PRs por desarrollador
         $prCounts = PullRequest::select('author_id', DB::raw('COUNT(*) as pr_count'))
             ->groupBy('author_id')
             ->pluck('pr_count', 'author_id');
 
-        // Reviews por desarrollador
         $reviewCounts = PullRequestReview::select('reviewer_id', DB::raw('COUNT(*) as review_count'))
             ->groupBy('reviewer_id')
             ->pluck('review_count', 'reviewer_id');
@@ -520,7 +511,6 @@ class MetricService
 
         $results = $query->get();
 
-        // Obtener todos los desarrolladores
         $developers = GithubUser::whereIn('id', $results->pluck('author_id')->unique())
             ->get()
             ->keyBy('id');
@@ -553,7 +543,6 @@ class MetricService
 
     private function getCodeQualityMetrics(?int $repositoryId): array
     {
-        // PR aprobados vs cambios solicitados
         $prQuery = PullRequest::query();
         if ($repositoryId) {
             $prQuery->where('github_repository_id', $repositoryId);
@@ -593,7 +582,7 @@ class MetricService
         )->get();
 
         if ($prs->isEmpty()) {
-            return ['avg' => 0, 'min' => 0, 'max' => 0, 'median' => 0];
+            return ['avg' => 0, 'min' => 0, 'max' => 0, 'median' => 0, 'p25' => 0, 'p75' => 0];
         }
 
         $times = $prs->pluck('hours')->sort()->values();
@@ -606,5 +595,178 @@ class MetricService
             'p25' => round($times->percentile(25), 1),
             'p75' => round($times->percentile(75), 1),
         ];
+    }
+
+    // =============================================
+    // NUEVAS MÉTRICAS
+    // =============================================
+
+    // 👥 TEAM MEMBERS
+    private function getTeamMembers(?int $repositoryId): array
+    {
+        // Obtener todos los desarrolladores con actividad
+        $query = GithubUser::query()
+            ->withCount([
+                'commits' => fn ($q) => $q->when($repositoryId, fn ($q2) => $q2->where('github_repository_id', $repositoryId)),
+                'authoredPullRequests' => fn ($q) => $q->when($repositoryId, fn ($q2) => $q2->where('github_repository_id', $repositoryId)),
+                'pullRequestReviews' => fn ($q) => $q->when($repositoryId, fn ($q2) => $q2->whereHas('pullRequest', fn ($p) => $p->where('github_repository_id', $repositoryId))),
+            ]);
+
+        if ($repositoryId) {
+            $query->whereHas('commits', fn ($q) => $q->where('github_repository_id', $repositoryId));
+        }
+
+        $users = $query->get();
+
+        return $users->map(function ($user) {
+            $lastCommit = Commit::where('author_id', $user->id)
+                ->when(request()->get('repository_id'), fn ($q) => $q->where('github_repository_id', request()->get('repository_id')))
+                ->latest('date')
+                ->first();
+
+            $daysSinceLastCommit = $lastCommit ? now()->diffInDays($lastCommit->date) : 999;
+
+            $status = 'active';
+            if ($daysSinceLastCommit > 7) {
+                $status = 'away';
+            } elseif ($daysSinceLastCommit > 3) {
+                $status = 'idle';
+            }
+
+            return [
+                'name' => $user->displayName,
+                'username' => $user->username,
+                'avatar' => $user->avatar,
+                'commits' => $user->commits_count,
+                'prs' => $user->authored_pull_requests_count,
+                'reviews' => $user->pull_request_reviews_count,
+                'last_active' => $lastCommit ? Carbon::parse($lastCommit->date)->diffForHumans() : 'Never',
+                'status' => $status,
+            ];
+        })->toArray();
+    }
+
+    // ⚡ STALE PRS
+    private function getStalePrs(?int $repositoryId): int
+    {
+        $query = PullRequest::where('state', 'open')
+            ->where('updated_at', '<', now()->subDays(7));
+
+        if ($repositoryId) {
+            $query->where('github_repository_id', $repositoryId);
+        }
+
+        return $query->count();
+    }
+
+    // PRS NEEDING REVIEW
+    private function getPrsNeedingReview(?int $repositoryId): int
+    {
+        $query = PullRequest::where('state', 'open')
+            ->whereDoesntHave('reviews');
+
+        if ($repositoryId) {
+            $query->where('github_repository_id', $repositoryId);
+        }
+
+        return $query->count();
+    }
+
+    // INACTIVE DEVELOPERS
+    private function getInactiveDevelopers(?int $repositoryId, int $days): int
+    {
+        $query = GithubUser::whereDoesntHave('commits', function ($q) use ($repositoryId, $days) {
+            $q->where('date', '>=', now()->subDays($days));
+            if ($repositoryId) {
+                $q->where('github_repository_id', $repositoryId);
+            }
+        });
+
+        if ($repositoryId) {
+            $query->whereHas('commits', fn ($q) => $q->where('github_repository_id', $repositoryId));
+        }
+
+        return $query->count();
+    }
+
+    // PR MERGE RATE
+    private function getPrMergeRate(?int $repositoryId): float
+    {
+        $total = $this->getPrsTotal($repositoryId);
+        $merged = $this->getPrsMerged($repositoryId);
+
+        return $total > 0 ? round(($merged / $total) * 100, 1) : 0;
+    }
+
+    private function getPrsMerged(?int $repositoryId): int
+    {
+        $query = PullRequest::where('state', 'merged');
+
+        if ($repositoryId) {
+            $query->where('github_repository_id', $repositoryId);
+        }
+
+        return $query->count();
+    }
+
+    private function getPrsTotal(?int $repositoryId): int
+    {
+        $query = PullRequest::query();
+
+        if ($repositoryId) {
+            $query->where('github_repository_id', $repositoryId);
+        }
+
+        return $query->count();
+    }
+
+    // 🏆 TOP CONTRIBUTORS
+    private function getTopContributors(?int $repositoryId, int $limit): array
+    {
+        $stats = $this->getDeveloperStats($repositoryId);
+
+        return $stats->sortByDesc(function ($item) {
+            return ($item['commits'] * 0.4) + ($item['prs'] * 0.35) + ($item['reviews'] * 0.25);
+        })
+            ->take($limit)
+            ->map(function ($item) {
+                return [
+                    'name' => $item['name'],
+                    'username' => $item['username'],
+                    'avatar' => $item['avatar'],
+                    'score' => $item['productivity_score'],
+                    'commits' => $item['commits'],
+                    'prs' => $item['prs'],
+                    'reviews' => $item['reviews'],
+                ];
+            })
+            ->values()
+            ->toArray();
+    }
+
+    // TOP COMMITTERS
+    private function getTopCommitters(?int $repositoryId, int $limit): array
+    {
+        $query = Commit::select(
+            'author_id',
+            DB::raw('COUNT(*) as total_commits')
+        )
+            ->with('author')
+            ->groupBy('author_id')
+            ->orderByDesc('total_commits')
+            ->limit($limit);
+
+        if ($repositoryId) {
+            $query->where('github_repository_id', $repositoryId);
+        }
+
+        return $query->get()
+            ->map(fn ($item) => [
+                'name' => $item->author?->displayName ?? 'Unknown',
+                'username' => $item->author?->username ?? 'unknown',
+                'avatar' => $item->author?->avatar ?? null,
+                'commits' => $item->total_commits,
+            ])
+            ->toArray();
     }
 }
