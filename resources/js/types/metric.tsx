@@ -1,6 +1,6 @@
 // types/metrics.ts
 
-export interface MetricCard {
+export interface IMetricCard {
     label: string;
     value: number;
     sub?: string;
@@ -145,7 +145,7 @@ export interface TopCommitter {
 
 export interface DashboardMetrics {
     // Cards
-    cards: MetricCard[];
+    cards: IMetricCard[];
 
     // Gráficos
     commits_by_day: CommitByDay[];
