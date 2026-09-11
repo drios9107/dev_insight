@@ -52,7 +52,7 @@ export default function Metric({ metrics, repositories, selected_repository, tit
 
             <BodyWrapper>
                 {/* ========== METRIC CARDS ========== */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 w-full">
                     {metrics.cards.map((card, index) => (
                         <MetricCard
                             key={index}
@@ -69,7 +69,7 @@ export default function Metric({ metrics, repositories, selected_repository, tit
                 </div>
 
                 {/* ========== STAT CARDS ========== */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 w-full">
                     <StatCard label="Avg Commits/Day" value={metrics.avg_commits_per_day} />
                     <StatCard label="Avg PR Merge Time" value={`${metrics.avg_pr_merge_time}h`} />
                     <StatCard label="Avg Issue Close Time" value={`${metrics.avg_issue_close_time}d`} />
@@ -81,7 +81,7 @@ export default function Metric({ metrics, repositories, selected_repository, tit
 
                 {/* ========== ACTION CARDS ========== */}
                 <SectionTitle title="⚡ Actions & Alerts" className="mt-6" />
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 w-full">
                     <ActionCard
                         label="Stale PRs (7+ days)"
                         value={metrics.stale_prs}
@@ -113,7 +113,7 @@ export default function Metric({ metrics, repositories, selected_repository, tit
                 </div>
 
                 {/* ========== RANKING CARDS ========== */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 w-full">
                     <RankingCard
                         title="🏆 Top Contributors"
                         icon={<Star className="w-4 h-4" />}
@@ -139,7 +139,7 @@ export default function Metric({ metrics, repositories, selected_repository, tit
                 </div>
 
                 {/* ========== CHARTS ========== */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 w-full">
                     {/* Commits per day chart (keep as is) */}
                     <Card className="border-0 shadow-md overflow-hidden">
                         <CardHeader className="pb-2">
@@ -208,7 +208,7 @@ export default function Metric({ metrics, repositories, selected_repository, tit
                 </div>
 
                 {/* ========== PR CYCLE TIME ========== */}
-                <Card className="border-0 shadow-md mb-6">
+                <Card className="border-0 shadow-md mb-6 w-full lg:w-auto">
                     <CardHeader className="pb-2">
                         <CardTitle className="text-base font-semibold text-gray-700">
                             ⏱️ PR Cycle Time

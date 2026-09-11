@@ -28,7 +28,7 @@ const statusMap = {
 
 export function TeamMembersList({ members, title = 'Team Members' }: TeamMembersListProps) {
     return (
-        <Card className="border-0 shadow-md">
+        <Card className="border-0 shadow-md w-full lg:w-auto">
             <CardHeader className="pb-2">
                 <CardTitle className="text-base font-semibold text-gray-700">
                     👥 {title}

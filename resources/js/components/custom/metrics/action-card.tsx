@@ -31,7 +31,7 @@ export function ActionCard({
 }: ActionCardProps) {
     return (
         <Card
-            className={`border-0 shadow-md hover:shadow-lg transition-all duration-200 ${onClick ? 'cursor-pointer hover:scale-[1.02]' : ''}`}
+            className={`border-0 shadow-md hover:shadow-lg transition-all duration-200 w-full ${onClick ? 'cursor-pointer hover:scale-[1.02]' : ''}`}
             onClick={onClick}
         >
             <CardContent className="p-4">

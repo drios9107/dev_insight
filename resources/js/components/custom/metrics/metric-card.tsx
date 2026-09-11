@@ -48,7 +48,7 @@ export function MetricCard({
     const wrapperProps = route ? { href: route, className: 'block transition-transform duration-200 hover:scale-[1.02]' } : {};
 
     return (
-        <CardWrapper {...wrapperProps}>
+        <CardWrapper {...wrapperProps} className=' w-full'>
             <Card className="overflow-hidden border-0 shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer" style={{ height }}>
                 <div className={`h-1 w-full bg-gradient-to-r ${colorMap[color]}`} />
                 <CardContent className="p-6 h-full flex flex-col">

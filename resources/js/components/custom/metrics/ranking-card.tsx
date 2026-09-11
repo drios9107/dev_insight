@@ -24,7 +24,7 @@ export function RankingCard({ title, items, icon }: RankingCardProps) {
     }
 
     return (
-        <Card className="border-0 shadow-md">
+        <Card className="border-0 shadow-md w-full">
             <CardHeader className="pb-2">
                 <CardTitle className="text-base font-semibold text-gray-700 flex items-center gap-2">
                     {icon}
