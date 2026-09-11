@@ -8,6 +8,7 @@ import Header from '@/components/custom/header';
 import BodyWrapper from '@/components/custom/body-wrapper';
 import metric from '@/routes/metric';
 import ShadSelect from '@/components/custom/inputs/shad-select';
+import { Label } from '@/components/ui/label';
 
 
 export default function Metric({ metrics, repositories, selected_repository, title }: MetricsPageProps) {
@@ -29,8 +30,13 @@ export default function Metric({ metrics, repositories, selected_repository, tit
             <Head title={title} />
             <h1 className="sr-only">{title}</h1>
             <Header title={title}>
-                <div className="flex items-center gap-4">
-                    <ShadSelect label="Repository" name="owner_id" value={selectedRepo} onChange={handleRepoChange} list={repositories.map(i => ({ value: String(i.id), label: i.full_name }))} />
+                <div className="flex items-center gap-4" style={{
+                    width: '250px',
+                }}>
+                    <Label htmlFor="repo_id">
+                        Repository
+                    </Label>
+                    <ShadSelect name="repo_id" value={selectedRepo} onChange={handleRepoChange} list={repositories.map(i => ({ value: String(i.id), label: i.full_name }))} />
                 </div>
             </Header>
 

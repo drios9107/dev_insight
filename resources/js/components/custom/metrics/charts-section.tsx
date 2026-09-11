@@ -50,7 +50,7 @@ const ChartsSection = ({ commits_by_day = [], code_quality }: IChartsSection) =>
                                             }}
                                         />
                                         <span className="text-[10px] text-gray-400 mt-1 transform rotate-45 origin-bottom-left">
-                                            {date.format('MM/DD')}
+                                            {date.format('DD/MM')}
                                         </span>
                                     </div>
                                 );
