@@ -11,7 +11,7 @@ import { DeleteModal } from "@/components/custom/delete-modal";
 import BodyWrapper from "@/components/custom/body-wrapper";
 import { Badge } from "@/components/ui/badge";
 import { Circle } from "lucide-react";
-
+//dummy comment for pr statistic
 const Projects = (props: any) => {
     const [isOpen, setIsOpen] = useState(false)
     const [itemToDelete, setItemToDelete] = useState<IProject | null>(null)
