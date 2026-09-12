@@ -392,15 +392,22 @@ class MetricService
 
     private function getActiveDevelopers(?int $repositoryId, int $days): int
     {
-        $query = Commit::select('author_id')
-            ->where('date', '>=', now()->subDays($days))
-            ->distinct();
+        $query = Commit::where('date', '>=', now()->subDays($days))
+            ->whereNotNull('author_id')
+            ->pluck('author_id')
+            ->unique()
+            ->count();
 
         if ($repositoryId) {
-            $query->where('github_repository_id', $repositoryId);
+            $query = Commit::where('date', '>=', now()->subDays($days))
+                ->where('github_repository_id', $repositoryId)
+                ->whereNotNull('author_id')
+                ->pluck('author_id')
+                ->unique()
+                ->count();
         }
 
-        return $query->count();
+        return $query;
     }
 
     private function getCodeChurn(?int $repositoryId, int $days): array
@@ -470,6 +477,7 @@ class MetricService
                 'prs' => $prs,
                 'reviews' => $reviews,
                 'active_days' => $dev->active_days,
+                // Puntaje ponderado: 40% commits, 35% PRs, 25% reviews (ajustable según prioridades del equipo)
                 'productivity_score' => round(
                     ($commits * 0.4) + ($prs * 0.35) + ($reviews * 0.25),
                     1
@@ -578,23 +586,38 @@ class MetricService
         }
 
         $prs = $query->select(
-            DB::raw('EXTRACT(EPOCH FROM (merged_at - created_at)) / 3600 as hours')
+            DB::raw('EXTRACT(EPOCH FROM (merged_at - created_at)) / 60 as minutes') // ✅ Minutos
         )->get();
 
         if ($prs->isEmpty()) {
             return ['avg' => 0, 'min' => 0, 'max' => 0, 'median' => 0, 'p25' => 0, 'p75' => 0];
         }
 
-        $times = $prs->pluck('hours')->sort()->values();
+        $times = $prs->pluck('minutes')->sort()->values();
 
         return [
-            'avg' => round($times->average(), 1),
-            'min' => round($times->first(), 1),
-            'max' => round($times->last(), 1),
-            'median' => round($times->median(), 1),
-            'p25' => round($times->percentile(25), 1),
-            'p75' => round($times->percentile(75), 1),
+            'avg' => round($times->average(), 2),
+            'min' => round($times->first(), 2),
+            'max' => round($times->last(), 2),
+            'median' => round($this->calculatePercentile($times, 50), 2),
+            'p25' => round($this->calculatePercentile($times, 25), 2),
+            'p75' => round($this->calculatePercentile($times, 75), 2),
         ];
+    }
+
+    private function calculatePercentile($collection, float $percentile): float
+    {
+        $index = ($percentile / 100) * ($collection->count() - 1);
+        $lower = floor($index);
+        $upper = ceil($index);
+
+        if ($lower === $upper) {
+            return (float) $collection[$lower];
+        }
+
+        $weight = $index - $lower;
+
+        return (float) ($collection[$lower] * (1 - $weight) + $collection[$upper] * $weight);
     }
 
     // =============================================
