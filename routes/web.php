@@ -21,8 +21,6 @@ use Illuminate\Support\Facades\Route;
 Route::inertia('/', 'welcome')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
-
     $apiRoutes = ['index', 'show', 'store', 'update', 'destroy'];
 
     Route::middleware('admin')->group(function () use ($apiRoutes) {

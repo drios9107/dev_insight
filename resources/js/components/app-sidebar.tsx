@@ -13,11 +13,9 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 import user from '@/routes/user';
 import team from '@/routes/team';
-import comment from '@/routes/comment';
 import commit from '@/routes/commit';
 import githubIssue from '@/routes/github-issue';
 import githubRepository from '@/routes/github-repository';
@@ -53,10 +51,6 @@ const mainNavItems: NavItem[] = [
         title: 'Metrics',
         href: metric.index(),
         icon: LayoutDashboard,
-    }, {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
     }, {
         title: 'Notifications',
         href: notification.index(),
@@ -128,7 +122,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
+                            <Link href={metric.index().url} prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>

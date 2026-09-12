@@ -11,7 +11,7 @@ import ShadSelect from '@/components/custom/inputs/shad-select';
 import { Label } from '@/components/ui/label';
 
 
-export default function Metric({ metrics, repositories, selected_repository, title }: MetricsPageProps) {
+export default function Metric({ metrics, repositories, selected_repository, title, ...props }: MetricsPageProps) {
     const [selectedRepo, setSelectedRepo] = useState<string>(
         selected_repository ? String(selected_repository) : 'all'
     );
@@ -43,6 +43,7 @@ export default function Metric({ metrics, repositories, selected_repository, tit
             <BodyWrapper>
                 {/* ========== METRIC CARDS ========== */}
                 <MetricsSection cards={metrics.cards} />
+                {/* <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" /> */}
 
                 {/* ========== STAT CARDS ========== */}
                 <StatsSection
