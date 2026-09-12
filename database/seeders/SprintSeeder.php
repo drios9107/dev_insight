@@ -12,6 +12,7 @@ class SprintSeeder extends Seeder
      */
     public function run(): void
     {
+        if(Sprint::count()===0)
         Sprint::factory(10)->create();
     }
 }

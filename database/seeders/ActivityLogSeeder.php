@@ -13,7 +13,7 @@ class ActivityLogSeeder extends Seeder
      */
     public function run(): void
     {
-        if (Task::count('id') > 0) {
+        if (Task::count('id') > 0 && ActivityLog::count()===0) {
             ActivityLog::factory(10)->create();
         }
     }

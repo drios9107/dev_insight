@@ -13,7 +13,7 @@ class TaskSeeder extends Seeder
      */
     public function run(): void
     {
-        if (GithubIssue::count('id') > 0) {
+        if (GithubIssue::count('id') > 0&&Task::count()===0) {
             Task::factory(10)->create();
         }
     }

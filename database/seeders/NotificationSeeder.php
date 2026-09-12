@@ -12,6 +12,7 @@ class NotificationSeeder extends Seeder
      */
     public function run(): void
     {
+        if(Notification::count()===0)
         Notification::factory(10)->create();
     }
 }

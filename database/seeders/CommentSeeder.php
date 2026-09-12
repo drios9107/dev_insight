@@ -13,7 +13,7 @@ class CommentSeeder extends Seeder
      */
     public function run(): void
     {
-        if (Task::count('id') > 0) {
+        if (Task::count('id') > 0&&Comment::count()===0) {
             Comment::factory(10)->create();
         }
     }
