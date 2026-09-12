@@ -11,10 +11,10 @@ class CommitSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(CommitService $service): void
+    public function run(CommitService $service, string $ownerKey = 'drios9107', string $repoName = 'expenses'): void
     {
         $gservice = new GithubService;
 
-        $service->fetchData($gservice);
+        $service->fetchData($gservice, $ownerKey, $repoName);
     }
 }

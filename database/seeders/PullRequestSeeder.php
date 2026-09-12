@@ -11,10 +11,10 @@ class PullRequestSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(PullRequestService $service): void
+    public function run(PullRequestService $service, string $ownerKey = 'drios9107', string $repoName = 'expenses'): void
     {
         $gservice = new GithubService;
 
-        $service->fetchData($gservice);
+        $service->fetchData($gservice, 'all', $ownerKey, $repoName);
     }
 }

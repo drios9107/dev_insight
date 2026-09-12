@@ -16,7 +16,8 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        $this->call([
+        $useExpense = false;
+        $allSeeders = [
             RoleSeeder::class,
             UserSeeder::class,
             TeamSeeder::class,
@@ -29,10 +30,15 @@ class DatabaseSeeder extends Seeder
             PullRequestSeeder::class,
             PullRequestReviewSeeder::class,
             CommentSeeder::class,
-            // MetricSeeder::class,
             NotificationSeeder::class,
             ActivityLogSeeder::class,
+        ];
 
-        ]);
+        $useExpense ?
+        $this->call($allSeeders) :
+         $this->call($allSeeders, false, [
+             'ownerKey' => 'drios9107',
+             'repoName' => 'dev_insight',
+         ]);
     }
 }
