@@ -26,37 +26,48 @@ const ChartsSection = ({ commits_by_day = [], code_quality }: IChartsSection) =>
                             No commits found
                         </div>
                     ) : (
-                        <div className="flex items-end h-full gap-1">
-                            {commits_by_day.map((item) => {
-                                const max = Math.max(1, ...commits_by_day.map((c) => c.count));
-                                const height = Math.max(4, (item.count / max) * 100);
-                                const date = moment(item.date);
+                        <>
+                            <div className="h-32 w-full flex items-end gap-1">
+                                {commits_by_day.map((item) => {
+                                    const max = Math.max(1, ...commits_by_day.map((c) => c.count));
+                                    const height = Math.max(4, (item.count / max) * 100);
+                                    const date = moment(item.date);
 
-                                return (
+                                    return (
+                                        <div
+                                            key={item.date}
+                                            className="flex-1 h-full flex items-end group relative"
+                                        >
+                                            {/* Tooltip original */}
+                                            <div className="absolute bottom-full mb-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gray-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap pointer-events-none z-10">
+                                                {item.count} commits
+                                                <br />
+                                                {date.format('YYYY/MM/DD')}
+                                            </div>
+
+                                            {/* Barra */}
+                                            <div
+                                                className="w-full bg-gradient-to-t from-blue-400 to-blue-500 rounded-t transition-all duration-300 hover:from-blue-500 hover:to-blue-600"
+                                                style={{ height: `${height}%` }}
+                                            />
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            <div className="flex gap-1 mt-2">
+                                {commits_by_day.map((item) => (
                                     <div
                                         key={item.date}
-                                        className="flex-1 flex flex-col items-center group relative"
+                                        className="flex-1 flex justify-center relative h-6"
                                     >
-                                        <div className="absolute bottom-full mb-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gray-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap pointer-events-none z-10">
-                                            {item.count} commits
-                                            <br />
-                                            {date.format('YYYY/MM/DD')}
-                                        </div>
-                                        <div
-                                            className="w-full bg-gradient-to-t from-blue-400 to-blue-500 rounded-t transition-all duration-300 hover:from-blue-500 hover:to-blue-600"
-                                            style={{
-                                                height: `${height}%`,
-                                                minHeight: '4px',
-                                            }}
-                                        />
-                                        <span className="text-[10px] text-gray-400 mt-1 transform rotate-45 origin-bottom-left">
-                                            {date.format('DD/MM')}
+                                        <span className="absolute text-[10px] text-gray-400 transform -rotate-45 origin-top-left translate-y-3 whitespace-nowrap">
+                                            {moment(item.date).format('DD/MM')}
                                         </span>
                                     </div>
-                                );
-                            })}
-                        </div>
-                    )}
+                                ))}
+                            </div>
+                        </>)}
                 </div>
             </CardContent>
         </Card>
