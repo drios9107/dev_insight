@@ -48,6 +48,9 @@ class PullRequestService
                 }
             }
 
+            // ✅ Determinar el estado correcto
+            $prState = ! empty($pr['merged_at']) ? 'merged' : $pr['state'];
+
             return [
                 'pull_request_data' => [
                     'github_id' => $pr['id'],
@@ -55,11 +58,10 @@ class PullRequestService
                     'number' => $pr['number'],
                     'title' => $pr['title'],
                     'body' => $pr['body'] ?? null,
-                    'state' => $pr['state'],
+                    'state' => $prState, // ✅ Ahora puede ser 'open', 'closed' o 'merged'
                     'author_id' => $author?->id,
                     'base_branch' => $pr['base']['ref'] ?? 'main',
                     'head_branch' => $pr['head']['ref'] ?? 'feature',
-                    // @todo: define task source
                     'task_id' => null,
                     'closed_at' => $pr['closed_at'] ?? null,
                     'merged_at' => $pr['merged_at'] ?? null,
@@ -70,6 +72,7 @@ class PullRequestService
                 'assignee_ids' => $assigneeIds,
             ];
         }, $prs);
+
         DB::beginTransaction();
 
         try {
@@ -84,7 +87,6 @@ class PullRequestService
 
                 // Sincronizar assignees
                 if (! empty($item['assignee_ids'])) {
-
                     $prId = DB::table('pull_requests')
                         ->where('github_id', $prData['github_id'])
                         ->value('id');
