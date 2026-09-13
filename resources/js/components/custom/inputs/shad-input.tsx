@@ -2,10 +2,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { IHtmlWithLabel } from "@/types"
 
-const ShadInput = ({ label, id, name, value, onChange, errors, ...props }: IHtmlWithLabel) => {
+const ShadInput = ({ label, id, name, value, onChange, errors, labelClassName, ...props }: IHtmlWithLabel) => {
     return (
         <div className="flex flex-col gap-2 w-full">
-            {label && <Label htmlFor={id ?? name}>
+            {label && <Label htmlFor={id ?? name} className={labelClassName}>
                 {label}
                 {props.required && <span className="text-red-500 ml-1">*</span>}
             </Label>}

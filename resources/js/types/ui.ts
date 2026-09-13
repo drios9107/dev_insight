@@ -24,6 +24,7 @@ export type AuthLayoutProps = {
 
 export interface IHtmlWithLabel extends React.ComponentProps<"input"> {
     label?: string
+    labelClassName?: string
     errors?: any
 }
 
@@ -37,6 +38,7 @@ export interface ICustomSelect extends React.ComponentProps<typeof SelectPrimiti
     side?: 'top' | 'right' | 'bottom' | 'left',
     placeholder?: string
     addAll?: boolean
+    labelClassName?: string
 }
 
 export interface ICustomSelectItem {

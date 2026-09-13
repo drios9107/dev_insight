@@ -22,12 +22,13 @@ const ShadSelect = ({
     side = 'bottom',
     placeholder = 'Select an option...',
     addAll = false,
+    labelClassName,
     ...props
 }: ICustomSelect) => {
     return (
         <div className={cn("flex flex-col gap-2 w-full", className)}>
             {label && (
-                <Label htmlFor={id ?? name}>
+                <Label htmlFor={id ?? name} className={labelClassName}>
                     {label}
                     {props.required && <span className="text-red-500 ml-1">*</span>}
                 </Label>

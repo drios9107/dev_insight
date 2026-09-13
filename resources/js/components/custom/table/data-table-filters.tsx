@@ -50,12 +50,14 @@ export function DataTableFilters({
         <div className={`flex flex-wrap items-center gap-3 mb-4 w-full ${className}`}>
             {/* Búsqueda */}
             <div className="relative flex flex-1 items-center min-w-[200px]">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Search className="absolute left-3 top-2/3 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <ShadInput
+                    label='Search'
                     value={localSearch}
                     onChange={(e) => setLocalSearch(e.target.value)}
                     className="pl-9 w-full"
                     placeholder="Search..."
+                    labelClassName='font-normal'
                 />
                 {localSearch && (
                     <Button
@@ -73,12 +75,14 @@ export function DataTableFilters({
             {filters.map((filter) => (
                 <div key={filter.key} className="w-40">
                     <ShadSelect
+                        label={filter.label}
                         name={filter.key}
                         value={filter.value}
                         onChange={filter.onChange}
                         list={filter.options}
                         placeholder={filter.label}
                         addAll={filter.addAll}
+                        labelClassName='font-normal'
                     />
                 </div>
             ))}
