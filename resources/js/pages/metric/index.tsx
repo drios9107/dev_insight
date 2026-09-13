@@ -1,7 +1,7 @@
 // resources/js/pages/metrics/index.tsx
 
 import { Head, router } from '@inertiajs/react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { MetricsPageProps } from '@/types/metric';
 import { TeamMembersList, SectionTitle, MetricsSection, StatsSection, ActionCardsSection, RankingCardsSection, ChartsSection, PrCycleSection, } from '@/components/custom/metrics'
 import Header from '@/components/custom/header';
@@ -16,14 +16,14 @@ export default function Metric({ metrics, repositories, selected_repository, tit
         selected_repository ? String(selected_repository) : 'all'
     );
 
-    const handleRepoChange = (value: string) => {
+    const handleRepoChange = useCallback((value: string) => {
         setSelectedRepo(value);
         router.get(
             window.location.pathname,
             { repository_id: value === 'all' ? null : value },
             { preserveState: true }
         );
-    };
+    }, [setSelectedRepo]);
 
     return (
         <>
