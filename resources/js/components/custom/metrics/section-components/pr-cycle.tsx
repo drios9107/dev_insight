@@ -1,14 +1,14 @@
 import { PrCycleTime } from "@/types/metric";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import SingleData from "./section-components/single-data";
+import SingleData from "./single-data";
 
-interface IPrCycleSection {
+interface IPrCycle {
     pr_cycle_time: PrCycleTime;
 }
 
-const PrCycleSection = ({ pr_cycle_time }: IPrCycleSection) => {
+const PrCycle = ({ pr_cycle_time }: IPrCycle) => {
 
-    return <Card className="border-0 shadow-md mb-6 w-full lg:w-auto">
+    return <Card className="border-0 shadow-md">
         <CardHeader className="pb-2">
             <CardTitle className="text-base font-semibold text-gray-700">
                 ⏱️ PR Cycle Time
@@ -29,4 +29,4 @@ const PrCycleSection = ({ pr_cycle_time }: IPrCycleSection) => {
     </Card>
 }
 
-export default PrCycleSection
+export default PrCycle

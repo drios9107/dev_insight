@@ -11,8 +11,8 @@ import StatsSection from '@/components/custom/metrics/stats-section';
 import ActionCardsSection from '@/components/custom/metrics/action-cards-section';
 import RankingCardsSection from '@/components/custom/metrics/ranking-cards-section';
 import ChartsSection from '@/components/custom/metrics/charts-section';
-import PrCycleSection from '@/components/custom/metrics/pr-cycle-section';
 import ManagementSection from '@/components/custom/metrics/management-section';
+import CodeQualitySection from '@/components/custom/metrics/code-quality-section';
 
 
 export {
@@ -27,6 +27,6 @@ export {
     ActionCardsSection,
     RankingCardsSection,
     ChartsSection,
-    PrCycleSection,
-    ManagementSection
+    ManagementSection,
+    CodeQualitySection
 }

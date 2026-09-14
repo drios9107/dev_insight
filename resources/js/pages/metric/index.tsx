@@ -3,7 +3,7 @@
 import { Head, router } from '@inertiajs/react';
 import { useCallback, useState } from 'react';
 import { MetricsPageProps } from '@/types/metric';
-import { TeamMembersList, SectionTitle, MetricsSection, StatsSection, ActionCardsSection, RankingCardsSection, ChartsSection, PrCycleSection, ManagementSection, } from '@/components/custom/metrics'
+import { TeamMembersList, SectionTitle, MetricsSection, StatsSection, ActionCardsSection, RankingCardsSection, ChartsSection, PrCycleSection, ManagementSection, CodeQualitySection, } from '@/components/custom/metrics'
 import Header from '@/components/custom/header';
 import BodyWrapper from '@/components/custom/body-wrapper';
 import metric from '@/routes/metric';
@@ -90,10 +90,16 @@ export default function Metric({ metrics, repositories, selected_repository, tit
                 <RankingCardsSection top_committers={metrics.top_committers} top_contributors={metrics.top_contributors} />
 
                 {/* ========== CHARTS ========== */}
-                <ChartsSection code_quality={metrics.code_quality} commits_by_day={metrics.commits_by_day} />
+                <ChartsSection
+                    commits_by_day={metrics.commits_by_day}
+                    days_without_commit={metrics.days_without_commit}
+                />
 
-                {/* ========== PR CYCLE TIME ========== */}
-                <PrCycleSection pr_cycle_time={metrics.pr_cycle_time} />
+                {/* ========== CODE QUALITY ========== */}
+                <CodeQualitySection
+                    code_quality={metrics.code_quality}
+                    pr_cycle_time={metrics.pr_cycle_time}
+                />
             </BodyWrapper>
         </>
     );

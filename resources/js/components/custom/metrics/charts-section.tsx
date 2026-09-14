@@ -1,15 +1,17 @@
 import CardSectionWrapper from "./section-components/card-section-wrapper"
-import { CodeQualityMetrics, CommitByDay } from "@/types/metric";
+import { CommitByDay, DaysWithoutCommit } from "@/types/metric";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import moment from 'moment';
-import SingleData from "./section-components/single-data";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useMemo } from "react";
 
 interface IChartsSection {
     commits_by_day: CommitByDay[];
-    code_quality: CodeQualityMetrics;
+    days_without_commit: DaysWithoutCommit[];
 }
 
-const ChartsSection = ({ commits_by_day = [], code_quality }: IChartsSection) => {
+const ChartsSection = ({ days_without_commit = [], commits_by_day = [] }: IChartsSection) => {
+    const maxDays = useMemo(() => Math.max(1, ...days_without_commit.map((d) => d.days_without_commit)), [days_without_commit])
 
     return <CardSectionWrapper className="lg:grid-cols-2 gap-6">
         {/* Commits per day chart (keep as is) */}
@@ -72,20 +74,56 @@ const ChartsSection = ({ commits_by_day = [], code_quality }: IChartsSection) =>
             </CardContent>
         </Card>
 
-        {/* Code Quality */}
+        {/* Days Without Commit */}
         <Card className="border-0 shadow-md">
             <CardHeader className="pb-2">
                 <CardTitle className="text-base font-semibold text-gray-700">
-                    📊 Code Quality Metrics
+                    📅 Days Without Commit
                 </CardTitle>
             </CardHeader>
             <CardContent className="p-4">
-                <div className="grid grid-cols-2 gap-4">
-                    <SingleData title='Approval Rate' value={`${code_quality.approval_rate}%`} color='green' />
-                    <SingleData title='Changes Requested' value={`${code_quality.changes_requested_rate}%`} color='yellow' />
-                    <SingleData title='Merge Rate' value={`${code_quality.merge_rate}%`} color='blue' />
-                    <SingleData title='Avg Reviews/PR' value={`${code_quality.avg_reviews_per_pr}`} color='purple' />
-                </div>
+                {days_without_commit.length === 0 ? (
+                    <div className="flex items-center justify-center h-32 text-gray-400 text-sm">
+                        No data available
+                    </div>
+                ) : (
+                    <div className="space-y-2">
+                        {days_without_commit.map((item, index) => {
+                            const percentage = (item.days_without_commit / maxDays) * 100;
+                            const color =
+                                item.days_without_commit === 0 ? 'from-green-400 to-green-500' :
+                                    item.days_without_commit <= 3 ? 'from-blue-400 to-blue-500' :
+                                        item.days_without_commit <= 7 ? 'from-yellow-400 to-yellow-500' :
+                                            'from-red-400 to-red-500';
+
+                            return (
+                                <div key={index} className="flex items-center gap-2">
+                                    <div className="w-24 flex items-center gap-1 flex-shrink-0">
+                                        <Avatar className="w-5 h-5">
+                                            <AvatarImage src={item.avatar || undefined} />
+                                            <AvatarFallback className="text-[10px]">
+                                                {item.name.charAt(0).toUpperCase()}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <span className="text-xs text-gray-600 truncate">
+                                            {item.username}
+                                        </span>
+                                    </div>
+                                    <div className="flex-1 h-5 bg-gray-100 rounded-full overflow-hidden">
+                                        <div
+                                            className={`h-full bg-gradient-to-r ${color} rounded-full transition-all duration-500 flex items-center justify-end pr-1`}
+                                            style={{ width: `${Math.max(8, percentage)}%` }}
+                                        >
+                                            <span className="text-[10px] font-bold text-white">
+                                                {item.days_without_commit === 999 ? '∞' : `${item.days_without_commit}d`}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
             </CardContent>
         </Card>
     </CardSectionWrapper>

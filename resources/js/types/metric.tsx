@@ -139,6 +139,14 @@ export interface TopCommitter {
     commits: number;
 }
 
+export interface DaysWithoutCommit {
+    name: string;
+    username: string;
+    avatar: string | null;
+    days_without_commit: number;
+    last_commit_date: string | null;
+}
+
 // =============================================
 // DASHBOARD METRICS COMPLETO
 // =============================================
@@ -161,6 +169,7 @@ export interface DashboardMetrics {
 
     // Estadísticas avanzadas
     avg_commits_per_day: number;
+    days_without_commit: DaysWithoutCommit[];
     avg_pr_merge_time: number;
     avg_issue_close_time: number;
     active_developers: number;
