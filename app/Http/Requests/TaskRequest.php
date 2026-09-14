@@ -25,7 +25,8 @@ class TaskRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $taskId = $this->input('id') ?? $this->route('task');
+        $rules = [
             'title' => 'required|string|unique:tasks,title',
             'description' => 'nullable|string',
             'project_id' => 'nullable|integer|exists:projects,id',
@@ -37,7 +38,7 @@ class TaskRequest extends FormRequest
                 Rule::in(array_column(TaskStatusEnum::cases(), 'value')),
             ],
             'priority' => [
-                'nullable|',
+                'nullable',
                 Rule::in(array_column(TaskPriorityEnum::cases(), 'value')),
             ],
             'story_points' => 'nullable|numeric|min:0',
@@ -48,5 +49,11 @@ class TaskRequest extends FormRequest
             'hours_spent' => 'nullable|numeric|min:0',
             'order' => 'nullable|numeric|min:0',
         ];
+
+        if ($taskId) {
+            $rules['title'] = 'required|string|unique:tasks,title,'.$taskId;
+        }
+
+        return $rules;
     }
 }
