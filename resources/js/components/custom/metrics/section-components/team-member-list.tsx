@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import CardSectionWrapper from './card-section-wrapper';
+import { cn } from '@/lib/utils';
 
 interface TeamMember {
     name: string;
@@ -41,32 +42,32 @@ export function TeamMembersList({ members, title = 'Team Members' }: TeamMembers
                         {members.map((member, index) => (
                             <div
                                 key={index}
-                                className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors duration-150"
+                                className="flex items-center justify-between gap-4 p-2 rounded-lg hover:bg-gray-50 w-full"
                             >
-                                <div className="flex items-center gap-3 min-w-0">
-                                    <Avatar className="w-9 h-9 flex-shrink-0">
+                                <div className="flex items-center gap-3">
+                                    <Avatar className="w-9 h-9">
                                         <AvatarImage src={member.avatar || undefined} />
                                         <AvatarFallback>
                                             {member.name.charAt(0).toUpperCase()}
                                         </AvatarFallback>
                                     </Avatar>
-                                    <div className="min-w-0 flex-1">
-                                        <div className="flex items-center gap-2">
-                                            <p className="font-medium text-gray-900 truncate">{member.name}</p>
-                                            <Badge variant="outline" className={statusMap[member.status].className}>
-                                                {statusMap[member.status].label}
-                                            </Badge>
-                                        </div>
-                                        <p className="text-xs text-gray-400 truncate">@{member.username}</p>
+                                    <div className="flex items-center gap-2 min-w-0 max-w-[160px]">
+                                        <p className="font-medium text-gray-900">
+                                            {member.name}
+                                        </p>
+                                        <Badge
+                                            variant="outline"
+                                            className={statusMap[member.status].className}
+                                        >
+                                            {statusMap[member.status].label}
+                                        </Badge>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-4 text-sm flex-shrink-0 ml-2">
+                                <div className="flex items-center gap-4 text-sm ml-2 whitespace-nowrap overflow-x-auto scrollbar-none">
                                     <span className="text-gray-600">{member.commits} commits</span>
-                                    <span className="text-gray-400 hidden sm:inline">·</span>
-                                    <span className="text-gray-600 hidden sm:inline">{member.prs} PRs</span>
-                                    <span className="text-gray-400 hidden md:inline">·</span>
-                                    <span className="text-gray-600 hidden md:inline">{member.reviews} reviews</span>
-                                    <span className="text-xs text-gray-400 ml-1 hidden lg:inline">
+                                    <span className="text-gray-600">{member.prs} PRs</span>
+                                    <span className="text-gray-600">{member.reviews} reviews</span>
+                                    <span className="text-xs text-gray-400 ml-1">
                                         {member.last_active}
                                     </span>
                                 </div>

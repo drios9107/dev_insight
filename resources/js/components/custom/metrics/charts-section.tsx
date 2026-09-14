@@ -78,7 +78,7 @@ const ChartsSection = ({ days_without_commit = [], commits_by_day = [] }: IChart
         <Card className="border-0 shadow-md">
             <CardHeader className="pb-2">
                 <CardTitle className="text-base font-semibold text-gray-700">
-                    📅 Days Without Commit
+                    📅 Days Without Commit (30 days)
                 </CardTitle>
             </CardHeader>
             <CardContent className="p-4">

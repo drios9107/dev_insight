@@ -3,7 +3,7 @@
 import { Head, router } from '@inertiajs/react';
 import { useCallback, useState } from 'react';
 import { MetricsPageProps } from '@/types/metric';
-import { TeamMembersList, SectionTitle, MetricsSection, StatsSection, ActionCardsSection, RankingCardsSection, ChartsSection, PrCycleSection, ManagementSection, CodeQualitySection, } from '@/components/custom/metrics'
+import { TeamMembersList, SectionTitle, MetricsSection, StatsSection, ActionCardsSection, RankingCardsSection, ChartsSection, ManagementSection, CodeQualitySection, } from '@/components/custom/metrics'
 import Header from '@/components/custom/header';
 import BodyWrapper from '@/components/custom/body-wrapper';
 import metric from '@/routes/metric';
