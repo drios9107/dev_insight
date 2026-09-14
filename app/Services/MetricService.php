@@ -28,6 +28,7 @@ class MetricService
             // GRÁFICOS
             // =============================================
             'commits_by_day' => $this->getCommitsByDay($repositoryId, 30),
+            'days_without_commit' => $this->getDaysWithoutCommit($repositoryId, 10),
             'commits_by_week' => $this->getCommitsByWeek($repositoryId, 12),
             'prs_by_state' => $this->getPrsByState($repositoryId),
             'issues_by_state' => $this->getIssuesByState($repositoryId),
@@ -172,6 +173,47 @@ class MetricService
     // =============================================
     // GRÁFICOS
     // =============================================
+
+    private function getDaysWithoutCommit(?int $repositoryId, int $limit = 10): array
+    {
+        $thirtyDaysAgo = now()->subDays(30);
+
+        $query = GithubUser::query()
+            ->whereHas('commits', function ($q) use ($repositoryId, $thirtyDaysAgo) {
+                $q->where('date', '>=', $thirtyDaysAgo);
+                if ($repositoryId) {
+                    $q->where('github_repository_id', $repositoryId);
+                }
+            });
+
+        $users = $query->get();
+
+        $data = $users->map(function ($user) use ($repositoryId, $thirtyDaysAgo) {
+            $lastCommit = Commit::where('author_id', $user->id)
+                ->where('date', '>=', $thirtyDaysAgo)
+                ->when($repositoryId, fn ($q) => $q->where('github_repository_id', $repositoryId))
+                ->latest('date')
+                ->first();
+
+            $daysWithoutCommit = $lastCommit
+                ? (int) Carbon::parse($lastCommit->date)->diffInDays(now())
+                : 999;
+
+            return [
+                'name' => $user->displayName,
+                'username' => $user->username,
+                'avatar' => $user->avatar,
+                'days_without_commit' => $daysWithoutCommit,
+                'last_commit_date' => $lastCommit ? $lastCommit->date : null,
+            ];
+        })
+            ->sortByDesc('days_without_commit')
+            ->take($limit)
+            ->values()
+            ->toArray();
+
+        return $data;
+    }
 
     private function getCommitsByDay(?int $repositoryId, int $days): array
     {
