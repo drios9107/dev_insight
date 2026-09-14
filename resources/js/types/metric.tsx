@@ -202,6 +202,27 @@ export interface DashboardMetrics {
 
     /** Top committers */
     top_committers: TopCommitter[];
+
+    // Projects
+    active_projects: number;
+    total_projects: number;
+
+    // Sprints
+    active_sprints: number;
+    total_sprints: number;
+    sprint_completion_rate: number;
+
+    // Issues
+    open_issues: number;
+    total_issues: number;
+    avg_issue_resolution_time: number;
+
+    // Tasks
+    tasks_in_progress: number;
+    tasks_in_review: number;
+    total_tasks: number;
+    task_completion_rate: number;
+    overdue_tasks: number;
 }
 
 // =============================================

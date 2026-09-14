@@ -12,6 +12,8 @@ import ActionCardsSection from '@/components/custom/metrics/action-cards-section
 import RankingCardsSection from '@/components/custom/metrics/ranking-cards-section';
 import ChartsSection from '@/components/custom/metrics/charts-section';
 import PrCycleSection from '@/components/custom/metrics/pr-cycle-section';
+import ManagementSection from '@/components/custom/metrics/management-section';
+
 
 export {
     MetricCard,
@@ -25,5 +27,6 @@ export {
     ActionCardsSection,
     RankingCardsSection,
     ChartsSection,
-    PrCycleSection
+    PrCycleSection,
+    ManagementSection
 }

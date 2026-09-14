@@ -1,4 +1,4 @@
-import CardSectionWrapper from "./card-section-wrapper"
+import CardSectionWrapper from "./section-components/card-section-wrapper"
 import { AlertCircle, Clock, Eye, FileCheck, GitCommit } from "lucide-react"
 import { ActionCard } from "./section-components/action-card";
 

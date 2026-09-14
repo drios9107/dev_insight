@@ -1,4 +1,4 @@
-import CardSectionWrapper from "./card-section-wrapper"
+import CardSectionWrapper from "./section-components/card-section-wrapper"
 import { GitCommit, Star } from "lucide-react"
 import { RankingCard } from "./section-components/ranking-card";
 import { TopCommitter, TopContributor } from "@/types/metric";

@@ -1,4 +1,4 @@
-import CardSectionWrapper from "./card-section-wrapper"
+import CardSectionWrapper from "./section-components/card-section-wrapper"
 import { CodeQualityMetrics, CommitByDay } from "@/types/metric";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import moment from 'moment';

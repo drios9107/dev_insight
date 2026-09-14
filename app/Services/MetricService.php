@@ -5,8 +5,11 @@ namespace App\Services;
 use App\Models\Commit;
 use App\Models\GithubIssue;
 use App\Models\GithubUser;
+use App\Models\Project;
 use App\Models\PullRequest;
 use App\Models\PullRequestReview;
+use App\Models\Sprint;
+use App\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -70,6 +73,31 @@ class MetricService
             // 🏆 Rankings
             'top_contributors' => $this->getTopContributors($repositoryId, 5),
             'top_committers' => $this->getTopCommitters($repositoryId, 5),
+
+            // =============================================
+            // NUEVAS MÉTRICAS (ALTAS Y MEDIAS)
+            // =============================================
+
+            // Projects
+            'active_projects' => $this->getProjectMetrics()['active_projects'],
+            'total_projects' => $this->getProjectMetrics()['total_projects'],
+
+            // Sprints
+            'active_sprints' => $this->getSprintMetrics()['active_sprints'],
+            'total_sprints' => $this->getSprintMetrics()['total_sprints'],
+            'sprint_completion_rate' => $this->getSprintMetrics()['sprint_completion_rate'],
+
+            // Issues
+            'open_issues' => $this->getIssueMetrics()['open_issues'],
+            'total_issues' => $this->getIssueMetrics()['total_issues'],
+            'avg_issue_resolution_time' => $this->getIssueMetrics()['avg_issue_resolution_time'],
+
+            // Tasks
+            'tasks_in_progress' => $this->getTaskMetrics()['tasks_in_progress'],
+            'tasks_in_review' => $this->getTaskMetrics()['tasks_in_review'],
+            'total_tasks' => $this->getTaskMetrics()['total_tasks'],
+            'task_completion_rate' => $this->getTaskMetrics()['task_completion_rate'],
+            'overdue_tasks' => $this->getTaskMetrics()['overdue_tasks'],
         ];
     }
 
@@ -791,5 +819,99 @@ class MetricService
                 'commits' => $item->total_commits,
             ])
             ->toArray();
+    }
+
+    // =============================================
+    // PROJECTS
+    // =============================================
+
+    private function getProjectMetrics(): array
+    {
+        return [
+            'active_projects' => Project::where('status', 'active')->count(),
+            'total_projects' => Project::count(),
+        ];
+    }
+
+    // =============================================
+    // SPRINTS
+    // =============================================
+
+    private function getSprintMetrics(): array
+    {
+        return [
+            'active_sprints' => Sprint::where('status', 'active')->count(),
+            'total_sprints' => Sprint::count(),
+            'sprint_completion_rate' => $this->getSprintCompletionRate(),
+        ];
+    }
+
+    private function getSprintCompletionRate(): float
+    {
+        $total = Sprint::count();
+        if ($total === 0) {
+            return 0;
+        }
+
+        $completed = Sprint::where('status', 'completed')->count();
+
+        return round(($completed / $total) * 100, 1);
+    }
+
+    // =============================================
+    // ISSUES
+    // =============================================
+
+    private function getIssueMetrics(): array
+    {
+        return [
+            'open_issues' => GithubIssue::where('state', 'open')->count(),
+            'total_issues' => GithubIssue::count(),
+            'avg_issue_resolution_time' => $this->getAvgIssueResolutionTime(),
+        ];
+    }
+
+    private function getAvgIssueResolutionTime(): float
+    {
+        $avg = GithubIssue::whereNotNull('closed_at')
+            ->where('state', 'closed')
+            ->select(DB::raw('AVG(EXTRACT(EPOCH FROM (closed_at - created_at)) / 86400) as days'))
+            ->value('days');
+
+        return $avg ? round($avg, 1) : 0;
+    }
+
+    // =============================================
+    // TASKS
+    // =============================================
+
+    private function getTaskMetrics(): array
+    {
+        return [
+            'tasks_in_progress' => Task::where('status', 'in_progress')->count(),
+            'tasks_in_review' => Task::where('status', 'review')->count(),
+            'total_tasks' => Task::count(),
+            'task_completion_rate' => $this->getTaskCompletionRate(),
+            'overdue_tasks' => $this->getOverdueTasks(),
+        ];
+    }
+
+    private function getTaskCompletionRate(): float
+    {
+        $total = Task::count();
+        if ($total === 0) {
+            return 0;
+        }
+
+        $completed = Task::where('status', 'done')->count();
+
+        return round(($completed / $total) * 100, 1);
+    }
+
+    private function getOverdueTasks(): int
+    {
+        return Task::where('due_date', '<', now())
+            ->whereNotIn('status', ['done', 'cancelled'])
+            ->count();
     }
 }

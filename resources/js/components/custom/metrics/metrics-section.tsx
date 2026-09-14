@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils"
-import CardSectionWrapper from "./card-section-wrapper"
+import CardSectionWrapper from "./section-components/card-section-wrapper"
 import { GitCommit } from "lucide-react"
 import commit from "@/routes/commit";
 import pullRequest from "@/routes/pull-request";
