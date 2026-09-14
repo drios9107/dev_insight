@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\GithubRepository;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Http;
@@ -137,5 +138,45 @@ class GithubService
     public function getPullRequestReview(string $owner, string $repo, int $pullNumber, int $reviewId): array
     {
         return $this->get("/repos/{$owner}/{$repo}/pulls/{$pullNumber}/reviews/{$reviewId}");
+    }
+
+    /**
+     * Sincronizar un repositorio completo (commits, PRs, issues, reviews)
+     */
+    public function syncRepository(GithubRepository $repository): array
+    {
+        [$owner, $repoName] = explode('/', $repository->full_name);
+
+        $results = [
+            'commits' => false,
+            'pull_requests' => false,
+            'issues' => false,
+            'reviews' => false,
+        ];
+
+        try {
+            app(CommitService::class)->fetchData($this, $owner, $repoName);
+            $results['commits'] = true;
+
+            app(PullRequestService::class)->fetchData($this, 'all', $owner, $repoName);
+            $results['pull_requests'] = true;
+
+            app(GithubIssueService::class)->fetchData($this, $owner, $repoName);
+            $results['issues'] = true;
+
+            app(PullRequestReviewService::class)->fetchData($this, $owner, $repoName);
+            $results['reviews'] = true;
+
+            $repository->update(['last_synced_at' => now()]);
+
+            Log::info("Repository synced: {$repository->full_name}", $results);
+
+            return $results;
+
+        } catch (Exception $e) {
+            Log::error("Sync failed for {$repository->full_name}: ".$e->getMessage());
+
+            throw $e;
+        }
     }
 }

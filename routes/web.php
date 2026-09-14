@@ -3,6 +3,7 @@
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CommitController;
+use App\Http\Controllers\GithubController;
 use App\Http\Controllers\GithubIssueController;
 use App\Http\Controllers\GithubRepositoryController;
 use App\Http\Controllers\GithubUserController;
@@ -58,6 +59,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/github-user', UserController::class)->only($apiRoutes);
 
     Route::get('metric', [MetricController::class, 'index'])->name('metric.index');
+
+    Route::post('/github/sync/{repositoryId}', [GithubController::class, 'sync'])
+        ->name('github.sync');
 });
 
 require __DIR__.'/settings.php';

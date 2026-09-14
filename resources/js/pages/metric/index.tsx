@@ -9,6 +9,7 @@ import BodyWrapper from '@/components/custom/body-wrapper';
 import metric from '@/routes/metric';
 import ShadSelect from '@/components/custom/inputs/shad-select';
 import { Label } from '@/components/ui/label';
+import { SyncButton } from '@/components/custom/metrics/section-components/sync-button';
 
 
 export default function Metric({ metrics, repositories, selected_repository, title, ...props }: MetricsPageProps) {
@@ -31,12 +32,13 @@ export default function Metric({ metrics, repositories, selected_repository, tit
             <h1 className="sr-only">{title}</h1>
             <Header title={title}>
                 <div className="flex items-center gap-4" style={{
-                    width: '250px',
+                    minWidth: '250px',
                 }}>
                     <Label htmlFor="repo_id" className='font-normal'>
                         Repository
                     </Label>
                     <ShadSelect name="repo_id" value={selectedRepo} onChange={handleRepoChange} list={repositories.map(i => ({ value: String(i.id), label: i.full_name }))} />
+                    <SyncButton repositoryId={selectedRepo} />
                 </div>
             </Header>
 
