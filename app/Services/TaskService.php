@@ -11,6 +11,11 @@ class TaskService
     {
         $query = Task::query();
 
+        if ($request && $request->boolean('overdue')) {
+            $query->where('due_date', '<', now())
+                ->whereNotIn('status', ['done', 'cancelled']);
+        }
+
         if ($request && $request->filled('search')) {
             $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {

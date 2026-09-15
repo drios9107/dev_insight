@@ -146,6 +146,11 @@ class PullRequestService
             });
         }
 
+        if ($request && $request->boolean('stale')) {
+            $query->where('state', 'open')
+                ->where('updated_at', '<', now()->subDays(7));
+        }
+
         if ($request && $request->filled('state') && $request->state !== 'all') {
             $query->where('state', $request->state);
         }

@@ -20,6 +20,12 @@ class GithubUserService
             });
         }
 
+        if ($request && $request->boolean('inactive')) {
+            $query->whereDoesntHave('commits', function ($q) {
+                $q->where('date', '>=', now()->subDays(7));
+            });
+        }
+
         return $query->latest()->paginate($request->per_page ?? 10);
     }
 

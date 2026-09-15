@@ -69,7 +69,7 @@ export default function ManagementSection({
                 icon={<AlertCircle className="w-5 h-5" />}
                 color={overdue_tasks > 0 ? 'red' : 'green'}
                 sub={overdue_tasks > 0 ? 'Needs attention' : 'All on track'}
-                link="/task?filter=overdue"
+                link="/task?overdue=1"
             />
 
             {/* ========== ALERTS ========== */}
@@ -79,7 +79,7 @@ export default function ManagementSection({
                 icon={<Clock className="w-5 h-5" />}
                 color="yellow"
                 sub="No activity in 7 days"
-                link="/pull-request?filter=stale"
+                link="/pull-request?stale=1"
             />
             <ActionCard
                 label="PRs Needing Review"
@@ -95,7 +95,7 @@ export default function ManagementSection({
                 icon={<Users className="w-5 h-5" />}
                 color="red"
                 sub="No commits in 7 days"
-                link="/github-user?filter=inactive"
+                link="/github-user?inactive=1"
             />
             <ActionCard
                 label="PR Merge Rate"
