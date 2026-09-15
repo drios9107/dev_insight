@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button"
 import { SimpleModal } from "../simple-modal"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { useForm } from "@inertiajs/react"
@@ -9,11 +8,7 @@ import { toast } from "sonner"
 import user from "@/routes/user"
 import { useFetch } from "@/hooks/use-fetch"
 import project from "@/routes/project"
-import githubsRepository from "@/routes/github-repository"
-import { TProjectStatus } from "@/types/models/project"
 import { ShadDate } from "../inputs/shad-date"
-import { ShadColor } from "../inputs/shad-color"
-import { ProjectStatusEnum } from "@/enums/project"
 import sprint from "@/routes/sprint"
 import { TaskPriorityEnum, TaskStatusEnum, TTaskPriority, TTaskStatus } from "@/enums/task"
 
@@ -27,7 +22,7 @@ const defaultData = {
     status: 'planning',
     priority: 'low',
     due_date: new Date().toISOString().slice(0, 10),
-    completed_at: new Date().toISOString().slice(0, 10),
+    completed_at: null,
     story_points: 0,
     hours_estimate: 0,
     hours_spent: 0,
@@ -62,7 +57,9 @@ const CustomForm = ({ item, onClose }: { item?: any, onClose: () => void }) => {
                 setProjectsLoading(false);
                 setSprintsLoading(false);
             });
-    }, [])
+    }, [setUsersLoading,
+        setProjectsLoading,
+        setSprintsLoading])
 
     useEffect(() => {
         fetchSelectorsData()
@@ -145,11 +142,6 @@ const CustomForm = ({ item, onClose }: { item?: any, onClose: () => void }) => {
         </div>
 
         <div className="flex justify-between gap-3">
-            <ShadDate required label="Due Date" name="due_date" value={data.due_date} onChange={(e) => setData('due_date', e.target.value)} errors={errors} />
-            <ShadDate required label="Completed At" name="completed_at" value={data.completed_at} onChange={(e) => setData('completed_at', e.target.value)} errors={errors} />
-        </div>
-
-        <div className="flex justify-between gap-3">
             <ShadInput required label="Story Points" name="story_points" value={data.story_points} onChange={(e) => setData('story_points', parseNumber(e.target.value))} errors={errors} />
             <ShadInput required label="Order" name="order" value={data.order} onChange={(e) => setData('order', parseNumber(e.target.value))} errors={errors} />
         </div>
@@ -157,6 +149,11 @@ const CustomForm = ({ item, onClose }: { item?: any, onClose: () => void }) => {
         <div className="flex justify-between gap-3">
             <ShadInput required label="Hours Estimate" name="hours_estimate" value={data.hours_estimate} onChange={(e) => setData('hours_estimate', parseNumber(e.target.value))} errors={errors} />
             <ShadInput required label="Hours Spent" name="hours_spent" value={data.hours_spent} onChange={(e) => setData('hours_spent', parseNumber(e.target.value))} errors={errors} />
+        </div>
+
+        <div className="flex justify-between gap-3">
+            <ShadDate required label="Due Date" name="due_date" value={data.due_date} onChange={(e) => setData('due_date', e.target.value)} errors={errors} />
+            <div className="w-full"></div>
         </div>
 
         <ShadTextarea label="Description" name="description" value={data.description} onChange={(e) => setData('description', e.target.value)} errors={errors} />

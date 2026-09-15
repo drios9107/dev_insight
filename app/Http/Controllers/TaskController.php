@@ -41,6 +41,10 @@ class TaskController extends Controller
             $filters['priority'] = $request->priority;
         }
 
+        if ($request->has('overdue')) {
+            $filters['overdue'] = $request->overdue;
+        }
+
         return Inertia::render('task/index', [
             'list' => $data,
             'title' => 'Tasks',

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\TaskStatusEnum;
 use App\Models\Task;
 use Illuminate\Http\Request;
 
@@ -11,13 +12,8 @@ class TaskService
     {
         $query = Task::query();
 
-        if ($request && $request->boolean('overdue')) {
-            $query->where('due_date', '<', now())
-                ->whereNotIn('status', ['done', 'cancelled']);
-        }
-
         if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('description', 'ilike', $search)
@@ -34,6 +30,11 @@ class TaskService
                         $s->where('name', 'ilike', $search);
                     });
             });
+        }
+
+        if ($request && $request->boolean('overdue')) {
+            $query->where('due_date', '<', now())
+                ->whereNotIn('status', ['done', 'cancelled']);
         }
 
         if ($request && $request->filled('status') && $request->status !== 'all') {
@@ -60,7 +61,7 @@ class TaskService
      */
     public function store(array $data): bool
     {
-        return Task::create($data) !== null;
+        return Task::create($this->updateStatus($data)) !== null;
     }
 
     /**
@@ -81,7 +82,8 @@ class TaskService
      */
     public function update(int $id, array $data): bool
     {
-        return Task::whereId($id)->update($data) !== null;
+        $updated = $this->updateStatus($data);
+        return Task::whereId($id)->update($updated) !== null;
     }
 
     /**
@@ -93,5 +95,20 @@ class TaskService
     public function destroy($id)
     {
         return Task::destroy($id) !== null;
+    }
+
+    /**
+     * When the status is done the 'completed_at' field takes the current date and time, with any other value completed value is cleared
+     * @param array $data
+     * @return $data
+     */
+    private function updateStatus(array $data)
+    {
+        if ($data['status'] === TaskStatusEnum::Done->value) {
+            $data['completed_at'] = now();
+        } else
+            $data['completed_at'] = null;
+
+        return $data;
     }
 }
