@@ -31,11 +31,6 @@ export function TeamMembersList({ members, title = 'Team Members' }: TeamMembers
     return (
         <CardSectionWrapper className="lg:grid-cols-2 gap-6">
             <Card className="border-0 shadow-md">
-                <CardHeader className="pb-2">
-                    <CardTitle className="text-base font-semibold text-gray-700">
-                        👥 {title}
-                    </CardTitle>
-                </CardHeader>
                 <CardContent className="p-4">
                     <div className="space-y-3 max-h-[400px] overflow-y-auto pr-1">
                         {members.map((member, index) => (

@@ -1,99 +1,110 @@
-// resources/js/components/custom/metrics/management-section.tsx
-
-import { StatCard } from './section-components/stat-card';
 import { ActionCard } from './section-components/action-card';
-import { SectionTitle } from './section-components/section-title';
-import { ListStart, Bug, ListCheck, AlertCircle, } from 'lucide-react';
+import {
+    ListStart,
+    ListCheck,
+    Bug,
+    AlertCircle,
+    Clock,
+    Eye,
+    Users,
+    FileCheck,
+} from 'lucide-react';
+import CardSectionWrapper from './section-components/card-section-wrapper';
 
 interface ManagementSectionProps {
-    active_projects: number;
-    total_projects: number;
-    active_sprints: number;
-    total_sprints: number;
     sprint_completion_rate: number;
-    open_issues: number;
-    total_issues: number;
-    avg_issue_resolution_time: number;
-    tasks_in_progress: number;
-    tasks_in_review: number;
-    total_tasks: number;
     task_completion_rate: number;
+    avg_issue_resolution_time: number;
     overdue_tasks: number;
+    stale_prs: number;
+    prs_needing_review: number;
+    inactive_developers: number;
+    pr_merge_rate: number;
+    prs_merged: number;
+    prs_total: number;
 }
 
 export default function ManagementSection({
-    active_projects,
-    total_projects,
-    active_sprints,
-    total_sprints,
     sprint_completion_rate,
-    open_issues,
-    total_issues,
-    avg_issue_resolution_time,
-    tasks_in_progress,
-    tasks_in_review,
-    total_tasks,
     task_completion_rate,
+    avg_issue_resolution_time,
     overdue_tasks,
+    stale_prs,
+    prs_needing_review,
+    inactive_developers,
+    pr_merge_rate,
+    prs_merged,
+    prs_total,
 }: ManagementSectionProps) {
     return (
-        <>
-            {/* ========== STAT CARDS ========== */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 w-full">
-                <StatCard
-                    label="Active Projects"
-                    value={`${active_projects} / ${total_projects}`}
-                />
-                <StatCard
-                    label="Active Sprints"
-                    value={`${active_sprints} / ${total_sprints}`}
-                />
-                <StatCard
-                    label="Open Issues"
-                    value={`${open_issues} / ${total_issues}`}
-                />
-                <StatCard
-                    label="Tasks In Progress"
-                    value={`${tasks_in_progress} / ${total_tasks}`}
-                />
-                <StatCard
-                    label="Tasks In Review" // ✅ Nuevo
-                    value={`${tasks_in_review} / ${total_tasks}`}
-                />
-            </div>
+        <CardSectionWrapper className="sm:grid-cols-2 lg:grid-cols-4">
+            {/* ========== MANAGEMENT ========== */}
+            <ActionCard
+                label="Sprint Completion"
+                value={`${sprint_completion_rate}%`}
+                icon={<ListStart className="w-5 h-5" />}
+                color="green"
+                sub="Completed sprints"
+                link="/sprint?status=completed"
+            />
+            <ActionCard
+                label="Task Completion"
+                value={`${task_completion_rate}%`}
+                icon={<ListCheck className="w-5 h-5" />}
+                color="blue"
+                sub="Completed tasks"
+                link="/task?status=done"
+            />
+            <ActionCard
+                label="Avg Issue Resolution"
+                value={`${avg_issue_resolution_time}d`}
+                icon={<Bug className="w-5 h-5" />}
+                color="purple"
+                sub="Days to close"
+                link="/github-issue?state=closed"
+            />
+            <ActionCard
+                label="Overdue Tasks"
+                value={overdue_tasks}
+                icon={<AlertCircle className="w-5 h-5" />}
+                color={overdue_tasks > 0 ? 'red' : 'green'}
+                sub={overdue_tasks > 0 ? 'Needs attention' : 'All on track'}
+                link="/task?filter=overdue"
+            />
 
-            {/* ========== ACTION CARDS ========== */}
-            <SectionTitle title="📊 Management Overview" className="mt-6" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 w-full">
-                <ActionCard
-                    label="Sprint Completion"
-                    value={`${sprint_completion_rate}%`}
-                    icon={<ListStart className="w-5 h-5" />}
-                    color="green"
-                    sub="Completed sprints"
-                />
-                <ActionCard
-                    label="Task Completion"
-                    value={`${task_completion_rate}%`}
-                    icon={<ListCheck className="w-5 h-5" />}
-                    color="blue"
-                    sub="Completed tasks"
-                />
-                <ActionCard
-                    label="Avg Issue Resolution"
-                    value={`${avg_issue_resolution_time}d`}
-                    icon={<Bug className="w-5 h-5" />}
-                    color="purple"
-                    sub="Days to close"
-                />
-                <ActionCard
-                    label="Overdue Tasks"
-                    value={overdue_tasks}
-                    icon={<AlertCircle className="w-5 h-5" />}
-                    color={overdue_tasks > 0 ? 'red' : 'green'}
-                    sub={overdue_tasks > 0 ? 'Needs attention' : 'All on track'}
-                />
-            </div>
-        </>
+            {/* ========== ALERTS ========== */}
+            <ActionCard
+                label="Stale PRs (7+ days)"
+                value={stale_prs}
+                icon={<Clock className="w-5 h-5" />}
+                color="yellow"
+                sub="No activity in 7 days"
+                link="/pull-request?filter=stale"
+            />
+            <ActionCard
+                label="PRs Needing Review"
+                value={prs_needing_review}
+                icon={<Eye className="w-5 h-5" />}
+                color="blue"
+                sub="Open PRs with 0 reviews"
+                link="/pull-request?filter=open"
+            />
+            <ActionCard
+                label="Inactive Devs (7+ days)"
+                value={inactive_developers}
+                icon={<Users className="w-5 h-5" />}
+                color="red"
+                sub="No commits in 7 days"
+                link="/github-user?filter=inactive"
+            />
+            <ActionCard
+                label="PR Merge Rate"
+                value={`${pr_merge_rate}%`}
+                icon={<FileCheck className="w-5 h-5" />}
+                color="green"
+                sub={`${prs_merged} merged / ${prs_total} total`}
+                link="/pull-request?state=merged"
+            />
+        </CardSectionWrapper>
     );
 }

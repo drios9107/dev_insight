@@ -1,6 +1,7 @@
-// resources/js/components/metrics/ActionCard.tsx
+// resources/js/components/custom/metrics/section-components/action-card.tsx
 
 import { Card, CardContent } from '@/components/ui/card';
+import { Link } from '@inertiajs/react';
 import { ReactNode } from 'react';
 
 interface ActionCardProps {
@@ -9,6 +10,7 @@ interface ActionCardProps {
     icon?: ReactNode;
     color?: 'blue' | 'green' | 'red' | 'yellow' | 'purple' | 'gray';
     sub?: string;
+    link?: string; // ✅ Nuevo: link opcional
     onClick?: () => void;
 }
 
@@ -27,27 +29,36 @@ export function ActionCard({
     icon,
     color = 'gray',
     sub,
+    link,
     onClick,
 }: ActionCardProps) {
+    const CardWrapper = link ? Link : 'div';
+    const wrapperProps = link
+        ? { href: link, className: 'block' }
+        : {};
+
     return (
-        <Card
-            className={`border-0 shadow-md hover:shadow-lg transition-all duration-200 w-full ${onClick ? 'cursor-pointer hover:scale-[1.02]' : ''}`}
-            onClick={onClick}
-        >
-            <CardContent className="p-4">
-                <div className="flex items-start justify-between gap-2">
-                    <div>
-                        <p className="text-sm font-medium text-gray-500">{label}</p>
-                        <p className="text-2xl font-bold text-gray-900">{value}</p>
-                        {sub && <p className="text-xs text-gray-400 mt-1">{sub}</p>}
-                    </div>
-                    {icon && (
-                        <div className={`p-2 rounded-lg ${colorMap[color]}`}>
-                            {icon}
+        <CardWrapper {...wrapperProps}>
+            <Card
+                className={`border-0 shadow-md hover:shadow-lg transition-all duration-200 ${link || onClick ? 'cursor-pointer hover:scale-[1.02]' : ''
+                    }`}
+                onClick={onClick}
+            >
+                <CardContent className="p-4">
+                    <div className="flex items-start justify-between">
+                        <div>
+                            <p className="text-sm font-medium text-gray-500">{label}</p>
+                            <p className="text-2xl font-bold text-gray-900">{value}</p>
+                            {sub && <p className="text-xs text-gray-400 mt-1">{sub}</p>}
                         </div>
-                    )}
-                </div>
-            </CardContent>
-        </Card>
+                        {icon && (
+                            <div className={`p-2 rounded-lg ${colorMap[color]}`}>
+                                {icon}
+                            </div>
+                        )}
+                    </div>
+                </CardContent>
+            </Card>
+        </CardWrapper>
     );
 }
