@@ -25,9 +25,12 @@ class GithubUserController extends Controller
     {
         $data = GithubUserResource::collection($this->service->index($request));
 
+        $filters = $this->extractFilters($request, ['inactive']);
+
         return Inertia::render('github-user/index', [
             'list' => $data,
             'title' => 'GitHub Users',
+            'filters' => $filters,
         ]);
     }
 

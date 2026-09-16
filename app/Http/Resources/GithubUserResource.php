@@ -16,8 +16,12 @@ class GithubUserResource extends JsonResource
             'email' => $this->email,
             'name' => $this->name,
             'avatar_url' => $this->avatar_url,
+            'display_name' => $this->displayName,
+            'commits_count' => $this->commits()->count(),
+            'prs_count' => $this->authoredPullRequests()->count(),
+            'reviews_count' => $this->pullRequestReviews()->count(),
+            'last_synced_at' => $this->last_synced_at?->format('Y-m-d H:i:s'),
             'created_at' => $this->created_at?->format('Y-m-d H:i:s'),
-            'updated_at' => $this->updated_at?->format('Y-m-d H:i:s'),
         ];
     }
 }

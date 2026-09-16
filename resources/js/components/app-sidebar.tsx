@@ -29,6 +29,7 @@ import task from '@/routes/task';
 import role from '@/routes/role';
 import activityLog from '@/routes/activity-log';
 import { useMemo } from 'react';
+import githubUser from '@/routes/github-user';
 
 const adminNavItems: NavItem[] = [
     {
@@ -88,6 +89,10 @@ const githubNavItems: NavItem[] = [
         title: 'Repositories',
         href: githubRepository.index(),
         icon: FolderGit2,
+    }, {
+        title: 'Users',
+        href: githubUser.index(),
+        icon: Users2,
     }, {
         title: 'PRs',
         href: pullRequest.index(),
