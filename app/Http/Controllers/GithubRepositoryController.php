@@ -32,7 +32,7 @@ class GithubRepositoryController extends Controller
     {
         $data = GithubRepositoryResource::collection($this->service->index($request));
 
-        $$filters = $this->extractFilters($request, ['is_private']);
+        $filters = $this->extractFilters($request, ['is_private']);
 
         return Inertia::render('github-repository/index', [
             'list' => $data,
