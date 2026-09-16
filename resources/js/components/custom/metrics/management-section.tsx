@@ -86,8 +86,8 @@ export default function ManagementSection({
                 value={prs_needing_review}
                 icon={<Eye className="w-5 h-5" />}
                 color="blue"
-                sub="Open PRs with 0 reviews"
-                link="/pull-request?filter=open"
+                sub="Open PRs"
+                link="/pull-request?state=open"
             />
             <ActionCard
                 label="Inactive Devs (7+ days)"

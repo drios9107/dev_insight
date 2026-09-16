@@ -56,7 +56,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/task', TaskController::class)->only($apiRoutes);
     Route::resource('/team', TeamController::class)->only($apiRoutes);
     Route::resource('/user', UserController::class)->only($apiRoutes);
-    Route::resource('/github-user', UserController::class)->only($apiRoutes);
+    Route::resource('/github-user', GithubUserController::class)->only($apiRoutes);
 
     Route::get('metric', [MetricController::class, 'index'])->name('metric.index');
 
@@ -64,4 +64,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('github.sync');
 });
 
-require __DIR__.'/settings.php';
+require __DIR__ . '/settings.php';
