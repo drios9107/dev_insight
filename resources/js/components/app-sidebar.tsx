@@ -53,13 +53,13 @@ const mainNavItems: NavItem[] = [
         href: metric.index(),
         icon: LayoutDashboard,
     }, {
-        title: 'Notifications',
-        href: notification.index(),
-        icon: Cloud,
-    }, {
         title: 'Projects',
         href: project.index(),
         icon: Workflow,
+    }, {
+        title: 'Teams',
+        href: team.index(),
+        icon: Group,
     }, {
         title: 'Sprints',
         href: sprint.index(),
@@ -68,24 +68,12 @@ const mainNavItems: NavItem[] = [
         title: 'Tasks',
         href: task.index(),
         icon: ListCheck,
-    }, {
-        title: 'Teams',
-        href: team.index(),
-        icon: Group,
-    }
+    },
 ];
 
 
 const githubNavItems: NavItem[] = [
     {
-        title: 'Commit',
-        href: commit.index(),
-        icon: GitCommit,
-    }, {
-        title: 'Issues',
-        href: githubIssue.index(),
-        icon: Bug,
-    }, {
         title: 'Repositories',
         href: githubRepository.index(),
         icon: FolderGit2,
@@ -94,6 +82,10 @@ const githubNavItems: NavItem[] = [
         href: githubUser.index(),
         icon: Users2,
     }, {
+        title: 'Issues',
+        href: githubIssue.index(),
+        icon: Bug,
+    }, {
         title: 'PRs',
         href: pullRequest.index(),
         icon: DiamondPercent,
@@ -101,7 +93,11 @@ const githubNavItems: NavItem[] = [
         title: 'Reviews',
         href: pullRequestReview.index(),
         icon: CheckSquare,
-    }
+    }, {
+        title: 'Commit',
+        href: commit.index(),
+        icon: GitCommit,
+    },
 ];
 
 const footerNavItems: NavItem[] = [
