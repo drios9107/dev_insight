@@ -189,7 +189,7 @@ export function DataTable({
                             </Table.Row>
                         ) : (
                             items.map((item) => (
-                                <Table.Row key={item.id}>
+                                <Table.Row key={item.id} className="h-[52px] hover:bg-gray-100 transition-colors duration-150">
                                     {/* Checkbox de selección */}
                                     {selectable && (
                                         <Table.Cell className='px-4 py-3'>
