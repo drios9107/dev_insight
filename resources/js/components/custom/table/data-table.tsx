@@ -136,7 +136,7 @@ export function DataTable({
             )}
 
             {/* Tabla */}
-            <Box className="overflow-x-auto border rounded-lg w-full">
+            <Box className="overflow-x-auto border rounded-lg w-full datatable-container">
                 <Table.Root variant="surface" size="2">
                     <Table.Header>
                         <Table.Row>

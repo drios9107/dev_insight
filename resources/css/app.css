@@ -141,3 +141,8 @@
         @apply bg-background text-foreground;
     }
 }
+
+
+.datatable-container table {
+    width: 100%;
+}
