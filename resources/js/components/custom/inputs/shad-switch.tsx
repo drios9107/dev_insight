@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 import { Label } from "@radix-ui/react-label"
 
 interface SwitchProps {
-    label: string
+    label?: string
     id?: string
     name: string
     extraclasses?: string
@@ -40,7 +40,7 @@ const ShadSwitch = ({ label, id, name, value, onChange, extraclasses, ...props }
                     )}
                 />
             </SwitchPrimitive.Root>
-            <Label htmlFor={id ?? name}>{label}</Label>
+            {label && <Label htmlFor={id ?? name}>{label}</Label>}
         </div>
     )
 }

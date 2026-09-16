@@ -1,6 +1,6 @@
 import { Table, Box, Text, Button, ThemeContext, useThemeContext } from '@radix-ui/themes';
 import { ColumnHeader } from './column-header';
-import { DataTableFilters, IFilter } from './data-table-filters';
+import { DataTableFilters, ICheck, IFilter } from './data-table-filters';
 import { DataTablePagination } from './data-table-pagination';
 import { TableActions } from './table-actions';
 import { useTable } from '../../../hooks/use-table';
@@ -50,6 +50,7 @@ interface IDataTableProps {
     data: PaginatedData;
     columns: IColumn[];
     filters?: IFilter[];
+    checks?: ICheck[];
     searchFields?: string[];
     initialFilters?: Record<string, any>;
     onEdit?: (item: any) => void;
@@ -68,6 +69,7 @@ export function DataTable({
     data,
     columns,
     filters = [],
+    checks = [],
     searchFields = [],
     // initialFilters = {},
     onEdit,
@@ -106,6 +108,7 @@ export function DataTable({
                 search={search}
                 onSearch={handleSearch}
                 filters={filters}
+                checks={checks}
             />
 
             {/* Barra de acciones superiores */}
