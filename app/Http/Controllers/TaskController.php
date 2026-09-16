@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Concerns\ExtractsFilters;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Services\TaskService;
@@ -10,6 +11,7 @@ use Inertia\Inertia;
 
 class TaskController extends Controller
 {
+    use ExtractsFilters;
     private TaskService $service;
 
     public function __construct(TaskService $service)
@@ -32,18 +34,7 @@ class TaskController extends Controller
     {
         $data = TaskResource::collection($this->service->index($request));
 
-        $filters = [];
-        if ($request->has('status')) {
-            $filters['status'] = $request->status;
-        }
-
-        if ($request->has('priority')) {
-            $filters['priority'] = $request->priority;
-        }
-
-        if ($request->has('overdue')) {
-            $filters['overdue'] = $request->overdue;
-        }
+        $filters = $this->extractFilters($request, ['status', 'priority', 'overdue']);
 
         return Inertia::render('task/index', [
             'list' => $data,

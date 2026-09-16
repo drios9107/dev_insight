@@ -33,15 +33,9 @@ class GithubIssueController extends Controller
     {
         $data = GithubIssueResource::collection($this->service->index($request));
 
-        $filters = [];
-        if ($request->has('state')) {
-            $filters['state'] = $request->state;
-        }
-        if ($request->has('repository_id')) {
-            $filters['repository_id'] = $request->repository_id;
-        }
+        $filters = $this->extractFilters($request, ['state', 'repository_id']);
 
-        $repositories = GithubRepository::select('id', 'full_name')->get();
+        $repositories = GithubRepository::select('id', 'name', 'full_name')->get();
 
         return Inertia::render('github-issue/index', [
             'list' => $data,

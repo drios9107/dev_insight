@@ -33,10 +33,7 @@ class ProjectController extends Controller
     {
         $data = ProjectResource::collection($this->service->index($request));
 
-        $filters = [];
-        if ($request->has('status')) {
-            $filters['status'] = $request->status;
-        }
+        $filters = $this->extractFilters($request, ['status']);
 
         return Inertia::render('project/index', [
             'list' => $data,

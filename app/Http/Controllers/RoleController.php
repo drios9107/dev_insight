@@ -29,20 +29,17 @@ class RoleController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-{
-    $data = RoleResource::collection($this->service->index($request));
+    {
+        $data = RoleResource::collection($this->service->index($request));
 
-    $filters = [];
-    if ($request->has('search')) {
-        $filters['search'] = $request->search;
+        $filters = $this->extractFilters($request);
+
+        return Inertia::render('role/index', [
+            'list' => $data,
+            'title' => 'Roles',
+            'filters' => $filters,
+        ]);
     }
-
-    return Inertia::render('role/index', [
-        'list' => $data,
-        'title' => 'Roles',
-        'filters' => $filters,
-    ]);
-}
 
     /**
      * Store a newly created resource in storage.

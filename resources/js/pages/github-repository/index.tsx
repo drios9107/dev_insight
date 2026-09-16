@@ -10,7 +10,7 @@ import githubRepository from "@/routes/github-repository";
 import { Badge } from "@/components/ui/badge";
 import { ExternalLink } from "lucide-react";
 
-const GithubRepositorys = (props: any) => {
+const GithubRepositories = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<IGithubRepository | null>(null)
 
     const columns: IColumn[] = [
@@ -110,4 +110,4 @@ const GithubRepositorys = (props: any) => {
     </>
 }
 
-export default GithubRepositorys;
+export default GithubRepositories;

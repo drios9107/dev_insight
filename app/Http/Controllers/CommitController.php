@@ -30,24 +30,20 @@ class CommitController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-{
-    $data = CommitResource::collection($this->service->index($request));
+    {
+        $data = CommitResource::collection($this->service->index($request));
 
-    $filters = [];
-    if ($request->has('repository_id')) {
-        $filters['repository_id'] = $request->repository_id;
+        $filters = $this->extractFilters($request, ['repository_id']);
+
+        $repositories = GithubRepository::select('id', 'name', 'full_name')->get();
+
+        return Inertia::render('commit/index', [
+            'list' => $data,
+            'title' => 'Commits',
+            'filters' => $filters,
+            'repositories' => $repositories,
+        ]);
     }
-
-    // Para el filtro de repositorios en el frontend
-    $repositories = GithubRepository::select('id', 'full_name')->get();
-
-    return Inertia::render('commit/index', [
-        'list' => $data,
-        'title' => 'Commits',
-        'filters' => $filters,
-        'repositories' => $repositories,
-    ]);
-}
 
     /**
      * Store a newly created resource in storage.

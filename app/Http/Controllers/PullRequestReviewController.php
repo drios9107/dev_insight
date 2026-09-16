@@ -33,13 +33,7 @@ class PullRequestReviewController extends Controller
     {
         $data = PullRequestReviewResource::collection($this->service->index($request));
 
-        $filters = [];
-        if ($request->has('state')) {
-            $filters['state'] = $request->state;
-        }
-        if ($request->has('reviewer_id')) {
-            $filters['reviewer_id'] = $request->reviewer_id;
-        }
+        $filters = $this->extractFilters($request, ['state', 'reviewer_id']);
 
         $reviewers = User::select('id', 'name')->get();
 

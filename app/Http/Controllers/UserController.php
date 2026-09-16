@@ -33,10 +33,7 @@ class UserController extends Controller
     {
         $data = UserResource::collection($this->service->index($request));
 
-        $filters = [];
-        if ($request->has('role_id')) {
-            $filters['role_id'] = $request->role_id;
-        }
+        $filters = $this->extractFilters($request, ['role_id']);
 
         $roles = Role::select('id', 'name')->get();
 

@@ -32,10 +32,7 @@ class TeamController extends Controller
     {
         $data = TeamResource::collection($this->service->index($request));
 
-        $filters = [];
-        if ($request->has('is_active')) {
-            $filters['is_active'] = $request->is_active;
-        }
+        $$filters = $this->extractFilters($request, ['is_active']);
 
         return Inertia::render('team/index', [
             'list' => $data,

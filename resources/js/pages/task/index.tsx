@@ -119,6 +119,21 @@ const Tasks = (props: any) => {
         },
     ];
 
+    const checksOptions = [
+        {
+            key: 'overdue',
+            label: 'Is Overdue?',
+            value: props?.filters?.overdue,
+            onChange: (value: boolean) => {
+                router.get(
+                    task.index().url,
+                    { ...props?.filters, overdue: value ? 1 : undefined, page: 1 },
+                    { preserveState: true, preserveScroll: true }
+                );
+            },
+        }
+    ];
+
     const onEdit = useCallback((item: ITask) => {
         setItemToEdit(item)
         setIsOpen(true)
@@ -171,6 +186,7 @@ const Tasks = (props: any) => {
                 data={props.list}
                 columns={columns}
                 filters={filterOptions}
+                checks={checksOptions}
                 initialFilters={props.filters}
                 onEdit={onEdit}
                 onDelete={setItemToDelete}

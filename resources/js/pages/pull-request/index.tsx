@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tooltip } from "@/components/ui/tooltip";
 import { CustomTooltip } from "@/components/custom/tooltip";
+import { ICheck } from "@/components/custom/table/data-table-filters";
 
 const PullRequests = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<IPullRequest | null>(null)
@@ -151,6 +152,21 @@ const PullRequests = (props: any) => {
         },
     ];
 
+    const checksOptions: ICheck[] = [
+        {
+            key: 'stale',
+            label: 'Stale (7+ days)',
+            value: props?.filters?.stale,
+            onChange: (value: boolean) => {
+                router.get(
+                    pullRequest.index().url,
+                    { ...props?.filters, stale: value ? 1 : undefined, page: 1 },
+                    { preserveState: true, preserveScroll: true }
+                );
+            },
+        },
+    ];
+
     const onDelete = useCallback(() => {
         if (itemToDelete) {
             router.delete(pullRequest.destroy(itemToDelete!.id).url, {
@@ -181,6 +197,7 @@ const PullRequests = (props: any) => {
                 data={props.list}
                 columns={columns}
                 filters={filterOptions}
+                checks={checksOptions}
                 initialFilters={props.filters}
                 onDelete={setItemToDelete}
             />

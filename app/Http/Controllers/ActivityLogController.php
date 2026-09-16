@@ -34,13 +34,7 @@ class ActivityLogController extends Controller
     {
         $data = ActivityLogResource::collection($this->service->index($request));
 
-        $filters = [];
-        if ($request->has('type')) {
-            $filters['type'] = $request->type;
-        }
-        if ($request->has('user_id')) {
-            $filters['user_id'] = $request->user_id;
-        }
+        $filters = $this->extractFilters($request, ['type', 'user_id']);
 
         $types = ActivityLog::distinct()->pluck('type')->toArray();
         $users = User::select('id', 'name')->get();

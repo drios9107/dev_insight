@@ -33,13 +33,7 @@ class PullRequestController extends Controller
     {
         $data = PullRequestResource::collection($this->service->index($request));
 
-        $filters = [];
-        if ($request->has('state')) {
-            $filters['state'] = $request->state;
-        }
-        if ($request->has('repository_id')) {
-            $filters['repository_id'] = $request->repository_id;
-        }
+        $filters = $this->extractFilters($request, ['state', 'repository_id', 'stale']);
 
         $repositories = GithubRepository::select('id', 'name', 'full_name')->get();
 
