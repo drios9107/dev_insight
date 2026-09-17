@@ -62,6 +62,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/github/sync/{repositoryId}', [GithubController::class, 'sync'])
         ->name('github.sync');
+
+    Route::post('/github-repository/sync-all', [GithubRepositoryController::class, 'syncAll'])
+        ->name('github-repository.sync-all');
 });
 
 require __DIR__ . '/settings.php';
