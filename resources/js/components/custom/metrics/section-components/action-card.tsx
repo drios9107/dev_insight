@@ -10,7 +10,7 @@ interface ActionCardProps {
     icon?: ReactNode;
     color?: 'blue' | 'green' | 'red' | 'yellow' | 'purple' | 'gray';
     sub?: string;
-    link?: string; // ✅ Nuevo: link opcional
+    link?: string;
     onClick?: () => void;
 }
 

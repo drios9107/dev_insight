@@ -117,15 +117,9 @@ const Projects = (props: any) => {
                 data={props.list}
                 columns={columns}
                 filters={filterOptions}
-                // initialFilters={props.filters}
                 onEdit={onEdit}
                 onDelete={setItemToDelete}
             />
-            {/* onBulkDelete={(ids) => {
-                     if (confirm(`¿Eliminar ${ids.length} proyectos?`)) {
-                         router.post(route('projects.bulk-destroy'), { ids });
-                     }
-                 }} */}
 
             {isOpen && <CustomForm onClose={onCloseForm} item={itemToEdit} />}
             {itemToDelete && <DeleteModal onClose={onCloseForm} onClick={onDelete} />}

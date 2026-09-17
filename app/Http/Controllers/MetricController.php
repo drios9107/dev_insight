@@ -22,7 +22,6 @@ class MetricController extends Controller
 
         $metrics = $this->metricService->getDashboardMetrics($repositoryId);
 
-        // Repositorios para el filtro
         $repositories = GithubRepository::select('id', 'full_name')->get();
 
         return Inertia::render('metric/index', [

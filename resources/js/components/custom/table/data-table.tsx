@@ -103,7 +103,7 @@ export function DataTable({
 
     return (
         <ThemeContext value={theme}>
-            {/* Filtros */}
+            {/* Filters */}
             <DataTableFilters
                 search={search}
                 onSearch={handleSearch}
@@ -111,7 +111,7 @@ export function DataTable({
                 checks={checks}
             />
 
-            {/* Barra de acciones superiores */}
+            {/* Actions bar*/}
             {selectedRows.length > 0 && onBulkDelete && (
                 <div className="flex items-center gap-3 mb-3 p-2 bg-blue-50 rounded">
                     <Text size="2">
@@ -135,12 +135,12 @@ export function DataTable({
                 </div>
             )}
 
-            {/* Tabla */}
+            {/* Table */}
             <Box className="overflow-x-auto border rounded-lg w-full datatable-container">
                 <Table.Root variant="surface" size="2">
                     <Table.Header>
                         <Table.Row>
-                            {/* Selector masivo */}
+                            {/* Selector */}
                             {selectable && (
                                 <Table.ColumnHeaderCell className="w-8">
                                     <input
@@ -152,7 +152,7 @@ export function DataTable({
                                 </Table.ColumnHeaderCell>
                             )}
 
-                            {/* Columnas */}
+                            {/* Columns */}
                             {columns.map((col) => (
                                 <ColumnHeader
                                     key={col.key}
@@ -166,10 +166,10 @@ export function DataTable({
                                 />
                             ))}
 
-                            {/* Acciones */}
+                            {/* Actions */}
                             {hasActions && (
                                 <Table.ColumnHeaderCell className="w-30 text-center bg-blue-100 text-gray-600">
-                                    Acciones
+                                    Actions
                                 </Table.ColumnHeaderCell>
                             )}
                         </Table.Row>
@@ -190,7 +190,7 @@ export function DataTable({
                         ) : (
                             items.map((item) => (
                                 <Table.Row key={item.id} className="h-[52px] hover:bg-gray-100 transition-colors duration-150">
-                                    {/* Checkbox de selección */}
+                                    {/* Checkbox */}
                                     {selectable && (
                                         <Table.Cell className='px-4 py-3'>
                                             <input
@@ -202,7 +202,7 @@ export function DataTable({
                                         </Table.Cell>
                                     )}
 
-                                    {/* Datos de la fila */}
+                                    {/* Data */}
                                     {columns.map((col) => (
                                         <Table.Cell key={col.key} align={col.align || 'left'} className='px-4'>
                                             {col.render
@@ -211,7 +211,7 @@ export function DataTable({
                                         </Table.Cell>
                                     ))}
 
-                                    {/* Acciones */}
+                                    {/* Actions */}
                                     {hasActions && (
                                         <Table.Cell align="right" className='px-4 py-3'>
                                             <TableActions
@@ -219,7 +219,6 @@ export function DataTable({
                                                 onEdit={onEdit}
                                                 onDelete={onDelete}
                                                 onSync={onSync}
-                                                isGithubItem={item.github_id !== undefined}
                                             />
                                         </Table.Cell>
                                     )}
@@ -230,7 +229,7 @@ export function DataTable({
                 </Table.Root>
             </Box>
 
-            {/* Paginación */}
+            {/* Pagination */}
             <DataTablePagination
                 currentPage={data?.meta?.current_page || 1}
                 total={data?.meta?.total}

@@ -23,11 +23,9 @@ class TaskFactory extends Factory
      */
     public function definition(): array
     {
-        // Estados posibles
         $statuses = array_column(TaskStatusEnum::cases(), 'value');
         $status = $this->faker->randomElement($statuses);
 
-        // Prioridades
         $priorities = array_column(TaskPriorityEnum::cases(), 'value');
         $priority = $this->faker->randomElement($priorities);
 

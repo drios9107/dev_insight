@@ -48,7 +48,6 @@ class PullRequestService
                 }
             }
 
-            // ✅ Determinar el estado correcto
             $prState = ! empty($pr['merged_at']) ? 'merged' : $pr['state'];
 
             return [
@@ -58,7 +57,7 @@ class PullRequestService
                     'number' => $pr['number'],
                     'title' => $pr['title'],
                     'body' => $pr['body'] ?? null,
-                    'state' => $prState, // ✅ Ahora puede ser 'open', 'closed' o 'merged'
+                    'state' => $prState,
                     'author_id' => $author?->id,
                     'base_branch' => $pr['base']['ref'] ?? 'main',
                     'head_branch' => $pr['head']['ref'] ?? 'feature',
@@ -79,13 +78,11 @@ class PullRequestService
             foreach ($data as $item) {
                 $prData = $item['pull_request_data'];
 
-                // Insertar o actualizar PR
                 DB::table('pull_requests')->updateOrInsert(
                     ['github_id' => $prData['github_id']],
                     $prData
                 );
 
-                // Sincronizar assignees
                 if (! empty($item['assignee_ids'])) {
                     $prId = DB::table('pull_requests')
                         ->where('github_id', $prData['github_id'])
@@ -112,16 +109,15 @@ class PullRequestService
 
             return response()->json([
                 'success' => true,
-                'message' => count($data).' pull requests sincronizados',
+                'message' => count($data) . ' pull requests sincronizados',
                 'count' => count($data),
             ]);
-
         } catch (\Exception $e) {
             DB::rollBack();
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error al sincronizar: '.$e->getMessage(),
+                'message' => 'Error al sincronizar: ' . $e->getMessage(),
             ], 500);
         }
     }
@@ -130,7 +126,7 @@ class PullRequestService
     {
         $query = PullRequest::query()->with(['author', 'assignees', 'githubRepository', 'task']);
         if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('body', 'ilike', $search)

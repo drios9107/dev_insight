@@ -35,12 +35,12 @@ export function useTable({
 
     const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
-    // Actualizar filtros y navegar
+    // Update filters and navigate
     const updateFilters = (newFilters: IFilters) => {
         const updated = { ...filters, ...newFilters };
         setFilters(updated);
 
-        // 👇 Resetear página si cambian filtros
+        // Reset page
         if (newFilters.search !== undefined || newFilters.sort !== undefined) {
             updated.page = 1;
         }
@@ -52,7 +52,7 @@ export function useTable({
         );
     };
 
-    // Ordenar
+    // Sort
     const handleSort = (field: string) => {
         const direction = filters.sort === field && filters.direction === 'asc'
             ? 'desc'
@@ -60,22 +60,22 @@ export function useTable({
         updateFilters({ sort: field, direction });
     };
 
-    // Buscar
+    // Search
     const handleSearch = (value: string) => {
         updateFilters({ search: value });
     };
 
-    // Cambiar página
+    // Change page
     const handlePageChange = (page: number) => {
         updateFilters({ page });
     };
 
-    // Cambiar items por página
+    // Change items per page
     const handlePerPageChange = (perPage: number) => {
         updateFilters({ per_page: perPage, page: 1 });
     };
 
-    // Seleccionar filas
+    // Select rows
     const toggleRowSelection = (id: number) => {
         setSelectedRows(prev =>
             prev.includes(id)
@@ -92,7 +92,7 @@ export function useTable({
         }
     };
 
-    // Resetear selección
+    // Reset selection
     const clearSelection = () => setSelectedRows([]);
 
     return {

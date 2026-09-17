@@ -40,14 +40,14 @@ const ChartsSection = ({ days_without_commit = [], commits_by_day = [] }: IChart
                                             key={item.date}
                                             className="flex-1 h-full flex items-end group relative"
                                         >
-                                            {/* Tooltip original */}
+                                            {/* Tooltip */}
                                             <div className="absolute bottom-full mb-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gray-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap pointer-events-none z-10">
                                                 {item.count} commits
                                                 <br />
                                                 {date.format('YYYY/MM/DD')}
                                             </div>
 
-                                            {/* Barra */}
+                                            {/* Bar */}
                                             <div
                                                 className="w-full bg-gradient-to-t from-blue-400 to-blue-500 rounded-t transition-all duration-300 hover:from-blue-500 hover:to-blue-600"
                                                 style={{ height: `${height}%` }}

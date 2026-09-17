@@ -41,7 +41,7 @@ export function DataTableFilters({
 }: IDataTableFilters) {
     const [localSearch, setLocalSearch] = useState(search || '');
 
-    // Debounce para búsqueda
+    // Debounce
     useEffect(() => {
         const timer = setTimeout(() => {
             if (localSearch !== search) {
@@ -60,7 +60,7 @@ export function DataTableFilters({
     return (
         <div className="flex flex-col gap-3 mb-4 w-full">
             <div className={`flex flex-wrap items-center gap-3 mb-4 w-full ${className}`}>
-                {/* Búsqueda */}
+                {/* Search */}
                 <div className="relative flex flex-1 items-center min-w-[200px]">
                     <Search className="absolute left-3 top-2/3 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <ShadInput
@@ -83,7 +83,7 @@ export function DataTableFilters({
                     )}
                 </div>
 
-                {/* Filtros dinámicos */}
+                {/* Filters */}
                 {filters.map((filter) => (
                     <div key={filter.key} className="w-40">
                         <ShadSelect
@@ -105,7 +105,7 @@ export function DataTableFilters({
                 <div className="flex flex-wrap items-center gap-4 w-full">
                     {checks.map((i) => (
                         <div key={`${i.key}-${i.value}`} className="flex items-center gap-2">
-                            <Label htmlFor={i.key} className="text-sm cursor-pointer">{i.label}</Label>
+                            <Label htmlFor={i.key} className="text-sm font-normal cursor-pointer">{i.label}</Label>
                             <ShadSwitch name={i.key} value={i.value} onChange={i.onChange} />
                         </div>
                     ))}

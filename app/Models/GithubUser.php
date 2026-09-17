@@ -43,17 +43,17 @@ class GithubUser extends Model
 
     public function githubIssues(): HasMany
     {
-        return $this->hasMany(GithubIssue::class, 'author_id'); // ✅
+        return $this->hasMany(GithubIssue::class, 'author_id');
     }
 
     public function pullRequestReviews(): HasMany
     {
-        return $this->hasMany(PullRequestReview::class, 'reviewer_id'); // ✅
+        return $this->hasMany(PullRequestReview::class, 'reviewer_id');
     }
 
     public function getAvatar(): string
     {
-        return $this->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($this->username);
+        return $this->avatar_url ?? 'https://ui-avatars.com/api/?name=' . urlencode($this->username);
     }
 
     public function getDisplayNameAttribute(): string

@@ -72,7 +72,7 @@ export default function ManagementSection({
                 link="/task?overdue=1"
             />
 
-            {/* ========== ALERTS ========== */}
+            {/* ========== OTHERS ========== */}
             <ActionCard
                 label="Stale PRs (7+ days)"
                 value={stale_prs}

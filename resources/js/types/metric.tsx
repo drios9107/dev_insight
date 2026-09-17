@@ -107,10 +107,6 @@ export interface DeveloperRanking {
     highest_productivity: DeveloperStats | null;
 }
 
-// =============================================
-// NUEVOS TIPOS PARA LAS NUEVAS MÉTRICAS
-// =============================================
-
 export interface TeamMember {
     name: string;
     username: string;
@@ -147,27 +143,23 @@ export interface DaysWithoutCommit {
     last_commit_date: string | null;
 }
 
-// =============================================
-// DASHBOARD METRICS COMPLETO
-// =============================================
-
 export interface DashboardMetrics {
     // Cards
     cards: IMetricCard[];
 
-    // Gráficos
+    // Charts
     commits_by_day: CommitByDay[];
     commits_by_week: CommitByWeek[];
     prs_by_state: StateCount;
     issues_by_state: StateCount;
     reviews_by_state: StateCount;
 
-    // Tablas
+    // Tables
     top_developers: TopDeveloper[];
     top_reviewers: TopReviewer[];
     recent_activity: RecentActivity[];
 
-    // Estadísticas avanzadas
+    // Advanced statistics
     avg_commits_per_day: number;
     days_without_commit: DaysWithoutCommit[];
     avg_pr_merge_time: number;
@@ -181,35 +173,17 @@ export interface DashboardMetrics {
     pr_cycle_time: PrCycleTime;
     developer_ranking: DeveloperRanking;
 
-    // =============================================
-    // NUEVAS MÉTRICAS
-    // =============================================
-
-    /** Lista de miembros del equipo con estado */
     team_members: TeamMember[];
-
-    /** PRs sin actividad en más de 7 días */
     stale_prs: number;
-
-    /** PRs abiertos sin ninguna review */
     prs_needing_review: number;
-
-    /** Desarrolladores sin commits en más de 7 días */
     inactive_developers: number;
 
-    /** Porcentaje de PRs que fueron mergeados */
     pr_merge_rate: number;
-
-    /** Total de PRs mergeados */
     prs_merged: number;
-
-    /** Total de PRs */
     prs_total: number;
 
-    /** Top contribuyentes (commits + PRs + reviews) */
+    /** Top contributors (commits + PRs + reviews) */
     top_contributors: TopContributor[];
-
-    /** Top committers */
     top_committers: TopCommitter[];
 
     // Projects
@@ -232,18 +206,4 @@ export interface DashboardMetrics {
     total_tasks: number;
     task_completion_rate: number;
     overdue_tasks: number;
-}
-
-// =============================================
-// PROPS DE LA PÁGINA
-// =============================================
-
-export interface MetricsPageProps {
-    metrics: DashboardMetrics;
-    repositories: Array<{
-        id: number;
-        full_name: string;
-    }>;
-    selected_repository: number | null;
-    title: string;
 }

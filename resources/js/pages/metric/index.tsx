@@ -1,8 +1,6 @@
-// resources/js/pages/metrics/index.tsx
-
 import { Head, router } from '@inertiajs/react';
 import { useCallback, useState } from 'react';
-import { MetricsPageProps } from '@/types/metric';
+import { DashboardMetrics } from '@/types/metric';
 import { TeamMembersList, SectionTitle, MetricsSection, StatsSection, RankingCardsSection, ChartsSection, ManagementSection, CodeQualitySection, } from '@/components/custom/metrics'
 import Header from '@/components/custom/header';
 import BodyWrapper from '@/components/custom/body-wrapper';
@@ -11,6 +9,15 @@ import ShadSelect from '@/components/custom/inputs/shad-select';
 import { Label } from '@/components/ui/label';
 import { SyncButton } from '@/components/custom/metrics/section-components/sync-button';
 
+export interface MetricsPageProps {
+    metrics: DashboardMetrics;
+    repositories: Array<{
+        id: number;
+        full_name: string;
+    }>;
+    selected_repository: number | null;
+    title: string;
+}
 
 export default function Metric({ metrics, repositories, selected_repository, title, ...props }: MetricsPageProps) {
     const [selectedRepo, setSelectedRepo] = useState<string>(
@@ -45,7 +52,6 @@ export default function Metric({ metrics, repositories, selected_repository, tit
             <BodyWrapper>
                 {/* ========== METRIC CARDS ========== */}
                 <MetricsSection cards={metrics.cards} />
-                {/* <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" /> */}
 
                 {/* ========== KEY METRICS + STATS OVERVIEW ========== */}
                 <SectionTitle title="📊 Key Metrics" className="mt-6" />
