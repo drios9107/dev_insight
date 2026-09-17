@@ -41,6 +41,15 @@ class GithubService
         return $response->json();
     }
 
+    public function getUser(string $username): ?array
+    {
+        try {
+            return $this->get("/users/{$username}");
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
     public function getCommits(string $owner, string $repo, int $perPage = 100): array
     {
         $response = $this->get("/repos/{$owner}/{$repo}/commits", [
@@ -177,5 +186,33 @@ class GithubService
 
             throw $e;
         }
+    }
+
+    /**
+     * Obtener todos los repositorios de una cuenta de GitHub
+     */
+    public function getUserRepositories(string $username): array
+    {
+        $repos = [];
+        $page = 1;
+        $perPage = 100;
+
+        do {
+            $response = $this->get("/users/{$username}/repos", [
+                'per_page' => $perPage,
+                'page' => $page,
+                'sort' => 'updated',
+                'direction' => 'desc',
+            ]);
+
+            if (empty($response)) {
+                break;
+            }
+
+            $repos = array_merge($repos, $response);
+            $page++;
+        } while (count($response) === $perPage);
+
+        return $repos;
     }
 }

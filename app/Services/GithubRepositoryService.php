@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\GithubRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class GithubRepositoryService
 {
@@ -44,12 +45,60 @@ class GithubRepositoryService
         ]);
     }
 
+    /**
+     * Sync every public repository in a github account
+     */
+    public function syncAllFromGithub(GithubService $githubService, string $username): array
+    {
+        $user = $githubService->getUser($username);
+        if ($user === null) {
+            throw new \Exception("GitHub user '{$username}' not found");
+        }
+
+        $repos = $githubService->getUserRepositories($username);
+        if (empty($repos)) {
+            throw new \Exception("GitHub user '{$username}' has no public repositories");
+        }
+
+        $results = [
+            'created' => 0,
+            'updated' => 0,
+            'total' => count($repos),
+        ];
+
+        foreach ($repos as $repo) {
+            $repository = GithubRepository::updateOrCreate(
+                ['github_id' => $repo['id']],
+                [
+                    'name' => $repo['name'],
+                    'full_name' => $repo['full_name'],
+                    'url' => $repo['html_url'],
+                    'description' => $repo['description'] ?? null,
+                    'default_branch' => $repo['default_branch'],
+                    'is_private' => $repo['private'],
+                    'language' => $repo['language'] ?? null,
+                    'stars_count' => $repo['stargazers_count'] ?? 0,
+                    'forks_count' => $repo['forks_count'] ?? 0,
+                    'last_synced_at' => now(),
+                ]
+            );
+
+            if ($repository->wasRecentlyCreated) {
+                $results['created']++;
+            } else {
+                $results['updated']++;
+            }
+        }
+
+        return $results;
+    }
+
     public function index(?Request $request = null)
     {
         $query = GithubRepository::query();
 
         if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('full_name', 'ilike', $search)
                     ->orWhere('name', 'ilike', $search)

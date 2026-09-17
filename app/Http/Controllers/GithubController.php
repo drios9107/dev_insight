@@ -21,10 +21,13 @@ class GithubController extends Controller
 
             $this->service->syncRepository($repository);
 
-            return back()->with('success', 'Repository synced successfully');
-
+            return response()->json([
+                'message' => 'Repository synced successfully',
+            ]);
         } catch (\Exception $e) {
-            return back()->with('error', 'Sync failed: '.$e->getMessage());
+            return response()->json([
+                'message' => 'Sync failed: ' . $e->getMessage(),
+            ], 422);
         }
     }
 }

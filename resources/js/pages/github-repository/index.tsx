@@ -8,10 +8,16 @@ import { DeleteModal } from "@/components/custom/delete-modal";
 import BodyWrapper from "@/components/custom/body-wrapper";
 import githubRepository from "@/routes/github-repository";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, RefreshCw } from "lucide-react";
+import { SimpleModal } from "@/components/custom/simple-modal";
+import ShadInput from "@/components/custom/inputs/shad-input";
+import { Button } from "@/components/ui/button";
 
 const GithubRepositories = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<IGithubRepository | null>(null)
+    const [showSyncModal, setShowSyncModal] = useState(false)
+    const [isSyncing, setIsSyncing] = useState(false)
+    const [username, setUsername] = useState(props?.github_username ?? '')
 
     const columns: IColumn[] = [
         {
@@ -90,12 +96,52 @@ const GithubRepositories = (props: any) => {
         }
     }, [itemToDelete])
 
-    const onClose = () => setItemToDelete(null)
+    const onClose = useCallback(() => setItemToDelete(null), [setItemToDelete])
+
+    const handleSyncAll = useCallback(() => {
+        if (!username.trim()) {
+            toast.error('Please enter a GitHub username');
+            return;
+        }
+
+        setIsSyncing(true);
+
+        router.post(
+            githubRepository.syncAll().url,
+            { ownerKey: username },
+            {
+                onSuccess: () => {
+                    toast.success('Repositories synced successfully');
+                    setShowSyncModal(false);
+                    router.reload();
+                },
+                onError: (errors) => {
+                    if (errors.ownerKey) {
+                        toast.error(errors.ownerKey);
+                    } else {
+                        toast.error('Sync failed');
+                    }
+                },
+                onFinish: () => setIsSyncing(false),
+            }
+        );
+    }, [username, setShowSyncModal, setIsSyncing]);
 
     return <>
         <Head title={props.title} />
         <h1 className="sr-only">{props.title}</h1>
-        <Header title={props.title} />
+        <Header title={props.title} >
+            <Button
+                onClick={() => setShowSyncModal(true)}
+                disabled={isSyncing}
+                variant="outline"
+                className="gap-2"
+            >
+                <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
+                {isSyncing ? 'Syncing...' : 'Sync All Repos'}
+            </Button>
+        </Header>
+
         <BodyWrapper>
             <DataTable
                 data={props.list}
@@ -107,6 +153,34 @@ const GithubRepositories = (props: any) => {
 
             {itemToDelete && <DeleteModal onClose={onClose} onClick={onDelete} />}
         </BodyWrapper>
+
+        {showSyncModal && (
+            <SimpleModal
+                title="Sync GitHub Repositories"
+                description="Enter a GitHub username to sync all their repositories"
+                onClose={() => setShowSyncModal(false)}
+                onClick={handleSyncAll}
+                isLoading={isSyncing}
+                confirmText="Sync"
+                height={null}
+            >
+                <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                        <ShadInput required label="Github username" name="github-username" value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            disabled={isSyncing}
+                            placeholder="drios9107"
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') handleSyncAll();
+                            }}
+                        />
+                        <p className="text-xs text-gray-500">
+                            This will fetch and sync all public and private repositories of the user
+                        </p>
+                    </div>
+                </div>
+            </SimpleModal>
+        )}
     </>
 }
 

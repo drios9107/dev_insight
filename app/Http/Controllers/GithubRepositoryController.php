@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\GithubRepositoryRequest;
 use App\Http\Resources\GithubRepositoryResource;
 use App\Services\GithubRepositoryService;
+use App\Services\GithubService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class GithubRepositoryController extends Controller
@@ -75,5 +77,28 @@ class GithubRepositoryController extends Controller
         $this->service->destroy($id);
 
         return redirect()->back()->with('success', 'Github Repository deleted successfully!');
+    }
+
+    public function syncAll(GithubService $githubService, Request $request)
+    {
+        try {
+            $username = $request->input('ownerKey');
+
+            if (!$username) {
+                throw new \Exception('No github username was provided');
+            }
+
+            $results = $this->service->syncAllFromGithub($githubService, $username);
+
+            return back()->with('success', sprintf(
+                'Synced: %d created, %d updated',
+                $results['created'],
+                $results['updated']
+            ));
+        } catch (\Exception $e) {
+            throw ValidationException::withMessages([
+                'ownerKey' => $e->getMessage(),
+            ]);
+        }
     }
 }
