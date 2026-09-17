@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Loader } from "./loader"
 import { Save } from "lucide-react"
+import { useMemo } from "react"
 
 interface SimpleModalProps {
     title?: string
@@ -18,12 +19,16 @@ interface SimpleModalProps {
     onClick: () => void
     children: React.ReactNode
     isLoading?: boolean
+    confirmText?: string
+    height?: string | number | null
 }
 
-export function SimpleModal({ title = "", description, onClose, children, isLoading, onClick }: SimpleModalProps) {
+export function SimpleModal({ title = "", description, onClose, children, isLoading, onClick, confirmText = 'Save', height = 600 }: SimpleModalProps) {
+    const getHeight = useMemo(() => height !== null ? { height } : {}, [height])
+
     return (
         <Dialog open onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-lg overflow-y-auto" style={{ height: 600 }}>
+            <DialogContent className="sm:max-w-lg overflow-y-auto" style={getHeight}>
                 <DialogHeader>
                     <DialogTitle className="text-center text-xl font-semibold">
                         {title}
@@ -38,7 +43,7 @@ export function SimpleModal({ title = "", description, onClose, children, isLoad
                 {isLoading && <Loader />}
 
                 <DialogFooter className="flex justify-center">
-                    <Button type="button" onClick={onClick}><Save />Save</Button>
+                    <Button type="button" onClick={onClick}><Save />{confirmText}</Button>
                     <DialogClose asChild>
                         <Button variant="outline">Close</Button>
                     </DialogClose>
