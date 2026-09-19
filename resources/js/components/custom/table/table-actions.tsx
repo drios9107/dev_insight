@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/button';
-import { Pencil, Trash2, RefreshCw, Database } from 'lucide-react';
+import { Pencil, Trash2, RefreshCw, Database, Eye } from 'lucide-react';
 
 interface ITableActions {
     item: any,
+    onView?: (v: any) => void;
     onEdit?: (v: any) => void;
     onDelete?: (id: number) => void;
     onSync?: (v: any) => void;
@@ -10,6 +11,7 @@ interface ITableActions {
 
 export function TableActions({
     item,
+    onView,
     onEdit,
     onDelete,
     onSync,
@@ -21,9 +23,20 @@ export function TableActions({
                     variant="outline"
                     size="sm"
                     onClick={() => onSync(item)}
-                    className='text-green-600 cursor-pointer'
+                    className='text-yellow-600 cursor-pointer'
                 >
                     <Database className="w-4 h-4" />
+                </Button>
+            )}
+
+            {onView && (
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onView(item)}
+                    className='text-green-600 cursor-pointer'
+                >
+                    <Eye className="w-4 h-4" />
                 </Button>
             )}
 

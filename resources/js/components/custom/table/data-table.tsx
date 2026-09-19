@@ -56,6 +56,7 @@ interface IDataTableProps {
     onEdit?: (item: any) => void;
     onDelete?: (item: any) => void;
     onBulkDelete?: (ids: (number | string)[]) => void;
+    onView?: (item: any) => void;
     onSync?: (item: any) => void;
     actions?: boolean;
     selectable?: boolean;
@@ -75,6 +76,7 @@ export function DataTable({
     onEdit,
     onDelete,
     onBulkDelete,
+    onView,
     onSync,
     selectable = false,
     className = '',
@@ -99,7 +101,7 @@ export function DataTable({
 
     const items = useMemo(() => data?.data || [], [data?.data]);
 
-    const hasActions = useMemo(() => onEdit || onDelete || onSync || onBulkDelete, [onEdit, onDelete, onSync, onBulkDelete])
+    const hasActions = useMemo(() => onView || onEdit || onDelete || onSync || onBulkDelete, [onView, onEdit, onDelete, onSync, onBulkDelete])
 
     return (
         <ThemeContext value={theme}>
@@ -216,6 +218,7 @@ export function DataTable({
                                         <Table.Cell align="right" className='px-4 py-3'>
                                             <TableActions
                                                 item={item}
+                                                onView={onView}
                                                 onEdit={onEdit}
                                                 onDelete={onDelete}
                                                 onSync={onSync}
