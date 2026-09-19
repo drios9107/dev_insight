@@ -1,5 +1,3 @@
-// resources/js/pages/github-user/index.tsx
-
 import { DataTable, IColumn } from "@/components/custom/table/data-table";
 import { IGithubUser } from "@/types/models/github-user";
 import { Head, router } from "@inertiajs/react";
@@ -67,7 +65,7 @@ const GithubUsers = (props: any) => {
             key: 'last_synced_at',
             label: 'Last Synced',
             sortable: true,
-            render: (value: string) => value ? new Date(value).toLocaleDateString() : 'Never',
+            render: (value: string) => value ?? 'Never',
         },
     ];
 
@@ -96,7 +94,9 @@ const GithubUsers = (props: any) => {
         }
     }, [itemToDelete])
 
-    const onClose = () => setItemToDelete(null)
+    const onClose = useCallback(() => {
+        setItemToDelete(null)
+    }, [setItemToDelete])
 
     return <>
         <Head title={props.title} />

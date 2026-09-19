@@ -8,7 +8,6 @@ import role from "@/routes/role";
 import Header from "@/components/custom/header";
 import { DeleteModal } from "@/components/custom/delete-modal";
 import BodyWrapper from "@/components/custom/body-wrapper";
-import { Badge } from "@/components/ui/badge";
 
 const Roles = (props: any) => {
     const [isOpen, setIsOpen] = useState(false)
@@ -32,13 +31,13 @@ const Roles = (props: any) => {
             key: 'created_at',
             label: 'Created',
             sortable: true,
-            render: (value) => value ? new Date(value).toLocaleDateString() : '-',
+            render: (value) => value ?? '-',
         },
         {
             key: 'updated_at',
             label: 'Updated',
             sortable: true,
-            render: (value) => value ? new Date(value).toLocaleDateString() : '-',
+            render: (value) => value ?? '-',
         },
     ];
 
@@ -57,11 +56,11 @@ const Roles = (props: any) => {
         }
     }, [itemToDelete])
 
-    const onCloseForm = () => {
+    const onCloseForm = useCallback(() => {
         setIsOpen(false)
         setItemToEdit(null)
         setItemToDelete(null)
-    }
+    }, [setIsOpen, setItemToEdit, setItemToDelete])
 
     return <>
         <Head title={props.title} />

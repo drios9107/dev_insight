@@ -66,13 +66,13 @@ const Notifications = (props: any) => {
             key: 'created_at',
             label: 'Created',
             sortable: true,
-            render: (value) => value ? new Date(value).toLocaleDateString() : '-',
+            render: (value) => value ?? '-',
         },
         {
             key: 'read_at',
             label: 'Read At',
             sortable: true,
-            render: (value) => value ? new Date(value).toLocaleDateString() : '-',
+            render: (value) => value ?? '-',
         },
     ];
 
@@ -124,7 +124,9 @@ const Notifications = (props: any) => {
         }
     }, [itemToDelete])
 
-    const onClose = () => setItemToDelete(null)
+    const onClose = useCallback(() => {
+        setItemToDelete(null)
+    }, [setItemToDelete])
 
     const getBadgeVariant = useCallback((item: TNotificationType) => {
         const mapping = {

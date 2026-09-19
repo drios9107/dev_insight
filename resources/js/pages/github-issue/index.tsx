@@ -54,13 +54,13 @@ const GithubsIssues = (props: any) => {
             key: 'created_at',
             label: 'Created',
             sortable: true,
-            render: (value) => value ? new Date(value).toLocaleDateString() : '-',
+            render: (value) => value ?? '-',
         },
         {
             key: 'closed_at',
             label: 'Closed',
             sortable: true,
-            render: (value) => value ? new Date(value).toLocaleDateString() : '-',
+            render: (value) => value ?? '-',
         },
         {
             key: 'task',
@@ -116,7 +116,9 @@ const GithubsIssues = (props: any) => {
         }
     }, [itemToDelete])
 
-    const onClose = () => setItemToDelete(null)
+    const onClose = useCallback(() => {
+        setItemToDelete(null)
+    }, [setItemToDelete])
 
     const getBadgeColor = useCallback((status: TGithubsIssueState) => {
         const mapping = {

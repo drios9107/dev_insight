@@ -10,7 +10,6 @@ import { PullRequestStateEnum } from "@/enums/pull-requests";
 import pullRequest from "@/routes/pull-request";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Tooltip } from "@/components/ui/tooltip";
 import { CustomTooltip } from "@/components/custom/tooltip";
 import { ICheck } from "@/components/custom/table/data-table-filters";
 
@@ -99,19 +98,19 @@ const PullRequests = (props: any) => {
             key: 'created_at',
             label: 'Created',
             sortable: true,
-            render: (value) => value ? new Date(value).toLocaleDateString() : '-',
+            render: (value) => value ?? '-',
         },
         {
             key: 'closed_at',
             label: 'Closed',
             sortable: true,
-            render: (value) => value ? new Date(value).toLocaleDateString() : '-',
+            render: (value) => value ?? '-',
         },
         {
             key: 'merged_at',
             label: 'Merged',
             sortable: true,
-            render: (value) => value ? new Date(value).toLocaleDateString() : '-',
+            render: (value) => value ?? '-',
         },
     ];
 
@@ -177,7 +176,9 @@ const PullRequests = (props: any) => {
         }
     }, [itemToDelete])
 
-    const onClose = () => setItemToDelete(null)
+    const onClose = useCallback(() => {
+        setItemToDelete(null)
+    }, [setItemToDelete])
 
     const getBadgeColor = useCallback((item: TPullRequestState) => {
         const mapping = {

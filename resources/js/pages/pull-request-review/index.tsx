@@ -38,13 +38,13 @@ const PullRequestReviews = (props: any) => {
             key: 'submitted_at',
             label: 'Submitted',
             sortable: true,
-            render: (value) => value ? new Date(value).toLocaleDateString() : '-',
+            render: (value) => value ?? '-',
         },
         {
             key: 'created_at',
             label: 'Created',
             sortable: true,
-            render: (value) => value ? new Date(value).toLocaleDateString() : '-',
+            render: (value) => value ?? '-',
         },
     ];
 
@@ -95,7 +95,9 @@ const PullRequestReviews = (props: any) => {
         }
     }, [itemToDelete])
 
-    const onClose = () => setItemToDelete(null)
+    const onClose = useCallback(() => {
+        setItemToDelete(null)
+    }, [setItemToDelete])
 
     const getBadgeColor = useCallback((item: TPullRequestReviewState) => {
         const mapping = {

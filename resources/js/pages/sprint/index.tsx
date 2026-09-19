@@ -41,13 +41,13 @@ const Sprints = (props: any) => {
             key: 'start_date',
             label: 'Start Date',
             sortable: true,
-            render: (value) => value || '-',
+            render: (value) => value ?? '-',
         },
         {
             key: 'end_date',
             label: 'End Date',
             sortable: true,
-            render: (value) => value || '-',
+            render: (value) => value ?? '-',
         },
         {
             key: 'velocity',
@@ -98,11 +98,11 @@ const Sprints = (props: any) => {
         }
     }, [itemToDelete])
 
-    const onCloseForm = () => {
+    const onCloseForm = useCallback(() => {
         setIsOpen(false)
         setItemToEdit(null)
         setItemToDelete(null)
-    }
+    }, [setIsOpen, setItemToEdit, setItemToDelete])
 
     const getBadgeColor = useCallback((status: TSprintStatus) => {
         const mapping = {

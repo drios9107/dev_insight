@@ -52,13 +52,15 @@ const Projects = (props: any) => {
             key: 'start_date',
             label: 'Start date',
             sortable: true,
-            className: 'w-40'
+            className: 'w-40',
+            render: (value) => value ?? '-'
         },
         {
             key: 'end_date',
             label: 'End date',
             sortable: true,
-            className: 'w-40'
+            className: 'w-40',
+            render: (value) => value ?? '-'
         },
     ];
 
@@ -91,11 +93,11 @@ const Projects = (props: any) => {
         }
     }, [itemToDelete])
 
-    const onCloseForm = () => {
+    const onCloseForm = useCallback(() => {
         setIsOpen(false)
         setItemToEdit(null)
         setItemToDelete(null)
-    }
+    }, [setIsOpen, setItemToEdit, setItemToDelete])
 
     const getBadgeColor = useCallback((status: TProjectStatus) => {
         const mapping = {

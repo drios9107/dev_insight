@@ -7,7 +7,6 @@ import Header from "@/components/custom/header";
 import { DeleteModal } from "@/components/custom/delete-modal";
 import BodyWrapper from "@/components/custom/body-wrapper";
 import commit from "@/routes/commit";
-import { Badge } from "@/components/ui/badge";
 
 const Commits = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<ICommit | null>(null)
@@ -45,25 +44,7 @@ const Commits = (props: any) => {
             key: 'date',
             label: 'Date',
             sortable: true,
-            render: (value) => value ? new Date(value).toLocaleDateString() : '-',
-        },
-        {
-            key: 'additions',
-            label: '+',
-            align: 'center',
-            render: (value) => <span className={'text-green-600'}>{value ?? 0}</span>,
-        },
-        {
-            key: 'deletions',
-            label: '-',
-            align: 'center',
-            render: (value) => <span className={'text-red-600'}>{value ?? 0}</span>,
-        },
-        {
-            key: 'total_changes',
-            label: 'Changes',
-            align: 'center',
-            render: (value) => value ?? 0,
+            render: (value) => value ?? '-',
         },
         {
             key: 'task',
@@ -102,7 +83,7 @@ const Commits = (props: any) => {
         }
     }, [itemToDelete])
 
-    const onClose = () => setItemToDelete(null)
+    const onClose = useCallback(() => setItemToDelete(null), [setItemToDelete])
 
     return <>
         <Head title={props.title} />

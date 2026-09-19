@@ -149,11 +149,11 @@ const Tasks = (props: any) => {
         }
     }, [itemToDelete])
 
-    const onCloseForm = () => {
+    const onCloseForm = useCallback(() => {
         setIsOpen(false)
         setItemToEdit(null)
         setItemToDelete(null)
-    }
+    }, [setIsOpen, setItemToEdit, setItemToDelete])
 
     const getBadgeColor = useCallback((status: TTaskStatus) => {
         const mapping = {

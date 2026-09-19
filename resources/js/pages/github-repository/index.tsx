@@ -44,7 +44,7 @@ const GithubRepositories = (props: any) => {
             key: 'last_synced_at',
             label: 'Last Synced',
             sortable: true,
-            render: (value) => value ? new Date(value).toLocaleDateString() : 'Never',
+            render: (value) => value ?? 'Never',
         },
         {
             key: 'url',

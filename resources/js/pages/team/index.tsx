@@ -55,7 +55,7 @@ const Teams = (props: any) => {
             key: 'created_at',
             label: 'Created At',
             sortable: true,
-            render: (value) => value ? new Date(value).toLocaleDateString() : '-',
+            render: (value) => value ?? '-',
         },
     ];
 
@@ -95,11 +95,11 @@ const Teams = (props: any) => {
         }
     }, [itemToDelete])
 
-    const onCloseForm = () => {
+    const onCloseForm = useCallback(() => {
         setIsOpen(false)
         setItemToEdit(null)
         setItemToDelete(null)
-    }
+    }, [setIsOpen, setItemToEdit, setItemToDelete])
 
     return <>
         <Head title={props.title} />
