@@ -30,9 +30,6 @@ class CommitRequest extends FormRequest
             'message' => 'nulable|string',
             'date' => 'nulable|date',
             'url' => 'required|url',
-            'additions' => 'nulable|integer|min:0',
-            'deletions' => 'nulable|integer|min:0',
-            'total_changes' => 'nulable|integer|min:0',
         ];
     }
 }

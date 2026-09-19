@@ -21,9 +21,6 @@ class CommitFactory extends Factory
      */
     public function definition(): array
     {
-        $additions = $this->faker->numberBetween(1, 500);
-        $deletions = $this->faker->numberBetween(0, 200);
-
         return [
             'sha' => $this->faker->unique()->sha1(),
             'github_repository_id' => GithubRepository::inRandomOrder(0)->first()->id,
@@ -32,9 +29,6 @@ class CommitFactory extends Factory
             'message' => $this->faker->sentence(6),
             'date' => $this->faker->dateTimeBetween('-60 days', 'now'),
             'url' => $this->faker->url(),
-            'additions' => $additions,
-            'deletions' => $deletions,
-            'total_changes' => $additions + $deletions,
             'created_at' => $this->faker->dateTimeBetween('-60 days', 'now'),
             'updated_at' => $this->faker->dateTimeBetween('-60 days', 'now'),
         ];

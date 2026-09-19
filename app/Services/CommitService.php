@@ -37,10 +37,6 @@ class CommitService
             }
 
             $sha = $commit['sha'];
-            // @todo: optimize this fetch somehow
-            // $fullCommit = $service->getCommit($ownerKey, $repoName, $sha);
-            // $stats = $fullCommit['stats'] ?? ['additions' => 0, 'deletions' => 0];
-            $stats = ['additions' => 0, 'deletions' => 0];
 
             return [
                 'sha' => $sha,
@@ -51,9 +47,6 @@ class CommitService
                 'message' => $commit['commit']['message'],
                 'date' => date('Y-m-d H:i:s', strtotime($commit['commit']['author']['date'])),
                 'url' => $commit['html_url'] ?? '',
-                'additions' => $stats['additions'] ?? 0,
-                'deletions' => $stats['deletions'] ?? 0,
-                'total_changes' => ($stats['additions'] ?? 0) + ($stats['deletions'] ?? 0),
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
@@ -62,7 +55,7 @@ class CommitService
         DB::table('commits')->upsert(
             $data,
             ['sha'],
-            ['github_repository_id', 'author_id', 'task_id', 'message', 'date', 'url', 'additions', 'deletions', 'total_changes', 'updated_at']
+            ['github_repository_id', 'author_id', 'task_id', 'message', 'date', 'url', 'updated_at']
         );
 
         return response()->json([
@@ -78,7 +71,7 @@ class CommitService
             ->with(['author', 'githubRepository', 'task']);
 
         if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('message', 'ilike', $search)
                     ->orWhere('sha', 'ilike', $search)

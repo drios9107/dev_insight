@@ -18,7 +18,7 @@ class CommitResource extends JsonResource
             'id' => $this->id,
             'sha' => $this->sha,
             'github_repository' => $this->githubRepository,
-            'author' => $this->whenLoaded('author', fn () => [
+            'author' => $this->whenLoaded('author', fn() => [
                 'id' => $this->author->id,
                 'name' => $this->author->displayName,
             ]),
@@ -26,9 +26,6 @@ class CommitResource extends JsonResource
             'message' => $this->message,
             'date' => $this->date ? date('Y-m-d', strtotime($this->date)) : null,
             'url' => $this->url,
-            'additions' => $this->additions,
-            'deletions' => $this->deletions,
-            'total_changes' => $this->total_changes,
             'created_at' => date_format($this->created_at, 'Y-m-d'),
             'updated_at' => date_format($this->updated_at, 'Y-m-d'),
         ];

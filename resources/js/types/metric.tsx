@@ -52,12 +52,6 @@ export interface RecentActivity {
     url?: string;
 }
 
-export interface CodeChurn {
-    additions: number;
-    deletions: number;
-    total: number;
-}
-
 export interface DeveloperStats {
     name: string;
     username: string;
@@ -68,9 +62,6 @@ export interface DeveloperStats {
     active_days: number;
     productivity_score: number;
     avg_commit_size: number;
-    additions: number;
-    deletions: number;
-    net_change: number;
 }
 
 export interface DeveloperActivity {
@@ -165,7 +156,6 @@ export interface DashboardMetrics {
     avg_pr_merge_time: number;
     avg_issue_close_time: number;
     active_developers: number;
-    code_churn: CodeChurn;
 
     developer_stats: DeveloperStats[];
     developer_activity_heatmap: DeveloperActivity[];

@@ -11,9 +11,6 @@ export interface ICommit {
     message: string;
     date: string;
     url: string;
-    additions: number;
-    deletions: number;
-    total_changes: number;
     created_at: string;
     updated_at: string;
 }

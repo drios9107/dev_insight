@@ -48,7 +48,6 @@ class MetricService
             'avg_pr_merge_time' => $this->getAvgPrMergeTime($repositoryId),
             'avg_issue_close_time' => $this->getAvgIssueCloseTime($repositoryId),
             'active_developers' => $this->getActiveDevelopers($repositoryId, 30),
-            'code_churn' => $this->getCodeChurn($repositoryId, 30),
 
             'developer_stats' => $this->getDeveloperStats($repositoryId),
             'developer_activity_heatmap' => $this->getDeveloperActivityHeatmap($repositoryId, 7),
@@ -472,27 +471,6 @@ class MetricService
         return $query;
     }
 
-    private function getCodeChurn(?int $repositoryId, int $days): array
-    {
-        $query = Commit::select(
-            DB::raw('SUM(additions) as total_additions'),
-            DB::raw('SUM(deletions) as total_deletions')
-        )
-            ->where('date', '>=', now()->subDays($days));
-
-        if ($repositoryId) {
-            $query->where('github_repository_id', $repositoryId);
-        }
-
-        $result = $query->first();
-
-        return [
-            'additions' => $result->total_additions ?? 0,
-            'deletions' => $result->total_deletions ?? 0,
-            'total' => ($result->total_additions ?? 0) + ($result->total_deletions ?? 0),
-        ];
-    }
-
     // =============================================
     // DEVELOPER STATS
     // =============================================
@@ -503,10 +481,7 @@ class MetricService
             ->select(
                 'author_id',
                 DB::raw('COUNT(*) as total_commits'),
-                DB::raw('COUNT(DISTINCT DATE(date)) as active_days'),
-                DB::raw('SUM(additions) as total_additions'),
-                DB::raw('SUM(deletions) as total_deletions'),
-                DB::raw('AVG(additions + deletions) as avg_commit_size')
+                DB::raw('COUNT(DISTINCT DATE(date)) as active_days')
             )
             ->with('author')
             ->groupBy('author_id')
@@ -545,9 +520,6 @@ class MetricService
                     1
                 ),
                 'avg_commit_size' => round($dev->avg_commit_size ?? 0, 1),
-                'additions' => $dev->total_additions ?? 0,
-                'deletions' => $dev->total_deletions ?? 0,
-                'net_change' => ($dev->total_additions ?? 0) - ($dev->total_deletions ?? 0),
             ];
         });
     }

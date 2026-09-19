@@ -21,9 +21,6 @@ return new class extends Migration
             $table->text('message')->nullable();
             $table->timestamp('date')->nullable();
             $table->string('url');
-            $table->integer('additions')->default(0);
-            $table->integer('deletions')->default(0);
-            $table->integer('total_changes')->default(0);
         });
     }
 
