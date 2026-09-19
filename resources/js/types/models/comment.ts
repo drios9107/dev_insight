@@ -1,14 +1,22 @@
-import { IGithubUser } from "../github-user";
-import { ITask } from "./task";
+// types/models/comment.ts
+
+import { User } from "../auth";
+
 
 export interface IComment {
     id: number;
     content: string;
-    github_user: IGithubUser;
-    task: ITask;
-    parent?: IComment;
     is_internal: boolean;
+    user: Pick<User, 'id' | 'name' | 'avatar'>;
+    task?: {
+        id: number;
+        title: string;
+    };
+    parent?: {
+        id: number;
+        content: string;
+    };
+    replies?: IComment[];
     created_at: string;
-    updated_at: string;
+    updated_at?: string;
 }
-
