@@ -17,7 +17,10 @@ return new class extends Migration
             $table->string('sha')->unique();
             $table->foreignId('github_repository_id')->constrained('github_repositories');
             $table->foreignId('author_id')->nullable()->constrained('github_users');
-            $table->foreignId('task_id')->nullable()->constrained('tasks');
+            $table->foreignId('pull_request_id')
+                ->nullable()
+                ->constrained('pull_requests')
+                ->nullOnDelete();
             $table->text('message')->nullable();
             $table->timestamp('date')->nullable();
             $table->string('url');

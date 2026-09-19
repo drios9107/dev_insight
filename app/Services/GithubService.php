@@ -215,4 +215,9 @@ class GithubService
 
         return $repos;
     }
+
+    public function getPullRequestCommits(string $owner, string $repo, int $prNumber): array
+    {
+        return $this->get("/repos/{$owner}/{$repo}/pulls/{$prNumber}/commits");
+    }
 }

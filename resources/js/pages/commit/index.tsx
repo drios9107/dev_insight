@@ -47,9 +47,9 @@ const Commits = (props: any) => {
             render: (value) => value ?? '-',
         },
         {
-            key: 'task',
-            label: 'Task',
-            render: (value) => value?.title ? `#${value.id}` : '-',
+            key: 'pull_request',
+            label: 'PR',
+            render: (value) => value?.title ? `#${value.number} - ${value.title}` : '-',
         },
     ];
 
@@ -68,6 +68,23 @@ const Commits = (props: any) => {
             options: props?.repositories?.map((repo: any) => ({
                 value: String(repo.id),
                 label: repo.full_name,
+            })) || [],
+            addAll: true
+        },
+        {
+            key: 'pull_request_id',
+            label: 'PR',
+            value: props?.filters?.pull_request_id ?? 'all',
+            onChange: (value: string) => {
+                router.get(
+                    commit.index().url,
+                    { ...props?.filters, pull_request_id: value, page: 1 },
+                    { preserveState: true, preserveScroll: true }
+                );
+            },
+            options: props?.pull_requests?.map((pr: any) => ({
+                value: String(pr.id),
+                label: `#${pr.number} - ${pr.title}`,
             })) || [],
             addAll: true
         },

@@ -42,8 +42,7 @@ class CommitService
                 'sha' => $sha,
                 'github_repository_id' => $repoId,
                 'author_id' => $author?->id,
-                // @todo: define task source
-                'task_id' => null,
+                'pull_request_id' => null,
                 'message' => $commit['commit']['message'],
                 'date' => date('Y-m-d H:i:s', strtotime($commit['commit']['author']['date'])),
                 'url' => $commit['html_url'] ?? '',
@@ -55,7 +54,7 @@ class CommitService
         DB::table('commits')->upsert(
             $data,
             ['sha'],
-            ['github_repository_id', 'author_id', 'task_id', 'message', 'date', 'url', 'updated_at']
+            ['github_repository_id', 'author_id', 'message', 'date', 'url', 'updated_at']
         );
 
         return response()->json([
@@ -68,7 +67,7 @@ class CommitService
     public function index(?Request $request = null)
     {
         $query = Commit::query()
-            ->with(['author', 'githubRepository', 'task']);
+            ->with(['author', 'githubRepository', 'pullRequest']);
 
         if ($request && $request->filled('search')) {
             $search = '%' . $request->search . '%';
@@ -80,12 +79,19 @@ class CommitService
                     })
                     ->orWhereHas('githubRepository', function ($r) use ($search) {
                         $r->where('full_name', 'ilike', $search);
+                    })
+                    ->orWhereHas('pullRequest', function ($r) use ($search) {
+                        $r->where('title', 'ilike', $search);
                     });
             });
         }
 
         if ($request && $request->filled('repository_id') && $request->repository_id !== 'all') {
             $query->where('github_repository_id', $request->repository_id);
+        }
+
+        if ($request && $request->filled('pull_request_id') && $request->pull_request_id !== 'all') {
+            $query->where('pull_request_id', $request->pull_request_id);
         }
 
         return $query->latest('date')->paginate($request->per_page ?? 10);

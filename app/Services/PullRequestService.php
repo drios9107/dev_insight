@@ -6,6 +6,7 @@ use App\Models\GithubRepository;
 use App\Models\PullRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PullRequestService
 {
@@ -31,13 +32,13 @@ class PullRequestService
         $repoId = GithubRepository::whereGithubId($repo['id'])->value('id');
 
         $data = array_map(function ($pr) use ($repoId) {
-            // Author
+
             $author = null;
             if (isset($pr['user']) && isset($pr['user']['id'])) {
                 $author = $this->githubUserService->findOrCreate($pr['user']);
             }
 
-            // Assignees
+
             $assigneeIds = [];
             if (isset($pr['assignees']) && is_array($pr['assignees'])) {
                 foreach ($pr['assignees'] as $assigneeData) {
@@ -48,7 +49,7 @@ class PullRequestService
                 }
             }
 
-            $prState = ! empty($pr['merged_at']) ? 'merged' : $pr['state'];
+            $prState = !empty($pr['merged_at']) ? 'merged' : $pr['state'];
 
             return [
                 'pull_request_data' => [
@@ -69,6 +70,7 @@ class PullRequestService
                     'updated_at' => date('Y-m-d H:i:s', strtotime($pr['updated_at'])),
                 ],
                 'assignee_ids' => $assigneeIds,
+                'pr_number' => $pr['number'],
             ];
         }, $prs);
 
@@ -83,25 +85,27 @@ class PullRequestService
                     $prData
                 );
 
-                if (! empty($item['assignee_ids'])) {
-                    $prId = DB::table('pull_requests')
-                        ->where('github_id', $prData['github_id'])
-                        ->value('id');
+                $prId = DB::table('pull_requests')
+                    ->where('github_id', $prData['github_id'])
+                    ->value('id');
 
-                    if ($prId) {
-                        DB::table('pull_request_assignees')
-                            ->where('pull_request_id', $prId)
-                            ->delete();
+                if (!empty($item['assignee_ids']) && $prId) {
+                    DB::table('pull_request_assignees')
+                        ->where('pull_request_id', $prId)
+                        ->delete();
 
-                        foreach ($item['assignee_ids'] as $userId) {
-                            DB::table('pull_request_assignees')->insert([
-                                'pull_request_id' => $prId,
-                                'github_user_id' => $userId,
-                                'created_at' => now(),
-                                'updated_at' => now(),
-                            ]);
-                        }
+                    foreach ($item['assignee_ids'] as $userId) {
+                        DB::table('pull_request_assignees')->insert([
+                            'pull_request_id' => $prId,
+                            'github_user_id' => $userId,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
                     }
+                }
+
+                if ($prId) {
+                    $this->syncPullRequestCommits($service, $ownerKey, $repoName, $prId, $item['pr_number']);
                 }
             }
 
@@ -119,6 +123,21 @@ class PullRequestService
                 'success' => false,
                 'message' => 'Error al sincronizar: ' . $e->getMessage(),
             ], 500);
+        }
+    }
+
+    private function syncPullRequestCommits(GithubService $service, string $owner, string $repo, int $prId, int $prNumber): void
+    {
+        try {
+            $commits = $service->getPullRequestCommits($owner, $repo, $prNumber);
+
+            foreach ($commits as $commit) {
+                DB::table('commits')
+                    ->where('sha', $commit['sha'])
+                    ->update(['pull_request_id' => $prId]);
+            }
+        } catch (\Exception $e) {
+            Log::warning("Failed to sync commits for PR #{$prNumber}: " . $e->getMessage());
         }
     }
 

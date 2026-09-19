@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable(['github_id', 'github_repository_id', 'number', 'title', 'body', 'state', 'author_id', 'base_branch', 'head_branch', 'task_id', 'closed_at', 'merged_at', 'merge_commit_sha'])]
 #[Hidden(['merge_commit_sha'])]
@@ -55,5 +56,10 @@ class PullRequest extends Model
             'id',
             'reviewer_id'
         );
+    }
+
+    public function commits(): HasMany
+    {
+        return $this->hasMany(Commit::class);
     }
 }

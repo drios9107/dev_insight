@@ -35,10 +35,10 @@ class DatabaseSeeder extends Seeder
         ];
 
         $useExpense ?
-        $this->call($allSeeders) :
-         $this->call($allSeeders, false, [
-             'ownerKey' => 'drios9107',
-             'repoName' => 'dev_insight',
-         ]);
+            $this->call($allSeeders) :
+            $this->call($allSeeders, false, [
+                'ownerKey' => 'drios9107',
+                'repoName' => 'dev_insight',
+            ]);
     }
 }

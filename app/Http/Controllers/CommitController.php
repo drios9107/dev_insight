@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CommitRequest;
 use App\Http\Resources\CommitResource;
 use App\Models\GithubRepository;
+use App\Models\PullRequest;
 use App\Services\CommitService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -33,15 +34,20 @@ class CommitController extends Controller
     {
         $data = CommitResource::collection($this->service->index($request));
 
-        $filters = $this->extractFilters($request, ['repository_id']);
+        $filters = $this->extractFilters($request, ['repository_id', 'pull_request_id']);
 
         $repositories = GithubRepository::select('id', 'name', 'full_name')->get();
+        $pullRequests = PullRequest::where('state', 'merged')
+            ->select('id', 'number', 'title')
+            ->orderByDesc('number')
+            ->get();
 
         return Inertia::render('commit/index', [
             'list' => $data,
             'title' => 'Commits',
             'filters' => $filters,
             'repositories' => $repositories,
+            'pull_requests' => $pullRequests
         ]);
     }
 
