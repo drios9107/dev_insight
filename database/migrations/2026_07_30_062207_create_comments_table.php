@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->text('content');
-            $table->foreignId('github_user_id')->constrained('github_users');
+            $table->foreignId('user_id')->after('content')->constrained('users')->onDelete('cascade');
             $table->foreignId('task_id')->constrained('tasks');
             $table->foreignId('parent_id')->nullable()->constrained('comments');
             $table->boolean('is_internal')->default(false);

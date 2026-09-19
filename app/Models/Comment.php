@@ -13,9 +13,9 @@ class Comment extends Model
 {
     use HasFactory;
 
-    public function githubUser(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(GithubUser::class);
+        return $this->belongsTo(User::class);
     }
 
     public function task(): BelongsTo
@@ -28,7 +28,7 @@ class Comment extends Model
         return $this->belongsTo(Comment::class, 'parent_id');
     }
 
-    public function children(): HasMany
+    public function replies(): HasMany
     {
         return $this->hasMany(Comment::class, 'parent_id');
     }

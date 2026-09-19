@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CommentRequest;
 use App\Http\Resources\CommentResource;
+use App\Models\Comment;
+use App\Models\Task;
 use App\Services\CommentService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class CommentController extends Controller
@@ -17,20 +19,9 @@ class CommentController extends Controller
         $this->service = $service;
     }
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function all()
-    {
-        return CommentResource::collection($this->service->index());
-    }
-
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
-        $data = CommentResource::collection($this->service->index());
+        $data = CommentResource::collection($this->service->index($request));
 
         return Inertia::render('comment/index', [
             'list' => $data,
@@ -38,39 +29,96 @@ class CommentController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(CommentRequest $request)
+    public function all()
     {
-        $validated = $request->validated();
-
-        $this->service->store($validated);
-
-        return redirect()->route('comment.index')
-            ->with('success', 'Comment created successfully!');
+        return CommentResource::collection($this->service->all());
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(CommentRequest $request, int $id)
+    public function indexForTask(Task $task)
     {
-        $validated = $request->validated();
+        $comments = $this->service->indexForTask($task);
 
-        $this->service->update($id, $validated);
-
-        return redirect()->route('comment.index')
-            ->with('success', 'Comment updated successfully!');
+        return CommentResource::collection($comments);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(int $id)
+    public function storeForTask(Request $request, Task $task)
     {
-        $this->service->destroy($id);
+        try {
+            $validated = $request->validate([
+                'content' => 'required|string|max:5000',
+                'parent_id' => 'nullable|exists:comments,id',
+                'is_internal' => 'boolean',
+            ]);
 
-        return redirect()->back()->with('success', 'Comment deleted successfully!');
+            $this->service->store($task, $validated);
+
+            return redirect()->back();
+        } catch (ValidationException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            throw ValidationException::withMessages([
+                'content' => 'Failed to add comment: ' . $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'content' => 'required|string|max:5000',
+                'task_id' => 'required|exists:tasks,id',
+                'parent_id' => 'nullable|exists:comments,id',
+                'is_internal' => 'boolean',
+            ]);
+
+            $task = Task::findOrFail($validated['task_id']);
+            $this->service->store($task, $validated);
+
+            return redirect()->back();
+        } catch (ValidationException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            throw ValidationException::withMessages([
+                'content' => 'Failed to add comment: ' . $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function show(Comment $comment)
+    {
+        return new CommentResource($this->service->show($comment->id));
+    }
+
+    public function update(Request $request, Comment $comment)
+    {
+        try {
+            $validated = $request->validate([
+                'content' => 'required|string|max:5000',
+            ]);
+
+            $this->service->update($comment, $validated);
+
+            return redirect()->back();
+        } catch (ValidationException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            throw ValidationException::withMessages([
+                'content' => 'Failed to update comment: ' . $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function destroy(Comment $comment)
+    {
+        try {
+            $this->service->destroy($comment);
+
+            return redirect()->back();
+        } catch (\Exception $e) {
+            throw ValidationException::withMessages([
+                'content' => 'Failed to delete comment: ' . $e->getMessage(),
+            ]);
+        }
     }
 }

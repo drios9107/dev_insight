@@ -3,51 +3,97 @@
 namespace App\Services;
 
 use App\Models\Comment;
+use App\Models\Task;
+use Illuminate\Http\Request;
 
 class CommentService
 {
-    public function index()
+    /**
+     * Paginated listing (for the general comments page)
+     */
+    public function index(?Request $request = null)
     {
-        return Comment::all();
+        $query = Comment::query()->with(['user', 'task', 'parent']);
+
+        if ($request && $request->filled('search')) {
+            $search = '%' . $request->search . '%';
+            $query->where(function ($q) use ($search) {
+                $q->where('content', 'ilike', $search)
+                    ->orWhereHas('user', function ($u) use ($search) {
+                        $u->where('name', 'ilike', $search);
+                    })
+                    ->orWhereHas('task', function ($t) use ($search) {
+                        $t->where('title', 'ilike', $search);
+                    });
+            });
+        }
+
+        if ($request && $request->filled('task_id') && $request->task_id !== 'all') {
+            $query->where('task_id', $request->task_id);
+        }
+
+        return $query->latest()->paginate($request->per_page ?? 10);
     }
 
     /**
-     * Store a newly created item in storage.
+     * All comments (API)
      */
-    public function store(array $data): bool
+    public function all()
     {
-        return Comment::create($data) !== null;
+        return Comment::with(['user', 'task', 'parent'])->latest()->get();
     }
 
     /**
-     * Display the specified item.
-     *
-     * @param  int  $id
-     * @return Comment
+     * Comments for a specific task (root comments + replies)
      */
-    public function show($id)
+    public function indexForTask(Task $task)
     {
-        $item = Comment::findOrFail($id);
-
-        return $item;
+        return Comment::where('task_id', $task->id)
+            ->whereNull('parent_id')
+            ->with(['user', 'replies.user'])
+            ->latest()
+            ->get();
     }
 
     /**
-     * Update the specified item in storage.
+     * Create a comment on a task
      */
-    public function update(int $id, array $data): bool
+    public function store(Task $task, array $data): Comment
     {
-        return Comment::whereId($id)->update($data) !== null;
+        return Comment::create([
+            'content' => $data['content'],
+            'task_id' => $task->id,
+            'user_id' => auth()->id(),
+            'parent_id' => $data['parent_id'] ?? null,
+            'is_internal' => $data['is_internal'] ?? false,
+        ]);
     }
 
     /**
-     * Remove the specified item from storage.
-     *
-     * @param  int  $id
-     * @return bool
+     * Show a single comment
      */
-    public function destroy($id)
+    public function show(int $id): Comment
     {
-        return Comment::destroy($id) !== null;
+        return Comment::with(['user', 'task', 'parent', 'replies.user'])->findOrFail($id);
+    }
+
+    /**
+     * Update a comment
+     */
+    public function update(Comment $comment, array $data): Comment
+    {
+        $comment->update([
+            'content' => $data['content'],
+        ]);
+
+        return $comment;
+    }
+
+    /**
+     * Delete a comment
+     */
+    public function destroy(Comment $comment): bool
+    {
+        return $comment->delete();
     }
 }
