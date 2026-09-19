@@ -7,6 +7,7 @@ import { Clock, User, FolderKanban, ListStart, Calendar, Award, TrendingUp } fro
 import ShadDrawer from '../shad-drawer';
 import { getTaskPriorityColor, getTaskStatusColor } from '@/lib/utils/task';
 import DetailItem from '../detail-item';
+import { TaskComments } from '../forms/task-comment';
 
 interface TaskDetailsProps {
     itemToView: ITask;
@@ -71,6 +72,8 @@ export function TaskDetails({ itemToView, onClose }: TaskDetailsProps) {
                         </div>
                     )}
                 </div>
+
+                <TaskComments taskId={itemToView.id} />
             </div>
         </ShadDrawer>
     );
