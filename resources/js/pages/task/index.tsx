@@ -10,24 +10,28 @@ import { DeleteModal } from "@/components/custom/delete-modal";
 import BodyWrapper from "@/components/custom/body-wrapper";
 import { Badge } from "@/components/ui/badge";
 import { ITask } from "@/types/models/task";
+import { TaskDetails } from "@/components/custom/details/task-details";
+import { getTaskPriorityColor, getTaskStatusColor } from "@/lib/utils/task";
 
 const Tasks = (props: any) => {
     const [isOpen, setIsOpen] = useState(false)
     const [itemToDelete, setItemToDelete] = useState<ITask | null>(null)
     const [itemToEdit, setItemToEdit] = useState<ITask | null>(null)
+    const [itemToView, setItemToView] = useState<ITask | null>(null);
 
     const columns: IColumn[] = [
         {
             key: 'title',
             label: 'Title',
             sortable: true,
+            className: 'min-w-[300px]'
         },
         {
             key: 'priority',
             label: 'Priority',
             sortable: true,
             render: (value: TTaskPriority) => (
-                <Badge variant={getPriorityColor(value)}>
+                <Badge variant={getTaskPriorityColor(value)}>
                     {TaskPriorityEnum[value]}
                 </Badge>
             ),
@@ -37,7 +41,7 @@ const Tasks = (props: any) => {
             label: 'Status',
             sortable: true,
             render: (value: TTaskStatus) => (
-                <Badge variant={getBadgeColor(value)}>
+                <Badge variant={getTaskStatusColor(value)}>
                     {TaskStatusEnum[value]}
                 </Badge>
             ),
@@ -73,12 +77,14 @@ const Tasks = (props: any) => {
             label: 'Due Date',
             sortable: true,
             render: (value) => value || '-',
+            className: 'min-w-[120px]'
         },
         {
             key: 'completed_at',
             label: 'Completed',
             sortable: true,
             render: (value) => value || '-',
+            className: 'min-w-[120px]'
         },
     ];
 
@@ -155,28 +161,6 @@ const Tasks = (props: any) => {
         setItemToDelete(null)
     }, [setIsOpen, setItemToEdit, setItemToDelete])
 
-    const getBadgeColor = useCallback((status: TTaskStatus) => {
-        const mapping = {
-            backlog: 'default',
-            todo: 'secondary',
-            in_progress: 'info',
-            review: 'warning',
-            done: 'success',
-            cancelled: 'destructive'
-        }
-        return mapping[status] as 'default' | 'secondary' | 'info' | 'warning' | 'success' | 'destructive'
-    }, [])
-
-    const getPriorityColor = useCallback((item: TTaskPriority) => {
-        const mapping = {
-            low: 'default',
-            medium: 'info',
-            high: 'warning',
-            critical: 'destructive',
-        }
-        return mapping[item] as 'default' | 'info' | 'warning' | 'destructive'
-    }, [])
-
     return <>
         <Head title={props.title} />
         <h1 className="sr-only">{props.title}</h1>
@@ -190,10 +174,12 @@ const Tasks = (props: any) => {
                 initialFilters={props.filters}
                 onEdit={onEdit}
                 onDelete={setItemToDelete}
+                onView={(item) => setItemToView(item)}
             />
 
             {isOpen && <CustomForm onClose={onCloseForm} item={itemToEdit} />}
             {itemToDelete && <DeleteModal onClose={onCloseForm} onClick={onDelete} />}
+            {itemToView && <TaskDetails itemToView={itemToView} onClose={() => setItemToView(null)} />}
         </BodyWrapper>
     </>
 }
