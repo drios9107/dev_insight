@@ -1,17 +1,23 @@
-import { DataTable, IColumn } from "@/components/custom/table/data-table";
-import { IGithubsIssue, TGithubsIssueState } from "@/types/models/github-issue";
-import { Head, router } from "@inertiajs/react";
-import { useCallback, useState } from "react";
-import { toast } from "sonner";
-import Header from "@/components/custom/header";
-import { DeleteModal } from "@/components/custom/delete-modal";
-import BodyWrapper from "@/components/custom/body-wrapper";
-import { GithubIssueStateEnum } from "@/enums/githubs-issue";
-import githubIssue from "@/routes/github-issue";
-import { Badge } from "@/components/ui/badge";
+import { Head, router } from '@inertiajs/react';
+import { useCallback, useState } from 'react';
+import { toast } from 'sonner';
+import BodyWrapper from '@/components/custom/body-wrapper';
+import { DeleteModal } from '@/components/custom/delete-modal';
+import Header from '@/components/custom/header';
+import { DataTable } from '@/components/custom/table/data-table';
+import type { IColumn } from '@/components/custom/table/data-table';
+import { Badge } from '@/components/ui/badge';
+import { GithubIssueStateEnum } from '@/enums/githubs-issue';
+import githubIssue from '@/routes/github-issue';
+import type {
+    IGithubsIssue,
+    TGithubsIssueState,
+} from '@/types/models/github-issue';
 
 const GithubsIssues = (props: any) => {
-    const [itemToDelete, setItemToDelete] = useState<IGithubsIssue | null>(null)
+    const [itemToDelete, setItemToDelete] = useState<IGithubsIssue | null>(
+        null,
+    );
 
     const columns: IColumn[] = [
         {
@@ -25,9 +31,7 @@ const GithubsIssues = (props: any) => {
             label: 'Title',
             sortable: true,
             render: (value: string) => (
-                <span className="truncate max-w-[200px] block">
-                    {value}
-                </span>
+                <span className="block max-w-[200px] truncate">{value}</span>
             ),
         },
         {
@@ -78,14 +82,14 @@ const GithubsIssues = (props: any) => {
                 router.get(
                     githubIssue.index().url,
                     { ...props?.filters, state: value, page: 1 },
-                    { preserveState: true, preserveScroll: true }
+                    { preserveState: true, preserveScroll: true },
                 );
             },
-            options: Object.keys(GithubIssueStateEnum).map(i => ({
+            options: Object.keys(GithubIssueStateEnum).map((i) => ({
                 value: i,
-                label: GithubIssueStateEnum[i as TGithubsIssueState]
+                label: GithubIssueStateEnum[i as TGithubsIssueState],
             })),
-            addAll: true
+            addAll: true,
         },
         {
             key: 'repository_id',
@@ -95,14 +99,15 @@ const GithubsIssues = (props: any) => {
                 router.get(
                     githubIssue.index().url,
                     { ...props?.filters, repository_id: value, page: 1 },
-                    { preserveState: true, preserveScroll: true }
+                    { preserveState: true, preserveScroll: true },
                 );
             },
-            options: props?.repositories?.map((repo: any) => ({
-                value: String(repo.id),
-                label: repo.full_name,
-            })) || [],
-            addAll: true
+            options:
+                props?.repositories?.map((repo: any) => ({
+                    value: String(repo.id),
+                    label: repo.full_name,
+                })) || [],
+            addAll: true,
         },
     ];
 
@@ -110,40 +115,46 @@ const GithubsIssues = (props: any) => {
         if (itemToDelete) {
             router.delete(githubIssue.destroy(itemToDelete!.id).url, {
                 onSuccess: () => toast.success('Issue deleted successfully'),
-                onError: (error) => toast.error(`Issue deletion failed: ${error?.message}`),
-                onFinish: () => setItemToDelete(null)
-            })
+                onError: (error) =>
+                    toast.error(`Issue deletion failed: ${error?.message}`),
+                onFinish: () => setItemToDelete(null),
+            });
         }
-    }, [itemToDelete])
+    }, [itemToDelete]);
 
     const onClose = useCallback(() => {
-        setItemToDelete(null)
-    }, [setItemToDelete])
+        setItemToDelete(null);
+    }, [setItemToDelete]);
 
     const getBadgeColor = useCallback((status: TGithubsIssueState) => {
         const mapping = {
             open: 'warning',
             closed: 'secondary',
-        }
-        return mapping[status] as "warning" | "secondary"
-    }, [])
+        };
 
-    return <>
-        <Head title={props.title} />
-        <h1 className="sr-only">{props.title}</h1>
-        <Header title={props.title} />
-        <BodyWrapper>
-            <DataTable
-                data={props.list}
-                columns={columns}
-                filters={filterOptions}
-                initialFilters={props.filters}
-                onDelete={setItemToDelete}
-            />
+        return mapping[status] as 'warning' | 'secondary';
+    }, []);
 
-            {itemToDelete && <DeleteModal onClose={onClose} onClick={onDelete} />}
-        </BodyWrapper>
-    </>
-}
+    return (
+        <>
+            <Head title={props.title} />
+            <h1 className="sr-only">{props.title}</h1>
+            <Header title={props.title} />
+            <BodyWrapper>
+                <DataTable
+                    data={props.list}
+                    columns={columns}
+                    filters={filterOptions}
+                    initialFilters={props.filters}
+                    onDelete={setItemToDelete}
+                />
+
+                {itemToDelete && (
+                    <DeleteModal onClose={onClose} onClick={onDelete} />
+                )}
+            </BodyWrapper>
+        </>
+    );
+};
 
 export default GithubsIssues;

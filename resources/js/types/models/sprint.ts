@@ -1,4 +1,4 @@
-import { IProject } from "./project";
+import type { IProject } from './project';
 
 export interface ISprint {
     id: number;
@@ -14,4 +14,4 @@ export interface ISprint {
     updated_at: string;
 }
 
-export type TSprintStatus = 'planning' | 'active' | 'completed' | 'cancelled'
+export type TSprintStatus = 'planning' | 'active' | 'completed' | 'cancelled';

@@ -1,5 +1,5 @@
-import { IUser } from "../user";
-import { ITeam } from "./team";
+import type { IUser } from '../user';
+import type { ITeam } from './team';
 
 export interface IProject {
     id: number;
@@ -16,4 +16,5 @@ export interface IProject {
     updated_at: string;
 }
 
-export type TProjectStatus = 'planning' | 'active' | 'paused' | 'completed' | 'archived'
+export type TProjectStatus =
+    'planning' | 'active' | 'paused' | 'completed' | 'archived';

@@ -1,8 +1,8 @@
 // resources/js/components/custom/metrics/section-components/action-card.tsx
 
-import { Card, CardContent } from '@/components/ui/card';
 import { Link } from '@inertiajs/react';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface ActionCardProps {
     label: string;
@@ -33,26 +33,35 @@ export function ActionCard({
     onClick,
 }: ActionCardProps) {
     const CardWrapper = link ? Link : 'div';
-    const wrapperProps = link
-        ? { href: link, className: 'block' }
-        : {};
+    const wrapperProps = link ? { href: link, className: 'block' } : {};
 
     return (
         <CardWrapper {...wrapperProps}>
             <Card
-                className={`border-0 shadow-md hover:shadow-lg transition-all duration-200 ${link || onClick ? 'cursor-pointer hover:scale-[1.02]' : ''
-                    }`}
+                className={`border-0 shadow-md transition-all duration-200 hover:shadow-lg ${
+                    link || onClick ? 'cursor-pointer hover:scale-[1.02]' : ''
+                }`}
                 onClick={onClick}
             >
                 <CardContent className="p-4">
                     <div className="flex items-start justify-between">
                         <div>
-                            <p className="text-sm font-medium text-gray-500">{label}</p>
-                            <p className="text-2xl font-bold text-gray-900">{value}</p>
-                            {sub && <p className="text-xs text-gray-400 mt-1">{sub}</p>}
+                            <p className="text-sm font-medium text-gray-500">
+                                {label}
+                            </p>
+                            <p className="text-2xl font-bold text-gray-900">
+                                {value}
+                            </p>
+                            {sub && (
+                                <p className="mt-1 text-xs text-gray-400">
+                                    {sub}
+                                </p>
+                            )}
                         </div>
                         {icon && (
-                            <div className={`p-2 rounded-lg ${colorMap[color]}`}>
+                            <div
+                                className={`rounded-lg p-2 ${colorMap[color]}`}
+                            >
                                 {icon}
                             </div>
                         )}

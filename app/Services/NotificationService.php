@@ -10,7 +10,7 @@ class NotificationService
     public function index(?Request $request = null)
     {
         $query = Notification::query()
-        ->with('user');
+            ->with('user');
 
         if ($request && $request->filled('search')) {
             $search = '%'.$request->search.'%';

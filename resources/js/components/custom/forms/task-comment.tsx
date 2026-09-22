@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
 import { router, usePage } from '@inertiajs/react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { toast } from 'sonner';
-import { IComment } from '@/types/models/comment';
+import type { IComment } from '@/types/models/comment';
 import CommentItem from '../comment-item';
 import { SendForm } from '../send-form';
 
@@ -23,17 +23,20 @@ export function TaskComments({ taskId }: TaskCommentsProps) {
             setIsLoading(true);
             const response = await fetch(`/task/${taskId}/comments`, {
                 headers: {
-                    'Accept': 'application/json',
+                    Accept: 'application/json',
                     'X-Requested-With': 'XMLHttpRequest',
                 },
             });
 
-            if (!response.ok) throw new Error('Failed to load');
+            if (!response.ok) {
+                throw new Error('Failed to load');
+            }
 
             const data = await response.json();
             setComments(data.data);
         } catch (error) {
             toast.error('Failed to load comments');
+            console.log('***error', error);
         } finally {
             setIsLoading(false);
         }
@@ -44,7 +47,9 @@ export function TaskComments({ taskId }: TaskCommentsProps) {
     }, [fetchComments]);
 
     const handleSubmit = useCallback(() => {
-        if (!content.trim()) return;
+        if (!content.trim()) {
+            return;
+        }
 
         setIsSubmitting(true);
         setErrors({});
@@ -64,28 +69,30 @@ export function TaskComments({ taskId }: TaskCommentsProps) {
                     toast.error(errors.content || 'Failed to add comment');
                 },
                 onFinish: () => setIsSubmitting(false),
-            }
+            },
         );
     }, [content, taskId, fetchComments]);
 
-
-    const handleDelete = useCallback((commentId: number) => {
-        router.delete(`/comment/${commentId}`, {
-            preserveScroll: true,
-            onSuccess: () => fetchComments(),
-            onError: () => toast.error('Failed to delete comment'),
-        });
-    }, [fetchComments]);
+    const handleDelete = useCallback(
+        (commentId: number) => {
+            router.delete(`/comment/${commentId}`, {
+                preserveScroll: true,
+                onSuccess: () => fetchComments(),
+                onError: () => toast.error('Failed to delete comment'),
+            });
+        },
+        [fetchComments],
+    );
 
     const commentCount = useMemo(() => comments.length, [comments.length]);
 
     const canSubmit = useMemo(
         () => !isSubmitting && content.trim().length > 0,
-        [isSubmitting, content]
+        [isSubmitting, content],
     );
 
     return (
-        <div className="space-y-4 mt-6 pt-6 border-t">
+        <div className="mt-6 space-y-4 border-t pt-6">
             <h3 className="text-sm font-semibold text-gray-700">
                 💬 Comments ({commentCount})
             </h3>
@@ -93,9 +100,11 @@ export function TaskComments({ taskId }: TaskCommentsProps) {
             {/* List */}
             <div className="space-y-4">
                 {isLoading ? (
-                    <p className="text-sm text-gray-400 text-center py-4">Loading...</p>
+                    <p className="py-4 text-center text-sm text-gray-400">
+                        Loading...
+                    </p>
                 ) : comments.length === 0 ? (
-                    <p className="text-sm text-gray-400 text-center py-4">
+                    <p className="py-4 text-center text-sm text-gray-400">
                         No comments yet. Be the first!
                     </p>
                 ) : (
@@ -104,7 +113,11 @@ export function TaskComments({ taskId }: TaskCommentsProps) {
                             key={comment.id}
                             comment={comment}
                             onDelete={handleDelete}
-                            alignment={comment.user.id === props?.auth?.user?.id ? 'right' : 'left'}
+                            alignment={
+                                comment.user.id === props?.auth?.user?.id
+                                    ? 'right'
+                                    : 'left'
+                            }
                         />
                     ))
                 )}

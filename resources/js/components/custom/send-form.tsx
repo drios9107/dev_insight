@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button';
 import { Send } from 'lucide-react';
 import ShadTextarea from '@/components/custom/inputs/shad-textarea';
+import { Button } from '@/components/ui/button';
 
 interface SendFormProps {
     placeholder?: string;
@@ -22,7 +22,7 @@ export function SendForm({
     canSubmit,
 }: SendFormProps) {
     return (
-        <div className="flex gap-2 items-start">
+        <div className="flex items-start gap-2">
             <div className="flex-1">
                 <ShadTextarea
                     label=""
@@ -45,9 +45,9 @@ export function SendForm({
                 onClick={handleSubmit}
                 disabled={!canSubmit}
                 size="icon"
-                className="flex-shrink-0 mt-1"
+                className="mt-1 flex-shrink-0"
             >
-                <Send className="w-4 h-4" />
+                <Send className="h-4 w-4" />
             </Button>
         </div>
     );

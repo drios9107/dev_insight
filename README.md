@@ -21,11 +21,13 @@ DevInsights es una aplicación web que centraliza y visualiza las métricas de t
 ## 🛠️ Stack Tecnológico
 
 ### Backend
+
 - **Laravel 13** — Framework PHP
 - **PostgreSQL** — Base de datos
 - **Inertia.js** — Puente entre backend y frontend
 
 ### Frontend
+
 - **React 19** — Librería UI
 - **TypeScript** — Tipado estático
 - **Tailwind CSS** — Estilos
@@ -33,6 +35,7 @@ DevInsights es una aplicación web que centraliza y visualiza las métricas de t
 - **Lucide React** — Iconos
 
 ### Integraciones
+
 - **GitHub API** — Sincronización de datos
 - **Wayfinder** — Generación de rutas tipadas
 
@@ -108,10 +111,10 @@ GITHUB_USERNAME=tu-usuario
 1. Ve a **Metrics** en el sidebar
 2. Selecciona un repositorio en el filtro
 3. Explora el dashboard con:
-   - Cards de resumen
-   - Gráficos de actividad
-   - Rankings de desarrolladores
-   - Alertas y acciones
+    - Cards de resumen
+    - Gráficos de actividad
+    - Rankings de desarrolladores
+    - Alertas y acciones
 
 ### Gestionar tareas
 
@@ -124,16 +127,16 @@ GITHUB_USERNAME=tu-usuario
 
 ## 📊 Métricas Disponibles
 
-| Categoría | Métricas |
-|-----------|----------|
-| **Commits** | Total, por día, por desarrollador, promedio diario |
-| **Pull Requests** | Abiertos, mergeados, tiempo de merge, tasa de merge |
-| **Issues** | Abiertos, cerrados, tiempo de resolución |
-| **Reviews** | Total, tasa de aprobación, tiempo de revisión |
-| **Equipo** | Desarrolladores activos, inactivos, ranking |
-| **Sprints** | Velocidad, tasa de completación |
-| **Tareas** | En progreso, en review, vencidas, tasa de completación |
-| **Proyectos** | Activos, totales, duración promedio |
+| Categoría         | Métricas                                               |
+| ----------------- | ------------------------------------------------------ |
+| **Commits**       | Total, por día, por desarrollador, promedio diario     |
+| **Pull Requests** | Abiertos, mergeados, tiempo de merge, tasa de merge    |
+| **Issues**        | Abiertos, cerrados, tiempo de resolución               |
+| **Reviews**       | Total, tasa de aprobación, tiempo de revisión          |
+| **Equipo**        | Desarrolladores activos, inactivos, ranking            |
+| **Sprints**       | Velocidad, tasa de completación                        |
+| **Tareas**        | En progreso, en review, vencidas, tasa de completación |
+| **Proyectos**     | Activos, totales, duración promedio                    |
 
 ---
 
@@ -158,7 +161,6 @@ Las contribuciones son bienvenidas. Por favor:
 4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
 5. Abre un Pull Request
 
-
 ## 👤 Autor
 
 **David Rios**
@@ -167,6 +169,5 @@ Las contribuciones son bienvenidas. Por favor:
 - Portfolio: [driosportfolio.netlify.app](https://https://driosportfolio.netlify.app/)
 
 ---
-
 
 **⭐ Si te gusta el proyecto, dale una estrella ⭐**

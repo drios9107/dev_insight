@@ -1,4 +1,3 @@
-
 export interface IRole {
     id: number;
     name: string;
@@ -6,4 +5,3 @@ export interface IRole {
     created_at: string;
     updated_at: string;
 }
-

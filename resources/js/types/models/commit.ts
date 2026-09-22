@@ -1,6 +1,6 @@
-import { IUser } from "../user";
-import { IGithubRepository } from "./github-repository";
-import { ITask } from "./task";
+import type { IUser } from '../user';
+import type { IGithubRepository } from './github-repository';
+import type { ITask } from './task';
 
 export interface ICommit {
     id: number;
@@ -14,4 +14,3 @@ export interface ICommit {
     created_at: string;
     updated_at: string;
 }
-

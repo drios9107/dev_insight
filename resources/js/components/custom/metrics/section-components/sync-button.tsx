@@ -1,10 +1,10 @@
 // resources/js/components/custom/metrics/sync-button.tsx
 
-import { useCallback, useState } from 'react';
 import { router } from '@inertiajs/react';
 import { RefreshCw } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 
 interface SyncButtonProps {
     repositoryId: string | number | null;
@@ -16,6 +16,7 @@ export function SyncButton({ repositoryId }: SyncButtonProps) {
     const handleSync = useCallback(() => {
         if (!repositoryId || repositoryId === 'all') {
             toast.error('Please select a repository first');
+
             return;
         }
 
@@ -33,7 +34,7 @@ export function SyncButton({ repositoryId }: SyncButtonProps) {
                     toast.error(`Sync failed: ${error?.message}`);
                 },
                 onFinish: () => setIsSyncing(false),
-            }
+            },
         );
     }, [repositoryId]);
 
@@ -43,9 +44,11 @@ export function SyncButton({ repositoryId }: SyncButtonProps) {
             disabled={isSyncing || !repositoryId || repositoryId === 'all'}
             variant="outline"
             size="sm"
-            className="gap-2 h-9"
+            className="h-9 gap-2"
         >
-            <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
+            <RefreshCw
+                className={`h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`}
+            />
             {isSyncing ? 'Syncing...' : 'Sync'}
         </Button>
     );

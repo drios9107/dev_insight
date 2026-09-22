@@ -22,7 +22,7 @@ class GithubIssueResource extends JsonResource
                 'id' => $this->author->id,
                 'name' => $this->author->displayName,
             ]),
-            'task'=>$this->task,
+            'task' => $this->task,
             'number' => $this->number,
             'title' => $this->title,
             'body' => $this->body,

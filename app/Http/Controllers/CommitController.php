@@ -47,7 +47,7 @@ class CommitController extends Controller
             'title' => 'Commits',
             'filters' => $filters,
             'repositories' => $repositories,
-            'pull_requests' => $pullRequests
+            'pull_requests' => $pullRequests,
         ]);
     }
 

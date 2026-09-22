@@ -1,4 +1,4 @@
-import { IRole } from "./models/role";
+import type { IRole } from './models/role';
 
 export type User = {
     id: number;
@@ -10,7 +10,6 @@ export type User = {
     created_at: string;
     updated_at: string;
     [key: string]: unknown;
-
 };
 
 export type Auth = {

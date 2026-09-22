@@ -1,5 +1,5 @@
-import { IUser } from "../user";
-import { IGithubRepository } from "./github-repository";
+import type { IUser } from '../user';
+import type { IGithubRepository } from './github-repository';
 
 export interface IGithubsIssue {
     id: number;
@@ -15,4 +15,4 @@ export interface IGithubsIssue {
     updated_at: string;
 }
 
-export type TGithubsIssueState = 'open' | 'closed'
+export type TGithubsIssueState = 'open' | 'closed';

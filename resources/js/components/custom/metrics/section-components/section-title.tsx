@@ -7,7 +7,9 @@ interface SectionTitleProps {
 
 export function SectionTitle({ title, className = '' }: SectionTitleProps) {
     return (
-        <h2 className={`text-lg font-semibold text-gray-800 mb-4 w-full block ${className}`}>
+        <h2
+            className={`mb-4 block w-full text-lg font-semibold text-gray-800 ${className}`}
+        >
             {title}
         </h2>
     );

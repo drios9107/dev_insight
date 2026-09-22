@@ -15,7 +15,7 @@ trait ExtractsFilters
         foreach ($keys as $key) {
             $value = $request->input($key);
 
-            if (!is_null($value) && $value !== '') {
+            if (! is_null($value) && $value !== '') {
                 $filters[$key] = $value;
             }
         }

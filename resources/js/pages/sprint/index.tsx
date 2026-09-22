@@ -1,20 +1,21 @@
-import { DataTable, IColumn } from "@/components/custom/table/data-table";
-import { ISprint, TSprintStatus } from "@/types/models/sprint";
-import { Head, router } from "@inertiajs/react";
-import { useCallback, useState } from "react";
-import sprint from "@/routes/sprint";
-import { toast } from "sonner";
-import { SprintStatusEnum } from "@/enums/sprint";
-import CustomForm from "@/components/custom/forms/sprints-form";
-import Header from "@/components/custom/header";
-import { DeleteModal } from "@/components/custom/delete-modal";
-import BodyWrapper from "@/components/custom/body-wrapper";
-import { Badge } from "@/components/ui/badge";
+import { Head, router } from '@inertiajs/react';
+import { useCallback, useState } from 'react';
+import { toast } from 'sonner';
+import BodyWrapper from '@/components/custom/body-wrapper';
+import { DeleteModal } from '@/components/custom/delete-modal';
+import CustomForm from '@/components/custom/forms/sprints-form';
+import Header from '@/components/custom/header';
+import { DataTable } from '@/components/custom/table/data-table';
+import type { IColumn } from '@/components/custom/table/data-table';
+import { Badge } from '@/components/ui/badge';
+import { SprintStatusEnum } from '@/enums/sprint';
+import sprint from '@/routes/sprint';
+import type { ISprint, TSprintStatus } from '@/types/models/sprint';
 
 const Sprints = (props: any) => {
-    const [isOpen, setIsOpen] = useState(false)
-    const [itemToDelete, setItemToDelete] = useState<ISprint | null>(null)
-    const [itemToEdit, setItemToEdit] = useState<ISprint | null>(null)
+    const [isOpen, setIsOpen] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState<ISprint | null>(null);
+    const [itemToEdit, setItemToEdit] = useState<ISprint | null>(null);
 
     const columns: IColumn[] = [
         {
@@ -72,37 +73,41 @@ const Sprints = (props: any) => {
                 router.get(
                     sprint.index().url,
                     { ...props?.filters, status: value, page: 1 },
-                    { preserveState: true, preserveScroll: true }
+                    { preserveState: true, preserveScroll: true },
                 );
             },
-            options: Object.keys(SprintStatusEnum).map(i => ({
+            options: Object.keys(SprintStatusEnum).map((i) => ({
                 value: i,
-                label: SprintStatusEnum[i as TSprintStatus]
+                label: SprintStatusEnum[i as TSprintStatus],
             })),
-            addAll: true
+            addAll: true,
         },
     ];
 
-    const onEdit = useCallback((item: ISprint) => {
-        setItemToEdit(item)
-        setIsOpen(true)
-    }, [setItemToEdit, setIsOpen])
+    const onEdit = useCallback(
+        (item: ISprint) => {
+            setItemToEdit(item);
+            setIsOpen(true);
+        },
+        [setItemToEdit, setIsOpen],
+    );
 
     const onDelete = useCallback(() => {
         if (itemToDelete) {
             router.delete(sprint.destroy(itemToDelete!.id).url, {
                 onSuccess: () => toast.success('Sprint deleted successfully'),
-                onError: (error) => toast.error(`Sprint deletion failed: ${error?.message}`),
-                onFinish: () => setItemToDelete(null)
-            })
+                onError: (error) =>
+                    toast.error(`Sprint deletion failed: ${error?.message}`),
+                onFinish: () => setItemToDelete(null),
+            });
         }
-    }, [itemToDelete])
+    }, [itemToDelete]);
 
     const onCloseForm = useCallback(() => {
-        setIsOpen(false)
-        setItemToEdit(null)
-        setItemToDelete(null)
-    }, [setIsOpen, setItemToEdit, setItemToDelete])
+        setIsOpen(false);
+        setItemToEdit(null);
+        setItemToDelete(null);
+    }, [setIsOpen, setItemToEdit, setItemToDelete]);
 
     const getBadgeColor = useCallback((status: TSprintStatus) => {
         const mapping = {
@@ -110,28 +115,36 @@ const Sprints = (props: any) => {
             active: 'info',
             completed: 'success',
             cancelled: 'destructive',
-        }
-        return mapping[status] as "warning" | "info" | "success" | "destructive"
-    }, [])
+        };
 
-    return <>
-        <Head title={props.title} />
-        <h1 className="sr-only">{props.title}</h1>
-        <Header title={props.title} onClick={() => setIsOpen(true)} />
-        <BodyWrapper>
-            <DataTable
-                data={props.list}
-                columns={columns}
-                filters={filterOptions}
-                initialFilters={props.filters}
-                onEdit={onEdit}
-                onDelete={setItemToDelete}
-            />
+        return mapping[status] as
+            'warning' | 'info' | 'success' | 'destructive';
+    }, []);
 
-            {isOpen && <CustomForm onClose={onCloseForm} item={itemToEdit} />}
-            {itemToDelete && <DeleteModal onClose={onCloseForm} onClick={onDelete} />}
-        </BodyWrapper>
-    </>
-}
+    return (
+        <>
+            <Head title={props.title} />
+            <h1 className="sr-only">{props.title}</h1>
+            <Header title={props.title} onClick={() => setIsOpen(true)} />
+            <BodyWrapper>
+                <DataTable
+                    data={props.list}
+                    columns={columns}
+                    filters={filterOptions}
+                    initialFilters={props.filters}
+                    onEdit={onEdit}
+                    onDelete={setItemToDelete}
+                />
+
+                {isOpen && (
+                    <CustomForm onClose={onCloseForm} item={itemToEdit} />
+                )}
+                {itemToDelete && (
+                    <DeleteModal onClose={onCloseForm} onClick={onDelete} />
+                )}
+            </BodyWrapper>
+        </>
+    );
+};
 
 export default Sprints;

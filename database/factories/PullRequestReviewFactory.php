@@ -6,7 +6,6 @@ use App\Enums\PullRequestReviewStateEnum;
 use App\Models\GithubUser;
 use App\Models\PullRequest;
 use App\Models\PullRequestReview;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

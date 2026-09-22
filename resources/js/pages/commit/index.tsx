@@ -1,15 +1,16 @@
-import { DataTable, IColumn } from "@/components/custom/table/data-table";
-import { ICommit } from "@/types/models/commit";
-import { Head, router } from "@inertiajs/react";
-import { useCallback, useState } from "react";
-import { toast } from "sonner";
-import Header from "@/components/custom/header";
-import { DeleteModal } from "@/components/custom/delete-modal";
-import BodyWrapper from "@/components/custom/body-wrapper";
-import commit from "@/routes/commit";
+import { Head, router } from '@inertiajs/react';
+import { useCallback, useState } from 'react';
+import { toast } from 'sonner';
+import BodyWrapper from '@/components/custom/body-wrapper';
+import { DeleteModal } from '@/components/custom/delete-modal';
+import Header from '@/components/custom/header';
+import { DataTable } from '@/components/custom/table/data-table';
+import type { IColumn } from '@/components/custom/table/data-table';
+import commit from '@/routes/commit';
+import type { ICommit } from '@/types/models/commit';
 
 const Commits = (props: any) => {
-    const [itemToDelete, setItemToDelete] = useState<ICommit | null>(null)
+    const [itemToDelete, setItemToDelete] = useState<ICommit | null>(null);
 
     const columns: IColumn[] = [
         {
@@ -25,9 +26,7 @@ const Commits = (props: any) => {
             key: 'message',
             label: 'Message',
             render: (value: string) => (
-                <span className="truncate max-w-[200px] block">
-                    {value}
-                </span>
+                <span className="block max-w-[200px] truncate">{value}</span>
             ),
         },
         {
@@ -49,7 +48,8 @@ const Commits = (props: any) => {
         {
             key: 'pull_request',
             label: 'PR',
-            render: (value) => value?.title ? `#${value.number} - ${value.title}` : '-',
+            render: (value) =>
+                value?.title ? `#${value.number} - ${value.title}` : '-',
         },
     ];
 
@@ -62,14 +62,15 @@ const Commits = (props: any) => {
                 router.get(
                     commit.index().url,
                     { ...props?.filters, repository_id: value, page: 1 },
-                    { preserveState: true, preserveScroll: true }
+                    { preserveState: true, preserveScroll: true },
                 );
             },
-            options: props?.repositories?.map((repo: any) => ({
-                value: String(repo.id),
-                label: repo.full_name,
-            })) || [],
-            addAll: true
+            options:
+                props?.repositories?.map((repo: any) => ({
+                    value: String(repo.id),
+                    label: repo.full_name,
+                })) || [],
+            addAll: true,
         },
         {
             key: 'pull_request_id',
@@ -79,14 +80,15 @@ const Commits = (props: any) => {
                 router.get(
                     commit.index().url,
                     { ...props?.filters, pull_request_id: value, page: 1 },
-                    { preserveState: true, preserveScroll: true }
+                    { preserveState: true, preserveScroll: true },
                 );
             },
-            options: props?.pull_requests?.map((pr: any) => ({
-                value: String(pr.id),
-                label: `#${pr.number} - ${pr.title}`,
-            })) || [],
-            addAll: true
+            options:
+                props?.pull_requests?.map((pr: any) => ({
+                    value: String(pr.id),
+                    label: `#${pr.number} - ${pr.title}`,
+                })) || [],
+            addAll: true,
         },
     ];
 
@@ -94,30 +96,35 @@ const Commits = (props: any) => {
         if (itemToDelete) {
             router.delete(commit.destroy(itemToDelete!.id).url, {
                 onSuccess: () => toast.success('Commit deleted successfully'),
-                onError: (error) => toast.error(`Commit deletion failed: ${error?.message}`),
-                onFinish: () => setItemToDelete(null)
-            })
+                onError: (error) =>
+                    toast.error(`Commit deletion failed: ${error?.message}`),
+                onFinish: () => setItemToDelete(null),
+            });
         }
-    }, [itemToDelete])
+    }, [itemToDelete]);
 
-    const onClose = useCallback(() => setItemToDelete(null), [setItemToDelete])
+    const onClose = useCallback(() => setItemToDelete(null), [setItemToDelete]);
 
-    return <>
-        <Head title={props.title} />
-        <h1 className="sr-only">{props.title}</h1>
-        <Header title={props.title} />
-        <BodyWrapper>
-            <DataTable
-                data={props.list}
-                columns={columns}
-                filters={filterOptions}
-                initialFilters={props.filters}
-                onDelete={setItemToDelete}
-            />
+    return (
+        <>
+            <Head title={props.title} />
+            <h1 className="sr-only">{props.title}</h1>
+            <Header title={props.title} />
+            <BodyWrapper>
+                <DataTable
+                    data={props.list}
+                    columns={columns}
+                    filters={filterOptions}
+                    initialFilters={props.filters}
+                    onDelete={setItemToDelete}
+                />
 
-            {itemToDelete && <DeleteModal onClose={onClose} onClick={onDelete} />}
-        </BodyWrapper>
-    </>
-}
+                {itemToDelete && (
+                    <DeleteModal onClose={onClose} onClick={onDelete} />
+                )}
+            </BodyWrapper>
+        </>
+    );
+};
 
 export default Commits;

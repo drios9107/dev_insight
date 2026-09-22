@@ -1,12 +1,11 @@
-import { useState, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
-import { TextField, Select, Flex, Box } from '@radix-ui/themes';
-import ShadInput from '../inputs/shad-input';
-import { ICustomSelectItem } from '@/types';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import type { ICustomSelectItem } from '@/types';
+import ShadInput from '../inputs/shad-input';
 import ShadSelect from '../inputs/shad-select';
 import ShadSwitch from '../inputs/shad-switch';
-import { Label } from '@/components/ui/label';
 
 export interface IFilter {
     key: string;
@@ -14,7 +13,7 @@ export interface IFilter {
     onChange: (v: string) => void;
     label: string;
     options: ICustomSelectItem[];
-    addAll?: boolean
+    addAll?: boolean;
 }
 
 export interface ICheck {
@@ -50,6 +49,7 @@ export function DataTableFilters({
         }, 300);
 
         return () => clearTimeout(timer);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [localSearch]);
 
     const handleClear = () => {
@@ -58,27 +58,29 @@ export function DataTableFilters({
     };
 
     return (
-        <div className="flex flex-col gap-3 mb-4 w-full">
-            <div className={`flex flex-wrap items-center gap-3 mb-4 w-full ${className}`}>
+        <div className="mb-4 flex w-full flex-col gap-3">
+            <div
+                className={`mb-4 flex w-full flex-wrap items-center gap-3 ${className}`}
+            >
                 {/* Search */}
-                <div className="relative flex flex-1 items-center min-w-[200px]">
-                    <Search className="absolute left-3 top-2/3 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <div className="relative flex min-w-[200px] flex-1 items-center">
+                    <Search className="absolute top-2/3 left-3 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
                     <ShadInput
-                        label='Search'
+                        label="Search"
                         value={localSearch}
                         onChange={(e) => setLocalSearch(e.target.value)}
-                        className="pl-9 w-full"
+                        className="w-full pl-9"
                         placeholder="Search..."
-                        labelClassName='font-normal'
+                        labelClassName="font-normal"
                     />
                     {localSearch && (
                         <Button
                             variant="link"
                             size="sm"
                             onClick={handleClear}
-                            className="absolute right-1 top-2/3 transform -translate-y-1/2 cursor-pointer"
+                            className="absolute top-2/3 right-1 -translate-y-1/2 transform cursor-pointer"
                         >
-                            <X className="w-4 h-4" />
+                            <X className="h-4 w-4" />
                         </Button>
                     )}
                 </div>
@@ -94,7 +96,7 @@ export function DataTableFilters({
                             list={filter.options}
                             placeholder={filter.label}
                             addAll={filter.addAll}
-                            labelClassName='font-normal'
+                            labelClassName="font-normal"
                         />
                     </div>
                 ))}
@@ -102,11 +104,23 @@ export function DataTableFilters({
 
             {/* Checks */}
             {checks.length > 0 && (
-                <div className="flex flex-wrap items-center gap-4 w-full">
+                <div className="flex w-full flex-wrap items-center gap-4">
                     {checks.map((i) => (
-                        <div key={`${i.key}-${i.value}`} className="flex items-center gap-2">
-                            <Label htmlFor={i.key} className="text-sm font-normal cursor-pointer">{i.label}</Label>
-                            <ShadSwitch name={i.key} value={i.value} onChange={i.onChange} />
+                        <div
+                            key={`${i.key}-${i.value}`}
+                            className="flex items-center gap-2"
+                        >
+                            <Label
+                                htmlFor={i.key}
+                                className="cursor-pointer text-sm font-normal"
+                            >
+                                {i.label}
+                            </Label>
+                            <ShadSwitch
+                                name={i.key}
+                                value={i.value}
+                                onChange={i.onChange}
+                            />
                         </div>
                     ))}
                 </div>

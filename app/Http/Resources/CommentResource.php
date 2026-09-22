@@ -13,16 +13,16 @@ class CommentResource extends JsonResource
             'id' => $this->id,
             'content' => $this->content,
             'is_internal' => $this->is_internal,
-            'user' => $this->whenLoaded('user', fn() => [
+            'user' => $this->whenLoaded('user', fn () => [
                 'id' => $this->user->id,
                 'name' => $this->user->name,
                 'avatar' => $this->user->avatar_url,
             ]),
-            'task' => $this->whenLoaded('task', fn() => [
+            'task' => $this->whenLoaded('task', fn () => [
                 'id' => $this->task->id,
                 'title' => $this->task->title,
             ]),
-            'parent' => $this->whenLoaded('parent', fn() => [
+            'parent' => $this->whenLoaded('parent', fn () => [
                 'id' => $this->parent->id,
                 'content' => $this->parent->content,
             ]),

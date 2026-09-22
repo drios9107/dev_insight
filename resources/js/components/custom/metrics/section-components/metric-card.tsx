@@ -1,9 +1,9 @@
 // resources/js/components/metrics/MetricCard.tsx
 
-import { Card, CardContent } from '@/components/ui/card';
 import { Link } from '@inertiajs/react';
-import { ReactNode } from 'react';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import type { ReactNode } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface MetricCardProps {
     label: string;
@@ -45,32 +45,51 @@ export function MetricCard({
 }: MetricCardProps) {
     const TrendIcon = trendMap[trend];
     const CardWrapper = route ? Link : 'div';
-    const wrapperProps = route ? { href: route, className: 'block transition-transform duration-200 hover:scale-[1.02]' } : {};
+    const wrapperProps = route
+        ? {
+              href: route,
+              className:
+                  'block transition-transform duration-200 hover:scale-[1.02]',
+          }
+        : {};
 
     return (
-        <CardWrapper {...wrapperProps} className=' w-full'>
-            <Card className="overflow-hidden border-0 shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer" style={{ height }}>
-                <div className={`h-1 w-full bg-gradient-to-r ${colorMap[color]}`} />
-                <CardContent className="p-6 h-full flex flex-col">
-                    <div className="flex items-start justify-between flex-1 gap-2">
+        <CardWrapper {...wrapperProps} className="w-full">
+            <Card
+                className="cursor-pointer overflow-hidden border-0 shadow-md transition-shadow duration-200 hover:shadow-lg"
+                style={{ height }}
+            >
+                <div
+                    className={`h-1 w-full bg-gradient-to-r ${colorMap[color]}`}
+                />
+                <CardContent className="flex h-full flex-col p-6">
+                    <div className="flex flex-1 items-start justify-between gap-2">
                         <div className="space-y-1">
-                            <p className="text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            <p className="text-sm font-medium tracking-wider text-gray-500 uppercase">
                                 {label}
                             </p>
-                            <p className="text-3xl font-bold text-gray-900 tracking-tight">
+                            <p className="text-3xl font-bold tracking-tight text-gray-900">
                                 {value.toLocaleString()}
                             </p>
-                            {sub && <p className="text-sm text-gray-400">{sub}</p>}
+                            {sub && (
+                                <p className="text-sm text-gray-400">{sub}</p>
+                            )}
                             {trend !== 'neutral' && (
-                                <div className="flex items-center gap-1 mt-1">
-                                    <TrendIcon className={`w-4 h-4 ${trend === 'up' ? 'text-green-500' : 'text-red-500'}`} />
-                                    <span className={`text-xs font-medium ${trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
+                                <div className="mt-1 flex items-center gap-1">
+                                    <TrendIcon
+                                        className={`h-4 w-4 ${trend === 'up' ? 'text-green-500' : 'text-red-500'}`}
+                                    />
+                                    <span
+                                        className={`text-xs font-medium ${trend === 'up' ? 'text-green-600' : 'text-red-600'}`}
+                                    >
                                         {trendValue}
                                     </span>
                                 </div>
                             )}
                         </div>
-                        <div className={`p-3 rounded-xl bg-gradient-to-br ${colorMap[color]} text-white shadow-lg flex-shrink-0`}>
+                        <div
+                            className={`rounded-xl bg-gradient-to-br p-3 ${colorMap[color]} flex-shrink-0 text-white shadow-lg`}
+                        >
                             {icon}
                         </div>
                     </div>

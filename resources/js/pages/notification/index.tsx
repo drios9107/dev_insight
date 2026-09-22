@@ -1,18 +1,24 @@
-import { DataTable, IColumn } from "@/components/custom/table/data-table";
-import { INotification, TNotificationType } from "@/types/models/notification";
-import { Head, router } from "@inertiajs/react";
-import { useCallback, useState } from "react";
-import notification from "@/routes/notification";
-import { toast } from "sonner";
-import { NotificationTypeEnum } from "@/enums/notification";
-import Header from "@/components/custom/header";
-import { DeleteModal } from "@/components/custom/delete-modal";
-import BodyWrapper from "@/components/custom/body-wrapper";
-import { Badge } from "@/components/ui/badge";
-import { ExternalLink } from "lucide-react";
+import { Head, router } from '@inertiajs/react';
+import { ExternalLink } from 'lucide-react';
+import { useCallback, useState } from 'react';
+import { toast } from 'sonner';
+import BodyWrapper from '@/components/custom/body-wrapper';
+import { DeleteModal } from '@/components/custom/delete-modal';
+import Header from '@/components/custom/header';
+import type { IColumn } from '@/components/custom/table/data-table';
+import { DataTable } from '@/components/custom/table/data-table';
+import { Badge } from '@/components/ui/badge';
+import { NotificationTypeEnum } from '@/enums/notification';
+import notification from '@/routes/notification';
+import type {
+    INotification,
+    TNotificationType,
+} from '@/types/models/notification';
 
 const Notifications = (props: any) => {
-    const [itemToDelete, setItemToDelete] = useState<INotification | null>(null)
+    const [itemToDelete, setItemToDelete] = useState<INotification | null>(
+        null,
+    );
 
     const columns: IColumn[] = [
         {
@@ -49,7 +55,7 @@ const Notifications = (props: any) => {
             key: 'link',
             label: 'Link',
             align: 'center',
-            render: (value: string) => (
+            render: (value: string) =>
                 value ? (
                     <a
                         href={value}
@@ -57,10 +63,11 @@ const Notifications = (props: any) => {
                         rel="noopener noreferrer"
                         className="text-blue-600 hover:text-blue-800"
                     >
-                        <ExternalLink className="w-4 h-4 inline" />
+                        <ExternalLink className="inline h-4 w-4" />
                     </a>
-                ) : '-'
-            ),
+                ) : (
+                    '-'
+                ),
         },
         {
             key: 'created_at',
@@ -85,14 +92,14 @@ const Notifications = (props: any) => {
                 router.get(
                     notification.index().url,
                     { ...props?.filters, type: value, page: 1 },
-                    { preserveState: true, preserveScroll: true }
+                    { preserveState: true, preserveScroll: true },
                 );
             },
-            options: Object.keys(NotificationTypeEnum).map(i => ({
+            options: Object.keys(NotificationTypeEnum).map((i) => ({
                 value: i,
-                label: NotificationTypeEnum[i as TNotificationType]
+                label: NotificationTypeEnum[i as TNotificationType],
             })),
-            addAll: true
+            addAll: true,
         },
         {
             key: 'is_read',
@@ -102,7 +109,7 @@ const Notifications = (props: any) => {
                 router.get(
                     notification.index().url,
                     { ...props?.filters, is_read: value, page: 1 },
-                    { preserveState: true, preserveScroll: true }
+                    { preserveState: true, preserveScroll: true },
                 );
             },
             options: [
@@ -110,23 +117,27 @@ const Notifications = (props: any) => {
                 { value: '1', label: 'Read' },
                 { value: '0', label: 'Unread' },
             ],
-            addAll: false
+            addAll: false,
         },
     ];
 
     const onDelete = useCallback(() => {
         if (itemToDelete) {
             router.delete(notification.destroy(itemToDelete!.id).url, {
-                onSuccess: () => toast.success('Notification deleted successfully'),
-                onError: (error) => toast.error(`Notification deletion failed: ${error?.message}`),
-                onFinish: () => setItemToDelete(null)
-            })
+                onSuccess: () =>
+                    toast.success('Notification deleted successfully'),
+                onError: (error) =>
+                    toast.error(
+                        `Notification deletion failed: ${error?.message}`,
+                    ),
+                onFinish: () => setItemToDelete(null),
+            });
         }
-    }, [itemToDelete])
+    }, [itemToDelete]);
 
     const onClose = useCallback(() => {
-        setItemToDelete(null)
-    }, [setItemToDelete])
+        setItemToDelete(null);
+    }, [setItemToDelete]);
 
     const getBadgeVariant = useCallback((item: TNotificationType) => {
         const mapping = {
@@ -134,26 +145,31 @@ const Notifications = (props: any) => {
             warning: 'warning',
             error: 'destructive',
             success: 'success',
-        }
-        return mapping[item] as "info" | "warning" | "destructive" | "success"
-    }, [])
+        };
 
-    return <>
-        <Head title={props.title} />
-        <h1 className="sr-only">{props.title}</h1>
-        <Header title={props.title} />
-        <BodyWrapper>
-            <DataTable
-                data={props.list}
-                columns={columns}
-                filters={filterOptions}
-                initialFilters={props.filters}
-                onDelete={setItemToDelete}
-            />
+        return mapping[item] as 'info' | 'warning' | 'destructive' | 'success';
+    }, []);
 
-            {itemToDelete && <DeleteModal onClose={onClose} onClick={onDelete} />}
-        </BodyWrapper>
-    </>
-}
+    return (
+        <>
+            <Head title={props.title} />
+            <h1 className="sr-only">{props.title}</h1>
+            <Header title={props.title} />
+            <BodyWrapper>
+                <DataTable
+                    data={props.list}
+                    columns={columns}
+                    filters={filterOptions}
+                    initialFilters={props.filters}
+                    onDelete={setItemToDelete}
+                />
+
+                {itemToDelete && (
+                    <DeleteModal onClose={onClose} onClick={onDelete} />
+                )}
+            </BodyWrapper>
+        </>
+    );
+};
 
 export default Notifications;

@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\GithubRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class GithubRepositoryService
 {
@@ -98,7 +97,7 @@ class GithubRepositoryService
         $query = GithubRepository::query();
 
         if ($request && $request->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('full_name', 'ilike', $search)
                     ->orWhere('name', 'ilike', $search)

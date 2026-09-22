@@ -4,4 +4,4 @@ export const ProjectStatusEnum = {
     paused: 'Paused',
     completed: 'Completed',
     archived: 'Archived',
-}
+};

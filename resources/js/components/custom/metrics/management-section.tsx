@@ -1,4 +1,3 @@
-import { ActionCard } from './section-components/action-card';
 import {
     ListStart,
     ListCheck,
@@ -9,6 +8,7 @@ import {
     Users,
     FileCheck,
 } from 'lucide-react';
+import { ActionCard } from './section-components/action-card';
 import CardSectionWrapper from './section-components/card-section-wrapper';
 
 interface ManagementSectionProps {
@@ -42,7 +42,7 @@ export default function ManagementSection({
             <ActionCard
                 label="Sprint Completion"
                 value={`${sprint_completion_rate}%`}
-                icon={<ListStart className="w-5 h-5" />}
+                icon={<ListStart className="h-5 w-5" />}
                 color="green"
                 sub="Completed sprints"
                 link="/sprint?status=completed"
@@ -50,7 +50,7 @@ export default function ManagementSection({
             <ActionCard
                 label="Task Completion"
                 value={`${task_completion_rate}%`}
-                icon={<ListCheck className="w-5 h-5" />}
+                icon={<ListCheck className="h-5 w-5" />}
                 color="blue"
                 sub="Completed tasks"
                 link="/task?status=done"
@@ -58,7 +58,7 @@ export default function ManagementSection({
             <ActionCard
                 label="Avg Issue Resolution"
                 value={`${avg_issue_resolution_time}d`}
-                icon={<Bug className="w-5 h-5" />}
+                icon={<Bug className="h-5 w-5" />}
                 color="purple"
                 sub="Days to close"
                 link="/github-issue?state=closed"
@@ -66,7 +66,7 @@ export default function ManagementSection({
             <ActionCard
                 label="Overdue Tasks"
                 value={overdue_tasks}
-                icon={<AlertCircle className="w-5 h-5" />}
+                icon={<AlertCircle className="h-5 w-5" />}
                 color={overdue_tasks > 0 ? 'red' : 'green'}
                 sub={overdue_tasks > 0 ? 'Needs attention' : 'All on track'}
                 link="/task?overdue=1"
@@ -76,7 +76,7 @@ export default function ManagementSection({
             <ActionCard
                 label="Stale PRs (7+ days)"
                 value={stale_prs}
-                icon={<Clock className="w-5 h-5" />}
+                icon={<Clock className="h-5 w-5" />}
                 color="yellow"
                 sub="No activity in 7 days"
                 link="/pull-request?stale=1"
@@ -84,7 +84,7 @@ export default function ManagementSection({
             <ActionCard
                 label="PRs Needing Review"
                 value={prs_needing_review}
-                icon={<Eye className="w-5 h-5" />}
+                icon={<Eye className="h-5 w-5" />}
                 color="blue"
                 sub="Open PRs"
                 link="/pull-request?state=open"
@@ -92,7 +92,7 @@ export default function ManagementSection({
             <ActionCard
                 label="Inactive Devs (7+ days)"
                 value={inactive_developers}
-                icon={<Users className="w-5 h-5" />}
+                icon={<Users className="h-5 w-5" />}
                 color="red"
                 sub="No commits in 7 days"
                 link="/github-user?inactive=1"
@@ -100,7 +100,7 @@ export default function ManagementSection({
             <ActionCard
                 label="PR Merge Rate"
                 value={`${pr_merge_rate}%`}
-                icon={<FileCheck className="w-5 h-5" />}
+                icon={<FileCheck className="h-5 w-5" />}
                 color="green"
                 sub={`${prs_merged} merged / ${prs_total} total`}
                 link="/pull-request?state=merged"

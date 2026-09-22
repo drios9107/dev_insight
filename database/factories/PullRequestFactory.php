@@ -7,7 +7,6 @@ use App\Models\GithubRepository;
 use App\Models\GithubUser;
 use App\Models\PullRequest;
 use App\Models\Task;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

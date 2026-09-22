@@ -1,8 +1,6 @@
-// resources/js/components/metrics/TeamMembersList.tsx
-
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 import CardSectionWrapper from './card-section-wrapper';
 
 interface TeamMember {
@@ -18,7 +16,6 @@ interface TeamMember {
 
 interface TeamMembersListProps {
     members: TeamMember[];
-    title?: string;
 }
 
 const statusMap = {
@@ -27,41 +24,54 @@ const statusMap = {
     away: { label: 'Away', className: 'bg-red-100 text-red-800' },
 };
 
-export function TeamMembersList({ members, title = 'Team Members' }: TeamMembersListProps) {
+export function TeamMembersList({ members }: TeamMembersListProps) {
     return (
-        <CardSectionWrapper className="lg:grid-cols-2 gap-6">
+        <CardSectionWrapper className="gap-6 lg:grid-cols-2">
             <Card className="border-0 shadow-md">
                 <CardContent className="p-4">
-                    <div className="space-y-3 max-h-[400px] overflow-y-auto pr-1">
+                    <div className="max-h-[400px] space-y-3 overflow-y-auto pr-1">
                         {members.map((member, index) => (
                             <div
                                 key={index}
-                                className="flex items-center justify-between gap-4 p-2 rounded-lg hover:bg-gray-50 w-full"
+                                className="flex w-full items-center justify-between gap-4 rounded-lg p-2 hover:bg-gray-50"
                             >
                                 <div className="flex items-center gap-3">
-                                    <Avatar className="w-9 h-9">
-                                        <AvatarImage src={member.avatar || undefined} />
+                                    <Avatar className="h-9 w-9">
+                                        <AvatarImage
+                                            src={member.avatar || undefined}
+                                        />
                                         <AvatarFallback>
-                                            {member.name.charAt(0).toUpperCase()}
+                                            {member.name
+                                                .charAt(0)
+                                                .toUpperCase()}
                                         </AvatarFallback>
                                     </Avatar>
-                                    <div className="flex items-center gap-2 min-w-0 max-w-[160px]">
+                                    <div className="flex max-w-[160px] min-w-0 items-center gap-2">
                                         <p className="font-medium text-gray-900">
                                             {member.name}
                                         </p>
                                         <Badge
                                             variant="outline"
-                                            className={statusMap[member.status].className}
+                                            className={
+                                                statusMap[member.status]
+                                                    .className
+                                            }
                                         >
                                             {statusMap[member.status].label}
                                         </Badge>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-4 text-sm ml-2 whitespace-nowrap overflow-x-auto scrollbar-none">
-                                    <span className="text-gray-600">{member.commits} commits</span>
-                                    <span className="text-gray-600">{member.prs} PRs</span>
-                                    <span className="text-gray-600">{member.reviews} reviews</span>
-                                    <span className="text-xs text-gray-400 ml-1">
+                                <div className="ml-2 flex scrollbar-none items-center gap-4 overflow-x-auto text-sm whitespace-nowrap">
+                                    <span className="text-gray-600">
+                                        {member.commits} commits
+                                    </span>
+                                    <span className="text-gray-600">
+                                        {member.prs} PRs
+                                    </span>
+                                    <span className="text-gray-600">
+                                        {member.reviews} reviews
+                                    </span>
+                                    <span className="ml-1 text-xs text-gray-400">
                                         {member.last_active}
                                     </span>
                                 </div>

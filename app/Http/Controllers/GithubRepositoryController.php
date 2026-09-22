@@ -84,7 +84,7 @@ class GithubRepositoryController extends Controller
         try {
             $username = $request->input('ownerKey');
 
-            if (!$username) {
+            if (! $username) {
                 throw new \Exception('No github username was provided');
             }
 

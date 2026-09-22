@@ -1,4 +1,4 @@
-import { IUser } from "../user";
+import type { IUser } from '../user';
 
 export interface ITeam {
     id: number;
@@ -9,4 +9,4 @@ export interface ITeam {
     is_active: boolean;
     created_at: string;
     updated_at: string;
-} 
+}

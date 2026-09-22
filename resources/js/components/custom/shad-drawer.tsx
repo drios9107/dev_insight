@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import {
     Drawer,
     DrawerContent,
@@ -5,7 +6,6 @@ import {
     DrawerTitle,
     DrawerDescription,
 } from '@/components/ui/drawer';
-import { ReactNode } from 'react';
 
 interface IShadDrawer {
     title?: string;
@@ -23,18 +23,20 @@ const ShadDrawer = ({
     children,
 }: IShadDrawer) => {
     return (
-        <Drawer open={isOpen} onOpenChange={setIsOpen} direction='right'>
-            <DrawerContent className="w-full sm:w-[600px] flex flex-col">
-                <DrawerHeader className='pb-0'>
-                    {title && <DrawerTitle className='w-full text-center'>{title}</DrawerTitle>}
+        <Drawer open={isOpen} onOpenChange={setIsOpen} direction="right">
+            <DrawerContent className="flex w-full flex-col sm:w-[600px]">
+                <DrawerHeader className="pb-0">
+                    {title && (
+                        <DrawerTitle className="w-full text-center">
+                            {title}
+                        </DrawerTitle>
+                    )}
                     {description && (
                         <DrawerDescription>{description}</DrawerDescription>
                     )}
                 </DrawerHeader>
 
-                <div className="flex-1 overflow-y-auto p-4">
-                    {children}
-                </div>
+                <div className="flex-1 overflow-y-auto p-4">{children}</div>
             </DrawerContent>
         </Drawer>
     );

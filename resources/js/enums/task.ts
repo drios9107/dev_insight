@@ -1,10 +1,9 @@
-
 export const TaskPriorityEnum = {
     low: 'Low',
     medium: 'Medium',
     high: 'High',
     critical: 'Critical',
-}
+};
 
 export const TaskStatusEnum = {
     backlog: 'Backlog',
@@ -13,9 +12,9 @@ export const TaskStatusEnum = {
     review: 'Review',
     done: 'Done',
     cancelled: 'Cancelled',
-}
+};
 
+export type TTaskPriority = 'low' | 'medium' | 'high' | 'critical';
 
-export type TTaskPriority = 'low' | 'medium' | 'high' | 'critical'
-
-export type TTaskStatus = 'backlog' | 'todo' | 'in_progress' | 'review' | 'done' | 'cancelled'
+export type TTaskStatus =
+    'backlog' | 'todo' | 'in_progress' | 'review' | 'done' | 'cancelled';

@@ -1,8 +1,8 @@
-import { TTaskPriority, TTaskStatus } from "@/enums/task";
-import { IUser } from "../user";
-import { IProject } from "./project";
-import { ISprint } from "./sprint";
-import { IGithubsIssue } from "./github-issue";
+import type { TTaskPriority, TTaskStatus } from '@/enums/task';
+import type { IUser } from '../user';
+import type { IGithubsIssue } from './github-issue';
+import type { IProject } from './project';
+import type { ISprint } from './sprint';
 
 export interface ITask {
     id: number;
@@ -24,4 +24,4 @@ export interface ITask {
     created_at: string;
     updated_at: string;
     deleted_at?: string;
-} 
+}

@@ -1,6 +1,6 @@
-import { IUser } from "../user";
-import { IGithubRepository } from "./github-repository";
-import { ITask } from "./task";
+import type { IUser } from '../user';
+import type { IGithubRepository } from './github-repository';
+import type { ITask } from './task';
 
 export interface IPullRequest {
     id: number;
@@ -22,4 +22,4 @@ export interface IPullRequest {
     updated_at: string;
 }
 
-export type TPullRequestState = 'open' | 'closed' | 'merged'
+export type TPullRequestState = 'open' | 'closed' | 'merged';

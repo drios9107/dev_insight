@@ -1,5 +1,5 @@
-import { IUser } from "../user";
-import { IPullRequest } from "./pull-request";
+import type { IUser } from '../user';
+import type { IPullRequest } from './pull-request';
 
 export interface IPullRequestReview {
     id: number;
@@ -13,4 +13,5 @@ export interface IPullRequestReview {
     updated_at: string;
 }
 
-export type TPullRequestReviewState = 'approved' | 'changes_requested' | 'commented' | 'dismissed'
+export type TPullRequestReviewState =
+    'approved' | 'changes_requested' | 'commented' | 'dismissed';

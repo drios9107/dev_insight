@@ -1,7 +1,7 @@
-import { IUser } from "../user";
-import { IProject } from "./project";
-import { ITask } from "./task";
-import { ITeam } from "./team";
+import type { IUser } from '../user';
+import type { IProject } from './project';
+import type { ITask } from './task';
+import type { ITeam } from './team';
 
 export interface IActivityLog {
     id: number;

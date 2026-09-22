@@ -1,17 +1,18 @@
-import { DataTable, IColumn } from "@/components/custom/table/data-table";
-import { IGithubUser } from "@/types/models/github-user";
-import { Head, router } from "@inertiajs/react";
-import { useCallback, useState } from "react";
-import { toast } from "sonner";
-import Header from "@/components/custom/header";
-import { DeleteModal } from "@/components/custom/delete-modal";
-import BodyWrapper from "@/components/custom/body-wrapper";
-import githubUser from "@/routes/github-user";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ICheck } from "@/components/custom/table/data-table-filters";
+import { Head, router } from '@inertiajs/react';
+import { useCallback, useState } from 'react';
+import { toast } from 'sonner';
+import BodyWrapper from '@/components/custom/body-wrapper';
+import { DeleteModal } from '@/components/custom/delete-modal';
+import Header from '@/components/custom/header';
+import { DataTable } from '@/components/custom/table/data-table';
+import type { IColumn } from '@/components/custom/table/data-table';
+import type { ICheck } from '@/components/custom/table/data-table-filters';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import githubUser from '@/routes/github-user';
+import type { IGithubUser } from '@/types/models/github-user';
 
 const GithubUsers = (props: any) => {
-    const [itemToDelete, setItemToDelete] = useState<IGithubUser | null>(null)
+    const [itemToDelete, setItemToDelete] = useState<IGithubUser | null>(null);
 
     const columns: IColumn[] = [
         {
@@ -19,7 +20,7 @@ const GithubUsers = (props: any) => {
             label: 'Avatar',
             align: 'center',
             render: (value: string, row: IGithubUser) => (
-                <Avatar className="w-8 h-8">
+                <Avatar className="h-8 w-8">
                     <AvatarImage src={value || undefined} />
                     <AvatarFallback>
                         {row.display_name?.charAt(0).toUpperCase() || 'U'}
@@ -77,8 +78,12 @@ const GithubUsers = (props: any) => {
             onChange: (value: boolean) => {
                 router.get(
                     githubUser.index().url,
-                    { ...props?.filters, inactive: value ? 1 : undefined, page: 1 },
-                    { preserveState: true, preserveScroll: true }
+                    {
+                        ...props?.filters,
+                        inactive: value ? 1 : undefined,
+                        page: 1,
+                    },
+                    { preserveState: true, preserveScroll: true },
                 );
             },
         },
@@ -87,33 +92,39 @@ const GithubUsers = (props: any) => {
     const onDelete = useCallback(() => {
         if (itemToDelete) {
             router.delete(githubUser.destroy(itemToDelete!.id).url, {
-                onSuccess: () => toast.success('GitHub user deleted successfully'),
-                onError: (error) => toast.error(`Deletion failed: ${error?.message}`),
-                onFinish: () => setItemToDelete(null)
-            })
+                onSuccess: () =>
+                    toast.success('GitHub user deleted successfully'),
+                onError: (error) =>
+                    toast.error(`Deletion failed: ${error?.message}`),
+                onFinish: () => setItemToDelete(null),
+            });
         }
-    }, [itemToDelete])
+    }, [itemToDelete]);
 
     const onClose = useCallback(() => {
-        setItemToDelete(null)
-    }, [setItemToDelete])
+        setItemToDelete(null);
+    }, [setItemToDelete]);
 
-    return <>
-        <Head title={props.title} />
-        <h1 className="sr-only">{props.title}</h1>
-        <Header title={props.title} />
-        <BodyWrapper>
-            <DataTable
-                data={props.list}
-                columns={columns}
-                checks={checksOptions}
-                initialFilters={props.filters}
-                onDelete={setItemToDelete}
-            />
+    return (
+        <>
+            <Head title={props.title} />
+            <h1 className="sr-only">{props.title}</h1>
+            <Header title={props.title} />
+            <BodyWrapper>
+                <DataTable
+                    data={props.list}
+                    columns={columns}
+                    checks={checksOptions}
+                    initialFilters={props.filters}
+                    onDelete={setItemToDelete}
+                />
 
-            {itemToDelete && <DeleteModal onClose={onClose} onClick={onDelete} />}
-        </BodyWrapper>
-    </>
-}
+                {itemToDelete && (
+                    <DeleteModal onClose={onClose} onClick={onDelete} />
+                )}
+            </BodyWrapper>
+        </>
+    );
+};
 
 export default GithubUsers;

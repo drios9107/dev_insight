@@ -28,7 +28,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('/activity-log', ActivityLogController::class)->only($apiRoutes);
     });
 
-    //selectors
+    // selectors
     Route::get('all-comments', [CommentController::class, 'all'])->name('comment.all');
     Route::get('all-commits', [CommitController::class, 'all'])->name('commit.all');
     Route::get('all-githubs-issue', [GithubIssueController::class, 'all'])->name('github-issue.all');
@@ -44,8 +44,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('all-users', [UserController::class, 'all'])->name('user.all');
     Route::get('all-github-users', [GithubUserController::class, 'all'])->name('github-user.all');
 
-
-    //table lists
+    // table lists
     Route::resource('/comment', CommentController::class)->only($apiRoutes);
     Route::resource('/commit', CommitController::class)->only($apiRoutes);
     Route::resource('/github-issue', GithubIssueController::class)->only($apiRoutes);
@@ -61,18 +60,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/user', UserController::class)->only($apiRoutes);
     Route::resource('/github-user', GithubUserController::class)->only($apiRoutes);
 
-    //task comments
+    // task comments
     Route::get('/task/{task}/comments', [CommentController::class, 'indexForTask'])
         ->name('task.comments.index');
 
     Route::post('/task/{task}/comment', [CommentController::class, 'storeForTask'])
         ->name('task.comments.store');
 
-
-    //dashboard
+    // dashboard
     Route::get('metric', [MetricController::class, 'index'])->name('metric.index');
 
-    //sync
+    // sync
     Route::post('/github/sync/{repositoryId}', [GithubController::class, 'sync'])
         ->name('github.sync');
 
@@ -80,4 +78,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('github-repository.sync-all');
 });
 
-require __DIR__ . '/settings.php';
+require __DIR__.'/settings.php';

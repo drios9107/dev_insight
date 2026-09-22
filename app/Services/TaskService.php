@@ -13,7 +13,7 @@ class TaskService
         $query = Task::query();
 
         if ($request && $request->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('description', 'ilike', $search)
@@ -83,6 +83,7 @@ class TaskService
     public function update(int $id, array $data): bool
     {
         $updated = $this->updateStatus($data);
+
         return Task::whereId($id)->update($updated) !== null;
     }
 
@@ -99,15 +100,16 @@ class TaskService
 
     /**
      * When the status is done the 'completed_at' field takes the current date and time, with any other value completed value is cleared
-     * @param array $data
+     *
      * @return $data
      */
     private function updateStatus(array $data)
     {
         if ($data['status'] === TaskStatusEnum::Done->value) {
             $data['completed_at'] = now();
-        } else
+        } else {
             $data['completed_at'] = null;
+        }
 
         return $data;
     }

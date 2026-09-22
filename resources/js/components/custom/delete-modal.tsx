@@ -1,3 +1,5 @@
+import { Trash } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
@@ -6,15 +8,13 @@ import {
     DialogDescription,
     DialogFooter,
     DialogClose,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Loader } from "./loader"
-import { Trash } from "lucide-react"
+} from '@/components/ui/dialog';
+import { Loader } from './loader';
 
 interface DeleteModalProps {
-    onClose: () => void
-    onClick: () => void
-    isLoading?: boolean
+    onClose: () => void;
+    onClick: () => void;
+    isLoading?: boolean;
 }
 
 export function DeleteModal({ onClose, onClick, isLoading }: DeleteModalProps) {
@@ -33,16 +33,18 @@ export function DeleteModal({ onClose, onClick, isLoading }: DeleteModalProps) {
                 {isLoading && <Loader />}
 
                 <DialogFooter className="flex justify-center">
-                    <Button type="button" onClick={onClick}><Trash />Delete</Button>
+                    <Button type="button" onClick={onClick}>
+                        <Trash />
+                        Delete
+                    </Button>
                     <DialogClose asChild>
                         <Button variant="outline">Close</Button>
                     </DialogClose>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
-    )
+    );
 }
-
 
 // background gradient
 // bg-gradient-to-b from-[#f7fbff] to-[#eef4ff]

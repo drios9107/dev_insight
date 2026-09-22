@@ -16,7 +16,7 @@ class CommentService
         $query = Comment::query()->with(['user', 'task', 'parent']);
 
         if ($request && $request->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('content', 'ilike', $search)
                     ->orWhereHas('user', function ($u) use ($search) {

@@ -9,9 +9,9 @@ import {
 import { UserInfo } from '@/components/user-info';
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 import { logout } from '@/routes';
+import notification from '@/routes/notification';
 import { edit } from '@/routes/profile';
 import type { User } from '@/types';
-import notification from '@/routes/notification';
 
 type Props = {
     user: User;

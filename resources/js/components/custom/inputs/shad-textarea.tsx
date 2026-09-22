@@ -1,14 +1,27 @@
-import { Label } from "@/components/ui/label"
-import Textarea from "@/components/ui/textarea"
-import { IHtmlWithLabel } from "@/types"
+import { Label } from '@/components/ui/label';
+import Textarea from '@/components/ui/textarea';
+import type { IHtmlWithLabel } from '@/types';
 
-const ShadTextarea = ({ label, id, name, value, onChange, errors, rows = 4, ...props }: IHtmlWithLabel & React.ComponentProps<typeof Textarea>) => {
+const ShadTextarea = ({
+    label,
+    id,
+    name,
+    value,
+    onChange,
+    errors,
+    rows = 4,
+    ...props
+}: IHtmlWithLabel & React.ComponentProps<typeof Textarea>) => {
     return (
         <div className="flex flex-col gap-2">
-            {label && <Label htmlFor={id ?? name}>
-                {label}
-                {props.required && <span className="text-red-500 ml-1">*</span>}
-            </Label>}
+            {label && (
+                <Label htmlFor={id ?? name}>
+                    {label}
+                    {props.required && (
+                        <span className="ml-1 text-red-500">*</span>
+                    )}
+                </Label>
+            )}
             <Textarea
                 id={id ?? name}
                 name={name}
@@ -17,9 +30,16 @@ const ShadTextarea = ({ label, id, name, value, onChange, errors, rows = 4, ...p
                 rows={rows}
                 {...props}
             />
-            {name && errors?.[name] && <span className="text-red-600 text-sm px-1" style={{ marginTop: -8 }}>{errors[name]}</span>}
+            {name && errors?.[name] && (
+                <span
+                    className="px-1 text-sm text-red-600"
+                    style={{ marginTop: -8 }}
+                >
+                    {errors[name]}
+                </span>
+            )}
         </div>
-    )
-}
+    );
+};
 
-export default ShadTextarea
+export default ShadTextarea;

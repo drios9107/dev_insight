@@ -1,8 +1,8 @@
+import { Pencil, Trash2, Database, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Pencil, Trash2, RefreshCw, Database, Eye } from 'lucide-react';
 
 interface ITableActions {
-    item: any,
+    item: any;
     onView?: (v: any) => void;
     onEdit?: (v: any) => void;
     onDelete?: (id: number) => void;
@@ -23,9 +23,9 @@ export function TableActions({
                     variant="outline"
                     size="sm"
                     onClick={() => onSync(item)}
-                    className='text-yellow-600 cursor-pointer'
+                    className="cursor-pointer text-yellow-600"
                 >
-                    <Database className="w-4 h-4" />
+                    <Database className="h-4 w-4" />
                 </Button>
             )}
 
@@ -34,9 +34,9 @@ export function TableActions({
                     variant="outline"
                     size="sm"
                     onClick={() => onView(item)}
-                    className='text-green-600 cursor-pointer'
+                    className="cursor-pointer text-green-600"
                 >
-                    <Eye className="w-4 h-4" />
+                    <Eye className="h-4 w-4" />
                 </Button>
             )}
 
@@ -45,9 +45,9 @@ export function TableActions({
                     variant="outline"
                     size="sm"
                     onClick={() => onEdit(item)}
-                    className='text-blue-600 cursor-pointer'
+                    className="cursor-pointer text-blue-600"
                 >
-                    <Pencil className="w-4 h-4" />
+                    <Pencil className="h-4 w-4" />
                 </Button>
             )}
 
@@ -56,9 +56,9 @@ export function TableActions({
                     variant="outline"
                     size="sm"
                     onClick={() => onDelete(item.id)}
-                    className='text-red-600 cursor-pointer'
+                    className="cursor-pointer text-red-600"
                 >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="h-4 w-4" />
                 </Button>
             )}
         </div>

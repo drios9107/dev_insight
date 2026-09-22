@@ -1,8 +1,8 @@
 interface BaseProps {
-    title: string,
+    title: string;
     value?: string | number;
-    href?: string
-    onClick?: () => void
+    href?: string;
+    onClick?: () => void;
 }
 
 // interface UrlProps extends BaseProps {
@@ -11,18 +11,29 @@ interface BaseProps {
 
 // type TRowDataProps = BaseProps | UrlProps
 
-
 const RowData = ({ title, value, href, onClick }: BaseProps) => {
-    if (!value) return null
+    if (!value) {
+        return null;
+    }
 
-    return <div className="flex gap-1 justify-start items-start">
-        <span className="font-semibold" style={{ userSelect: 'none' }}>
-            {title}:
-        </span>
-        {href ?
-            <a href={href} className="text-blue-600 font-small" style={{ lineBreak: 'anywhere' }}>{value}</a> :
-            <span onClick={onClick}>{value}</span>}
-    </div>
-}
+    return (
+        <div className="flex items-start justify-start gap-1">
+            <span className="font-semibold" style={{ userSelect: 'none' }}>
+                {title}:
+            </span>
+            {href ? (
+                <a
+                    href={href}
+                    className="font-small text-blue-600"
+                    style={{ lineBreak: 'anywhere' }}
+                >
+                    {value}
+                </a>
+            ) : (
+                <span onClick={onClick}>{value}</span>
+            )}
+        </div>
+    );
+};
 
 export default RowData;

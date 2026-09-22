@@ -1,27 +1,25 @@
-import { useState, useEffect, useMemo } from 'react';
 import { router } from '@inertiajs/react';
-import { PaginatedData } from '@/components/custom/table/data-table';
+import { useState } from 'react';
+import type { PaginatedData } from '@/components/custom/table/data-table';
 
 interface IFilters {
     search?: string;
     sort?: string;
     direction?: 'asc' | 'desc';
-    per_page?: number
-    page?: number
+    per_page?: number;
+    page?: number;
 }
 
 interface IUseTableProps {
-    data: PaginatedData,
-    filters?: IFilters,
-    searchFields?: string[],
-    sortFields?: string[],
-    perPage?: number,
+    data: PaginatedData;
+    filters?: IFilters;
+    sortFields?: string[];
+    perPage?: number;
 }
 
 export function useTable({
     data,
     filters: initialFilters = {},
-    searchFields = [],
     sortFields = [],
     perPage = 10,
 }: IUseTableProps) {
@@ -45,18 +43,18 @@ export function useTable({
             updated.page = 1;
         }
 
-        router.get(
-            window.location.pathname,
-            updated,
-            { preserveState: true, preserveScroll: true }
-        );
+        router.get(window.location.pathname, updated, {
+            preserveState: true,
+            preserveScroll: true,
+        });
     };
 
     // Sort
     const handleSort = (field: string) => {
-        const direction = filters.sort === field && filters.direction === 'asc'
-            ? 'desc'
-            : 'asc';
+        const direction =
+            filters.sort === field && filters.direction === 'asc'
+                ? 'desc'
+                : 'asc';
         updateFilters({ sort: field, direction });
     };
 
@@ -77,10 +75,10 @@ export function useTable({
 
     // Select rows
     const toggleRowSelection = (id: number) => {
-        setSelectedRows(prev =>
+        setSelectedRows((prev) =>
             prev.includes(id)
-                ? prev.filter(rowId => rowId !== id)
-                : [...prev, id]
+                ? prev.filter((rowId) => rowId !== id)
+                : [...prev, id],
         );
     };
 
@@ -88,7 +86,7 @@ export function useTable({
         if (selectedRows.length === data.data?.length) {
             setSelectedRows([]);
         } else {
-            setSelectedRows(data.data?.map(item => item.id) || []);
+            setSelectedRows(data.data?.map((item) => item.id) || []);
         }
     };
 

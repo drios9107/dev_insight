@@ -1,10 +1,18 @@
-import { Table, Box, Text, Button, ThemeContext, useThemeContext } from '@radix-ui/themes';
+import {
+    Table,
+    Box,
+    Text,
+    Button,
+    ThemeContext,
+    useThemeContext,
+} from '@radix-ui/themes';
+import { useMemo } from 'react';
+import { useTable } from '../../../hooks/use-table';
 import { ColumnHeader } from './column-header';
-import { DataTableFilters, ICheck, IFilter } from './data-table-filters';
+import type { ICheck, IFilter } from './data-table-filters';
+import { DataTableFilters } from './data-table-filters';
 import { DataTablePagination } from './data-table-pagination';
 import { TableActions } from './table-actions';
-import { useTable } from '../../../hooks/use-table';
-import { useMemo } from 'react';
 
 export interface BaseEntity {
     id: number;
@@ -71,17 +79,14 @@ export function DataTable({
     columns,
     filters = [],
     checks = [],
-    searchFields = [],
-    // initialFilters = {},
     onEdit,
     onDelete,
     onBulkDelete,
     onView,
     onSync,
     selectable = false,
-    className = '',
 }: IDataTableProps) {
-    const theme = useThemeContext()
+    const theme = useThemeContext();
     const {
         handleSort,
         handleSearch,
@@ -95,13 +100,15 @@ export function DataTable({
         search,
     } = useTable({
         data,
-        searchFields,
-        sortFields: columns.filter(i => i.sortable).map(i => i.key),
+        sortFields: columns.filter((i) => i.sortable).map((i) => i.key),
     });
 
     const items = useMemo(() => data?.data || [], [data?.data]);
 
-    const hasActions = useMemo(() => onView || onEdit || onDelete || onSync || onBulkDelete, [onView, onEdit, onDelete, onSync, onBulkDelete])
+    const hasActions = useMemo(
+        () => onView || onEdit || onDelete || onSync || onBulkDelete,
+        [onView, onEdit, onDelete, onSync, onBulkDelete],
+    );
 
     return (
         <ThemeContext value={theme}>
@@ -115,10 +122,8 @@ export function DataTable({
 
             {/* Actions bar*/}
             {selectedRows.length > 0 && onBulkDelete && (
-                <div className="flex items-center gap-3 mb-3 p-2 bg-blue-50 rounded">
-                    <Text size="2">
-                        {selectedRows.length} seleccionados
-                    </Text>
+                <div className="mb-3 flex items-center gap-3 rounded bg-blue-50 p-2">
+                    <Text size="2">{selectedRows.length} seleccionados</Text>
                     <Button
                         variant="solid"
                         color="red"
@@ -138,7 +143,7 @@ export function DataTable({
             )}
 
             {/* Table */}
-            <Box className="overflow-x-auto border rounded-lg w-full datatable-container">
+            <Box className="datatable-container w-full overflow-x-auto rounded-lg border">
                 <Table.Root variant="surface" size="2">
                     <Table.Header>
                         <Table.Row>
@@ -147,7 +152,10 @@ export function DataTable({
                                 <Table.ColumnHeaderCell className="w-8">
                                     <input
                                         type="checkbox"
-                                        checked={items.length > 0 && selectedRows.length === items.length}
+                                        checked={
+                                            items.length > 0 &&
+                                            selectedRows.length === items.length
+                                        }
                                         onChange={toggleAllRows}
                                         className="rounded border-gray-300"
                                     />
@@ -162,7 +170,11 @@ export function DataTable({
                                     label={col.label}
                                     sortField={sortField}
                                     sortDirection={sortDirection}
-                                    onSort={col.sortable !== false ? handleSort : undefined}
+                                    onSort={
+                                        col.sortable !== false
+                                            ? handleSort
+                                            : undefined
+                                    }
                                     align={col.align || 'left'}
                                     className={col.className}
                                 />
@@ -170,7 +182,7 @@ export function DataTable({
 
                             {/* Actions */}
                             {hasActions && (
-                                <Table.ColumnHeaderCell className="w-30 text-center bg-blue-100 text-gray-600">
+                                <Table.ColumnHeaderCell className="w-30 bg-blue-100 text-center text-gray-600">
                                     Actions
                                 </Table.ColumnHeaderCell>
                             )}
@@ -181,8 +193,12 @@ export function DataTable({
                         {items.length === 0 ? (
                             <Table.Row>
                                 <Table.Cell
-                                    colSpan={columns.length + (hasActions ? 1 : 0) + (selectable ? 1 : 0)}
-                                    className="text-center py-8"
+                                    colSpan={
+                                        columns.length +
+                                        (hasActions ? 1 : 0) +
+                                        (selectable ? 1 : 0)
+                                    }
+                                    className="py-8 text-center"
                                 >
                                     <Text color="gray" size="2">
                                         No hay datos para mostrar
@@ -191,14 +207,21 @@ export function DataTable({
                             </Table.Row>
                         ) : (
                             items.map((item) => (
-                                <Table.Row key={item.id} className="h-[52px] hover:bg-gray-100 transition-colors duration-150">
+                                <Table.Row
+                                    key={item.id}
+                                    className="h-[52px] transition-colors duration-150 hover:bg-gray-100"
+                                >
                                     {/* Checkbox */}
                                     {selectable && (
-                                        <Table.Cell className='px-4 py-3'>
+                                        <Table.Cell className="px-4 py-3">
                                             <input
                                                 type="checkbox"
-                                                checked={selectedRows.includes(item.id)}
-                                                onChange={() => toggleRowSelection(item.id)}
+                                                checked={selectedRows.includes(
+                                                    item.id,
+                                                )}
+                                                onChange={() =>
+                                                    toggleRowSelection(item.id)
+                                                }
                                                 className="rounded border-gray-300"
                                             />
                                         </Table.Cell>
@@ -206,16 +229,26 @@ export function DataTable({
 
                                     {/* Data */}
                                     {columns.map((col) => (
-                                        <Table.Cell key={col.key} align={col.align || 'left'} className='px-4'>
+                                        <Table.Cell
+                                            key={col.key}
+                                            align={col.align || 'left'}
+                                            className="px-4"
+                                        >
                                             {col.render
-                                                ? col.render(item[col.key], item)
-                                                : item[col.key] ?? '-'}
+                                                ? col.render(
+                                                      item[col.key],
+                                                      item,
+                                                  )
+                                                : (item[col.key] ?? '-')}
                                         </Table.Cell>
                                     ))}
 
                                     {/* Actions */}
                                     {hasActions && (
-                                        <Table.Cell align="right" className='px-4 py-3'>
+                                        <Table.Cell
+                                            align="right"
+                                            className="px-4 py-3"
+                                        >
                                             <TableActions
                                                 item={item}
                                                 onView={onView}

@@ -1,23 +1,26 @@
-import { DataTable, IColumn } from "@/components/custom/table/data-table";
-import { IGithubRepository } from "@/types/models/github-repository";
-import { Head, router } from "@inertiajs/react";
-import { useCallback, useState } from "react";
-import { toast } from "sonner";
-import Header from "@/components/custom/header";
-import { DeleteModal } from "@/components/custom/delete-modal";
-import BodyWrapper from "@/components/custom/body-wrapper";
-import githubRepository from "@/routes/github-repository";
-import { Badge } from "@/components/ui/badge";
-import { ExternalLink, RefreshCw } from "lucide-react";
-import { SimpleModal } from "@/components/custom/simple-modal";
-import ShadInput from "@/components/custom/inputs/shad-input";
-import { Button } from "@/components/ui/button";
+import { Head, router } from '@inertiajs/react';
+import { ExternalLink, RefreshCw } from 'lucide-react';
+import { useCallback, useState } from 'react';
+import { toast } from 'sonner';
+import BodyWrapper from '@/components/custom/body-wrapper';
+import { DeleteModal } from '@/components/custom/delete-modal';
+import Header from '@/components/custom/header';
+import ShadInput from '@/components/custom/inputs/shad-input';
+import { SimpleModal } from '@/components/custom/simple-modal';
+import { DataTable } from '@/components/custom/table/data-table';
+import type { IColumn } from '@/components/custom/table/data-table';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import githubRepository from '@/routes/github-repository';
+import type { IGithubRepository } from '@/types/models/github-repository';
 
 const GithubRepositories = (props: any) => {
-    const [itemToDelete, setItemToDelete] = useState<IGithubRepository | null>(null)
-    const [showSyncModal, setShowSyncModal] = useState(false)
-    const [isSyncing, setIsSyncing] = useState(false)
-    const [username, setUsername] = useState(props?.github_username ?? '')
+    const [itemToDelete, setItemToDelete] = useState<IGithubRepository | null>(
+        null,
+    );
+    const [showSyncModal, setShowSyncModal] = useState(false);
+    const [isSyncing, setIsSyncing] = useState(false);
+    const [username, setUsername] = useState(props?.github_username ?? '');
 
     const columns: IColumn[] = [
         {
@@ -50,7 +53,7 @@ const GithubRepositories = (props: any) => {
             key: 'url',
             label: 'Link',
             align: 'center',
-            render: (value: string) => (
+            render: (value: string) =>
                 value ? (
                     <a
                         href={value}
@@ -58,10 +61,11 @@ const GithubRepositories = (props: any) => {
                         rel="noopener noreferrer"
                         className="text-blue-600 hover:text-blue-800"
                     >
-                        <ExternalLink className="w-4 h-4 inline" />
+                        <ExternalLink className="inline h-4 w-4" />
                     </a>
-                ) : '-'
-            ),
+                ) : (
+                    '-'
+                ),
         },
     ];
 
@@ -74,7 +78,7 @@ const GithubRepositories = (props: any) => {
                 router.get(
                     githubRepository.index().url,
                     { ...props?.filters, is_private: value, page: 1 },
-                    { preserveState: true, preserveScroll: true }
+                    { preserveState: true, preserveScroll: true },
                 );
             },
             options: [
@@ -82,25 +86,30 @@ const GithubRepositories = (props: any) => {
                 { value: '1', label: 'Private' },
                 { value: '0', label: 'Public' },
             ],
-            addAll: false
+            addAll: false,
         },
     ];
 
     const onDelete = useCallback(() => {
         if (itemToDelete) {
             router.delete(githubRepository.destroy(itemToDelete!.id).url, {
-                onSuccess: () => toast.success('Repository deleted successfully'),
-                onError: (error) => toast.error(`Repository deletion failed: ${error?.message}`),
-                onFinish: () => setItemToDelete(null)
-            })
+                onSuccess: () =>
+                    toast.success('Repository deleted successfully'),
+                onError: (error) =>
+                    toast.error(
+                        `Repository deletion failed: ${error?.message}`,
+                    ),
+                onFinish: () => setItemToDelete(null),
+            });
         }
-    }, [itemToDelete])
+    }, [itemToDelete]);
 
-    const onClose = useCallback(() => setItemToDelete(null), [setItemToDelete])
+    const onClose = useCallback(() => setItemToDelete(null), [setItemToDelete]);
 
     const handleSyncAll = useCallback(() => {
         if (!username.trim()) {
             toast.error('Please enter a GitHub username');
+
             return;
         }
 
@@ -123,65 +132,78 @@ const GithubRepositories = (props: any) => {
                     }
                 },
                 onFinish: () => setIsSyncing(false),
-            }
+            },
         );
     }, [username, setShowSyncModal, setIsSyncing]);
 
-    return <>
-        <Head title={props.title} />
-        <h1 className="sr-only">{props.title}</h1>
-        <Header title={props.title} >
-            <Button
-                onClick={() => setShowSyncModal(true)}
-                disabled={isSyncing}
-                variant="outline"
-                className="gap-2"
-            >
-                <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
-                {isSyncing ? 'Syncing...' : 'Sync All Repos'}
-            </Button>
-        </Header>
+    return (
+        <>
+            <Head title={props.title} />
+            <h1 className="sr-only">{props.title}</h1>
+            <Header title={props.title}>
+                <Button
+                    onClick={() => setShowSyncModal(true)}
+                    disabled={isSyncing}
+                    variant="outline"
+                    className="gap-2"
+                >
+                    <RefreshCw
+                        className={`h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`}
+                    />
+                    {isSyncing ? 'Syncing...' : 'Sync All Repos'}
+                </Button>
+            </Header>
 
-        <BodyWrapper>
-            <DataTable
-                data={props.list}
-                columns={columns}
-                filters={filterOptions}
-                initialFilters={props.filters}
-                onDelete={setItemToDelete}
-            />
+            <BodyWrapper>
+                <DataTable
+                    data={props.list}
+                    columns={columns}
+                    filters={filterOptions}
+                    initialFilters={props.filters}
+                    onDelete={setItemToDelete}
+                />
 
-            {itemToDelete && <DeleteModal onClose={onClose} onClick={onDelete} />}
-        </BodyWrapper>
+                {itemToDelete && (
+                    <DeleteModal onClose={onClose} onClick={onDelete} />
+                )}
+            </BodyWrapper>
 
-        {showSyncModal && (
-            <SimpleModal
-                title="Sync GitHub Repositories"
-                description="Enter a GitHub username to sync all their repositories"
-                onClose={() => setShowSyncModal(false)}
-                onClick={handleSyncAll}
-                isLoading={isSyncing}
-                confirmText="Sync"
-                height={null}
-            >
-                <div className="space-y-4 py-4">
-                    <div className="space-y-2">
-                        <ShadInput required label="Github username" name="github-username" value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            disabled={isSyncing}
-                            placeholder="drios9107"
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') handleSyncAll();
-                            }}
-                        />
-                        <p className="text-xs text-gray-500">
-                            This will fetch and sync all public and private repositories of the user
-                        </p>
+            {showSyncModal && (
+                <SimpleModal
+                    title="Sync GitHub Repositories"
+                    description="Enter a GitHub username to sync all their repositories"
+                    onClose={() => setShowSyncModal(false)}
+                    onClick={handleSyncAll}
+                    isLoading={isSyncing}
+                    confirmText="Sync"
+                    height={null}
+                >
+                    <div className="space-y-4 py-4">
+                        <div className="space-y-2">
+                            <ShadInput
+                                required
+                                label="Github username"
+                                name="github-username"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                disabled={isSyncing}
+                                placeholder="drios9107"
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        handleSyncAll();
+                                    }
+                                }}
+                            />
+                            <p className="text-xs text-gray-500">
+                                This will fetch and sync all public and private
+                                repositories of the user
+                            </p>
+                        </div>
                     </div>
-                </div>
-            </SimpleModal>
-        )}
-    </>
-}
+                </SimpleModal>
+            )}
+        </>
+    );
+};
 
 export default GithubRepositories;

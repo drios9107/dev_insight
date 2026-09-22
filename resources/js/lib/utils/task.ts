@@ -1,6 +1,13 @@
-import { TTaskPriority, TTaskStatus } from '@/enums/task';
+import type { TTaskPriority, TTaskStatus } from '@/enums/task';
 
-type BadgeVariant = 'default' | 'secondary' | 'info' | 'warning' | 'success' | 'destructive' | 'outline';
+type BadgeVariant =
+    | 'default'
+    | 'secondary'
+    | 'info'
+    | 'warning'
+    | 'success'
+    | 'destructive'
+    | 'outline';
 
 export function getTaskStatusColor(status: TTaskStatus): BadgeVariant {
     const mapping: Record<TTaskStatus, BadgeVariant> = {
@@ -11,6 +18,7 @@ export function getTaskStatusColor(status: TTaskStatus): BadgeVariant {
         done: 'success',
         cancelled: 'destructive',
     };
+
     return mapping[status];
 }
 
@@ -21,5 +29,6 @@ export function getTaskPriorityColor(priority: TTaskPriority): BadgeVariant {
         high: 'warning',
         critical: 'destructive',
     };
+
     return mapping[priority];
 }

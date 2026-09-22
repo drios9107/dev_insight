@@ -6,7 +6,6 @@ use App\Enums\GithubIssueStateEnum;
 use App\Models\GithubIssue;
 use App\Models\GithubRepository;
 use App\Models\GithubUser;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

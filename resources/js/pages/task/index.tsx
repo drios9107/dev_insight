@@ -1,22 +1,24 @@
-import { DataTable, IColumn } from "@/components/custom/table/data-table";
-import { Head, router } from "@inertiajs/react";
-import { useCallback, useState } from "react";
-import task from "@/routes/task";
-import { toast } from "sonner";
-import { TaskPriorityEnum, TaskStatusEnum, TTaskPriority, TTaskStatus } from "@/enums/task";
-import CustomForm from "@/components/custom/forms/tasks-form";
-import Header from "@/components/custom/header";
-import { DeleteModal } from "@/components/custom/delete-modal";
-import BodyWrapper from "@/components/custom/body-wrapper";
-import { Badge } from "@/components/ui/badge";
-import { ITask } from "@/types/models/task";
-import { TaskDetails } from "@/components/custom/details/task-details";
-import { getTaskPriorityColor, getTaskStatusColor } from "@/lib/utils/task";
+import { Head, router } from '@inertiajs/react';
+import { useCallback, useState } from 'react';
+import { toast } from 'sonner';
+import BodyWrapper from '@/components/custom/body-wrapper';
+import { DeleteModal } from '@/components/custom/delete-modal';
+import { TaskDetails } from '@/components/custom/details/task-details';
+import CustomForm from '@/components/custom/forms/tasks-form';
+import Header from '@/components/custom/header';
+import { DataTable } from '@/components/custom/table/data-table';
+import type { IColumn } from '@/components/custom/table/data-table';
+import { Badge } from '@/components/ui/badge';
+import { TaskPriorityEnum, TaskStatusEnum } from '@/enums/task';
+import type { TTaskPriority, TTaskStatus } from '@/enums/task';
+import { getTaskPriorityColor, getTaskStatusColor } from '@/lib/utils/task';
+import task from '@/routes/task';
+import type { ITask } from '@/types/models/task';
 
 const Tasks = (props: any) => {
-    const [isOpen, setIsOpen] = useState(false)
-    const [itemToDelete, setItemToDelete] = useState<ITask | null>(null)
-    const [itemToEdit, setItemToEdit] = useState<ITask | null>(null)
+    const [isOpen, setIsOpen] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState<ITask | null>(null);
+    const [itemToEdit, setItemToEdit] = useState<ITask | null>(null);
     const [itemToView, setItemToView] = useState<ITask | null>(null);
 
     const columns: IColumn[] = [
@@ -24,7 +26,7 @@ const Tasks = (props: any) => {
             key: 'title',
             label: 'Title',
             sortable: true,
-            className: 'min-w-[300px]'
+            className: 'min-w-[300px]',
         },
         {
             key: 'priority',
@@ -77,14 +79,14 @@ const Tasks = (props: any) => {
             label: 'Due Date',
             sortable: true,
             render: (value) => value || '-',
-            className: 'min-w-[120px]'
+            className: 'min-w-[120px]',
         },
         {
             key: 'completed_at',
             label: 'Completed',
             sortable: true,
             render: (value) => value || '-',
-            className: 'min-w-[120px]'
+            className: 'min-w-[120px]',
         },
     ];
 
@@ -97,14 +99,14 @@ const Tasks = (props: any) => {
                 router.get(
                     task.index().url,
                     { ...props?.filters, status: value, page: 1 },
-                    { preserveState: true, preserveScroll: true }
+                    { preserveState: true, preserveScroll: true },
                 );
             },
-            options: Object.keys(TaskStatusEnum).map(i => ({
+            options: Object.keys(TaskStatusEnum).map((i) => ({
                 value: i,
-                label: TaskStatusEnum[i as TTaskStatus]
+                label: TaskStatusEnum[i as TTaskStatus],
             })),
-            addAll: true
+            addAll: true,
         },
         {
             key: 'priority',
@@ -114,14 +116,14 @@ const Tasks = (props: any) => {
                 router.get(
                     task.index().url,
                     { ...props?.filters, priority: value, page: 1 },
-                    { preserveState: true, preserveScroll: true }
+                    { preserveState: true, preserveScroll: true },
                 );
             },
-            options: Object.keys(TaskPriorityEnum).map(i => ({
+            options: Object.keys(TaskPriorityEnum).map((i) => ({
                 value: i,
-                label: TaskPriorityEnum[i as TTaskPriority]
+                label: TaskPriorityEnum[i as TTaskPriority],
             })),
-            addAll: true
+            addAll: true,
         },
     ];
 
@@ -133,55 +135,74 @@ const Tasks = (props: any) => {
             onChange: (value: boolean) => {
                 router.get(
                     task.index().url,
-                    { ...props?.filters, overdue: value ? 1 : undefined, page: 1 },
-                    { preserveState: true, preserveScroll: true }
+                    {
+                        ...props?.filters,
+                        overdue: value ? 1 : undefined,
+                        page: 1,
+                    },
+                    { preserveState: true, preserveScroll: true },
                 );
             },
-        }
+        },
     ];
 
-    const onEdit = useCallback((item: ITask) => {
-        setItemToEdit(item)
-        setIsOpen(true)
-    }, [setItemToEdit, setIsOpen])
+    const onEdit = useCallback(
+        (item: ITask) => {
+            setItemToEdit(item);
+            setIsOpen(true);
+        },
+        [setItemToEdit, setIsOpen],
+    );
 
     const onDelete = useCallback(() => {
         if (itemToDelete) {
             router.delete(task.destroy(itemToDelete!.id).url, {
                 onSuccess: () => toast.success('Task deleted successfully'),
-                onError: (error) => toast.error(`Task deletion failed: ${error?.message}`),
-                onFinish: () => setItemToDelete(null)
-            })
+                onError: (error) =>
+                    toast.error(`Task deletion failed: ${error?.message}`),
+                onFinish: () => setItemToDelete(null),
+            });
         }
-    }, [itemToDelete])
+    }, [itemToDelete]);
 
     const onCloseForm = useCallback(() => {
-        setIsOpen(false)
-        setItemToEdit(null)
-        setItemToDelete(null)
-    }, [setIsOpen, setItemToEdit, setItemToDelete])
+        setIsOpen(false);
+        setItemToEdit(null);
+        setItemToDelete(null);
+    }, [setIsOpen, setItemToEdit, setItemToDelete]);
 
-    return <>
-        <Head title={props.title} />
-        <h1 className="sr-only">{props.title}</h1>
-        <Header title={props.title} onClick={() => setIsOpen(true)} />
-        <BodyWrapper>
-            <DataTable
-                data={props.list}
-                columns={columns}
-                filters={filterOptions}
-                checks={checksOptions}
-                initialFilters={props.filters}
-                onEdit={onEdit}
-                onDelete={setItemToDelete}
-                onView={(item) => setItemToView(item)}
-            />
+    return (
+        <>
+            <Head title={props.title} />
+            <h1 className="sr-only">{props.title}</h1>
+            <Header title={props.title} onClick={() => setIsOpen(true)} />
+            <BodyWrapper>
+                <DataTable
+                    data={props.list}
+                    columns={columns}
+                    filters={filterOptions}
+                    checks={checksOptions}
+                    initialFilters={props.filters}
+                    onEdit={onEdit}
+                    onDelete={setItemToDelete}
+                    onView={(item) => setItemToView(item)}
+                />
 
-            {isOpen && <CustomForm onClose={onCloseForm} item={itemToEdit} />}
-            {itemToDelete && <DeleteModal onClose={onCloseForm} onClick={onDelete} />}
-            {itemToView && <TaskDetails itemToView={itemToView} onClose={() => setItemToView(null)} />}
-        </BodyWrapper>
-    </>
-}
+                {isOpen && (
+                    <CustomForm onClose={onCloseForm} item={itemToEdit} />
+                )}
+                {itemToDelete && (
+                    <DeleteModal onClose={onCloseForm} onClick={onDelete} />
+                )}
+                {itemToView && (
+                    <TaskDetails
+                        itemToView={itemToView}
+                        onClose={() => setItemToView(null)}
+                    />
+                )}
+            </BodyWrapper>
+        </>
+    );
+};
 
 export default Tasks;

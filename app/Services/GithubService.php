@@ -21,10 +21,10 @@ class GithubService
 
     private function get(string $endpoint, array $params = []): array
     {
-        $url = $this->apiBase . $endpoint;
+        $url = $this->apiBase.$endpoint;
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->token,
+            'Authorization' => 'Bearer '.$this->token,
             'Accept' => 'application/vnd.github.v3+json',
         ])->get($url, $params);
 
@@ -35,7 +35,7 @@ class GithubService
                 'body' => $response->body(),
             ]);
 
-            throw new Exception('GitHub API error: ' . $response->status());
+            throw new Exception('GitHub API error: '.$response->status());
         }
 
         return $response->json();
@@ -45,7 +45,7 @@ class GithubService
     {
         try {
             return $this->get("/users/{$username}");
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
     }
@@ -182,7 +182,7 @@ class GithubService
 
             return $results;
         } catch (Exception $e) {
-            Log::error("Sync failed for {$repository->full_name}: " . $e->getMessage());
+            Log::error("Sync failed for {$repository->full_name}: ".$e->getMessage());
 
             throw $e;
         }

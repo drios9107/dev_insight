@@ -1,7 +1,21 @@
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Bug, CheckSquare, Cloud, DiamondPercent, FolderGit2, GitCommit, Group, History, LayoutDashboard, LayoutGrid, ListCheck, ListStart, Notebook, ReceiptPoundSterling, Shield, Users2, Workflow } from 'lucide-react';
+import {
+    Bug,
+    CheckSquare,
+    DiamondPercent,
+    FolderGit2,
+    GitCommit,
+    Group,
+    History,
+    LayoutDashboard,
+    ListCheck,
+    ListStart,
+    Shield,
+    Users2,
+    Workflow,
+} from 'lucide-react';
+import { useMemo } from 'react';
 import AppLogo from '@/components/app-logo';
-import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import {
@@ -13,109 +27,107 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import type { NavItem } from '@/types';
-import user from '@/routes/user';
-import team from '@/routes/team';
+import activityLog from '@/routes/activity-log';
 import commit from '@/routes/commit';
 import githubIssue from '@/routes/github-issue';
 import githubRepository from '@/routes/github-repository';
+import githubUser from '@/routes/github-user';
 import metric from '@/routes/metric';
-import notification from '@/routes/notification';
 import project from '@/routes/project';
 import pullRequest from '@/routes/pull-request';
 import pullRequestReview from '@/routes/pull-request-review';
+import role from '@/routes/role';
 import sprint from '@/routes/sprint';
 import task from '@/routes/task';
-import role from '@/routes/role';
-import activityLog from '@/routes/activity-log';
-import { useMemo } from 'react';
-import githubUser from '@/routes/github-user';
+import team from '@/routes/team';
+import user from '@/routes/user';
+import type { NavItem } from '@/types';
 
 const adminNavItems: NavItem[] = [
     {
         title: 'Logs',
         href: activityLog.index(),
         icon: History,
-    }, {
+    },
+    {
         title: 'Roles',
         href: role.index(),
         icon: Shield,
-    }, {
+    },
+    {
         title: 'Users',
         href: user.index(),
         icon: Users2,
-    }
-]
+    },
+];
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Metrics',
         href: metric.index(),
         icon: LayoutDashboard,
-    }, {
+    },
+    {
         title: 'Projects',
         href: project.index(),
         icon: Workflow,
-    }, {
+    },
+    {
         title: 'Teams',
         href: team.index(),
         icon: Group,
-    }, {
+    },
+    {
         title: 'Sprints',
         href: sprint.index(),
         icon: ListStart,
-    }, {
+    },
+    {
         title: 'Tasks',
         href: task.index(),
         icon: ListCheck,
     },
 ];
 
-
 const githubNavItems: NavItem[] = [
     {
         title: 'Repositories',
         href: githubRepository.index(),
         icon: FolderGit2,
-    }, {
+    },
+    {
         title: 'Users',
         href: githubUser.index(),
         icon: Users2,
-    }, {
+    },
+    {
         title: 'Issues',
         href: githubIssue.index(),
         icon: Bug,
-    }, {
+    },
+    {
         title: 'PRs',
         href: pullRequest.index(),
         icon: DiamondPercent,
-    }, {
+    },
+    {
         title: 'Reviews',
         href: pullRequestReview.index(),
         icon: CheckSquare,
-    }, {
+    },
+    {
         title: 'Commit',
         href: commit.index(),
         icon: GitCommit,
     },
 ];
 
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: FolderGit2,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
-    },
-];
-
 export function AppSidebar() {
-    const { props } = usePage()
-    const isAdmin = useMemo(() => props.auth.user?.role?.name === 'Admin', [props.auth.user?.role?.name])
+    const { props } = usePage();
+    const isAdmin = useMemo(
+        () => props.auth.user?.role?.name === 'Admin',
+        [props.auth.user?.role?.name],
+    );
 
     return (
         <Sidebar collapsible="icon" variant="inset">
@@ -133,8 +145,8 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain items={mainNavItems} />
-                <NavMain items={githubNavItems} title='Github' />
-                {isAdmin && <NavMain items={adminNavItems} title='Admin' />}
+                <NavMain items={githubNavItems} title="Github" />
+                {isAdmin && <NavMain items={adminNavItems} title="Admin" />}
             </SidebarContent>
 
             <SidebarFooter>

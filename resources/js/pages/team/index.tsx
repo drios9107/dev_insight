@@ -1,21 +1,22 @@
-import { DataTable, IColumn } from "@/components/custom/table/data-table";
-import { ITeam } from "@/types/models/team";
-import { Head, router } from "@inertiajs/react";
-import { useCallback, useState } from "react";
-import CustomForm from "@/components/custom/forms/teams-form";
-import { toast } from "sonner";
-import team from "@/routes/team";
-import Header from "@/components/custom/header";
-import { DeleteModal } from "@/components/custom/delete-modal";
-import BodyWrapper from "@/components/custom/body-wrapper";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ImageOff } from "lucide-react";
+import { Head, router } from '@inertiajs/react';
+import { ImageOff } from 'lucide-react';
+import { useCallback, useState } from 'react';
+import { toast } from 'sonner';
+import BodyWrapper from '@/components/custom/body-wrapper';
+import { DeleteModal } from '@/components/custom/delete-modal';
+import CustomForm from '@/components/custom/forms/teams-form';
+import Header from '@/components/custom/header';
+import type { IColumn } from '@/components/custom/table/data-table';
+import { DataTable } from '@/components/custom/table/data-table';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import team from '@/routes/team';
+import type { ITeam } from '@/types/models/team';
 
 const Teams = (props: any) => {
-    const [isOpen, setIsOpen] = useState(false)
-    const [itemToDelete, setItemToDelete] = useState<ITeam | null>(null)
-    const [itemToEdit, setItemToEdit] = useState<ITeam | null>(null)
+    const [isOpen, setIsOpen] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState<ITeam | null>(null);
+    const [itemToEdit, setItemToEdit] = useState<ITeam | null>(null);
 
     const columns: IColumn[] = [
         {
@@ -23,7 +24,7 @@ const Teams = (props: any) => {
             label: 'Avatar',
             align: 'center',
             render: (value: string) => (
-                <Avatar className="w-8 h-8">
+                <Avatar className="h-8 w-8">
                     <AvatarImage src={value || undefined} />
                     <AvatarFallback>
                         <ImageOff />
@@ -68,7 +69,7 @@ const Teams = (props: any) => {
                 router.get(
                     team.index().url,
                     { ...props?.filters, is_active: value, page: 1 },
-                    { preserveState: true, preserveScroll: true }
+                    { preserveState: true, preserveScroll: true },
                 );
             },
             options: [
@@ -76,49 +77,59 @@ const Teams = (props: any) => {
                 { value: '1', label: 'Active' },
                 { value: '0', label: 'Inactive' },
             ],
-            addAll: false
+            addAll: false,
         },
     ];
 
-    const onEdit = useCallback((item: ITeam) => {
-        setItemToEdit(item)
-        setIsOpen(true)
-    }, [setItemToEdit, setIsOpen])
+    const onEdit = useCallback(
+        (item: ITeam) => {
+            setItemToEdit(item);
+            setIsOpen(true);
+        },
+        [setItemToEdit, setIsOpen],
+    );
 
     const onDelete = useCallback(() => {
         if (itemToDelete) {
             router.delete(team.destroy(itemToDelete!.id).url, {
                 onSuccess: () => toast.success('Team deleted successfully'),
-                onError: (error) => toast.error(`Team deletion failed: ${error?.message}`),
-                onFinish: () => setItemToDelete(null)
-            })
+                onError: (error) =>
+                    toast.error(`Team deletion failed: ${error?.message}`),
+                onFinish: () => setItemToDelete(null),
+            });
         }
-    }, [itemToDelete])
+    }, [itemToDelete]);
 
     const onCloseForm = useCallback(() => {
-        setIsOpen(false)
-        setItemToEdit(null)
-        setItemToDelete(null)
-    }, [setIsOpen, setItemToEdit, setItemToDelete])
+        setIsOpen(false);
+        setItemToEdit(null);
+        setItemToDelete(null);
+    }, [setIsOpen, setItemToEdit, setItemToDelete]);
 
-    return <>
-        <Head title={props.title} />
-        <h1 className="sr-only">{props.title}</h1>
-        <Header title={props.title} onClick={() => setIsOpen(true)} />
-        <BodyWrapper>
-            <DataTable
-                data={props.list}
-                columns={columns}
-                filters={filterOptions}
-                initialFilters={props.filters}
-                onEdit={onEdit}
-                onDelete={setItemToDelete}
-            />
+    return (
+        <>
+            <Head title={props.title} />
+            <h1 className="sr-only">{props.title}</h1>
+            <Header title={props.title} onClick={() => setIsOpen(true)} />
+            <BodyWrapper>
+                <DataTable
+                    data={props.list}
+                    columns={columns}
+                    filters={filterOptions}
+                    initialFilters={props.filters}
+                    onEdit={onEdit}
+                    onDelete={setItemToDelete}
+                />
 
-            {isOpen && <CustomForm onClose={onCloseForm} item={itemToEdit} />}
-            {itemToDelete && <DeleteModal onClose={onCloseForm} onClick={onDelete} />}
-        </BodyWrapper>
-    </>
-}
+                {isOpen && (
+                    <CustomForm onClose={onCloseForm} item={itemToEdit} />
+                )}
+                {itemToDelete && (
+                    <DeleteModal onClose={onCloseForm} onClick={onDelete} />
+                )}
+            </BodyWrapper>
+        </>
+    );
+};
 
 export default Teams;

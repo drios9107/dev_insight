@@ -1,7 +1,6 @@
 // types/models/comment.ts
 
-import { User } from "../auth";
-
+import type { User } from '../auth';
 
 export interface IComment {
     id: number;

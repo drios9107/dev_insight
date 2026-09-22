@@ -1,10 +1,11 @@
-import { DataTable, IColumn } from "@/components/custom/table/data-table";
-import { Head, router } from "@inertiajs/react";
-import Header from "@/components/custom/header";
-import BodyWrapper from "@/components/custom/body-wrapper";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import user from "@/routes/user";
-import { IUser } from "@/types/user";
+import { Head, router } from '@inertiajs/react';
+import BodyWrapper from '@/components/custom/body-wrapper';
+import Header from '@/components/custom/header';
+import { DataTable } from '@/components/custom/table/data-table';
+import type { IColumn } from '@/components/custom/table/data-table';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import user from '@/routes/user';
+import type { IUser } from '@/types/user';
 
 const Users = (props: any) => {
     const columns: IColumn[] = [
@@ -13,7 +14,7 @@ const Users = (props: any) => {
             label: 'Avatar',
             align: 'center',
             render: (value: string, row: IUser) => (
-                <Avatar className="w-8 h-8">
+                <Avatar className="h-8 w-8">
                     <AvatarImage src={value || undefined} />
                     <AvatarFallback>
                         {row.name?.charAt(0).toUpperCase() || 'U'}
@@ -57,32 +58,35 @@ const Users = (props: any) => {
                 router.get(
                     user.index().url,
                     { ...props?.filters, role_id: value, page: 1 },
-                    { preserveState: true, preserveScroll: true }
+                    { preserveState: true, preserveScroll: true },
                 );
             },
-            options: props?.roles?.map((role: any) => ({
-                value: String(role.id),
-                label: role.name,
-            })) || [],
-            addAll: true
+            options:
+                props?.roles?.map((role: any) => ({
+                    value: String(role.id),
+                    label: role.name,
+                })) || [],
+            addAll: true,
         },
     ];
 
-    return <>
-        <Head title={props.title} />
-        <h1 className="sr-only">{props.title}</h1>
-        <Header title={props.title} />
-        <BodyWrapper>
-            <DataTable
-                data={props.list}
-                columns={columns}
-                filters={filterOptions}
-                initialFilters={props.filters}
-                actions={false}
-                selectable={false}
-            />
-        </BodyWrapper>
-    </>
-}
+    return (
+        <>
+            <Head title={props.title} />
+            <h1 className="sr-only">{props.title}</h1>
+            <Header title={props.title} />
+            <BodyWrapper>
+                <DataTable
+                    data={props.list}
+                    columns={columns}
+                    filters={filterOptions}
+                    initialFilters={props.filters}
+                    actions={false}
+                    selectable={false}
+                />
+            </BodyWrapper>
+        </>
+    );
+};
 
 export default Users;

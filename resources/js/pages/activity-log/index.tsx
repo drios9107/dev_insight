@@ -1,10 +1,10 @@
-import { DataTable, IColumn } from "@/components/custom/table/data-table";
-import { IActivityLog } from "@/types/models/activity-log";
-import { Head, router } from "@inertiajs/react";
-import Header from "@/components/custom/header";
-import BodyWrapper from "@/components/custom/body-wrapper";
-import { Badge } from "@/components/ui/badge";
-import activityLog from "@/routes/activity-log";
+import { Head, router } from '@inertiajs/react';
+import BodyWrapper from '@/components/custom/body-wrapper';
+import Header from '@/components/custom/header';
+import type { IColumn } from '@/components/custom/table/data-table';
+import { DataTable } from '@/components/custom/table/data-table';
+import { Badge } from '@/components/ui/badge';
+import activityLog from '@/routes/activity-log';
 
 const ActivityLogs = (props: any) => {
     const columns: IColumn[] = [
@@ -13,18 +13,14 @@ const ActivityLogs = (props: any) => {
             label: 'Type',
             sortable: true,
             render: (value: string) => (
-                <Badge variant={getBadgeVariant(value)}>
-                    {value}
-                </Badge>
+                <Badge variant={getBadgeVariant(value)}>{value}</Badge>
             ),
         },
         {
             key: 'description',
             label: 'Description',
             render: (value: string) => (
-                <span className="truncate max-w-[200px] block">
-                    {value}
-                </span>
+                <span className="block max-w-[200px] truncate">{value}</span>
             ),
         },
         {
@@ -45,13 +41,13 @@ const ActivityLogs = (props: any) => {
         {
             key: 'task',
             label: 'Task',
-            render: (value) => value?.title ? `#${value.id}` : '-',
+            render: (value) => (value?.title ? `#${value.id}` : '-'),
         },
         {
             key: 'created_at',
             label: 'Date',
             sortable: true,
-            render: (value) => value ? new Date(value).toLocaleString() : '-',
+            render: (value) => (value ? new Date(value).toLocaleString() : '-'),
         },
     ];
 
@@ -64,14 +60,15 @@ const ActivityLogs = (props: any) => {
                 router.get(
                     activityLog.index().url,
                     { ...props?.filters, type: value, page: 1 },
-                    { preserveState: true, preserveScroll: true }
+                    { preserveState: true, preserveScroll: true },
                 );
             },
-            options: props?.types?.map((type: string) => ({
-                value: type,
-                label: type.charAt(0).toUpperCase() + type.slice(1),
-            })) || [],
-            addAll: true
+            options:
+                props?.types?.map((type: string) => ({
+                    value: type,
+                    label: type.charAt(0).toUpperCase() + type.slice(1),
+                })) || [],
+            addAll: true,
         },
         {
             key: 'user_id',
@@ -81,39 +78,46 @@ const ActivityLogs = (props: any) => {
                 router.get(
                     activityLog.index().url,
                     { ...props?.filters, user_id: value, page: 1 },
-                    { preserveState: true, preserveScroll: true }
+                    { preserveState: true, preserveScroll: true },
                 );
             },
-            options: props?.users?.map((user: any) => ({
-                value: String(user.id),
-                label: user.name,
-            })) || [],
-            addAll: true
+            options:
+                props?.users?.map((user: any) => ({
+                    value: String(user.id),
+                    label: user.name,
+                })) || [],
+            addAll: true,
         },
     ];
 
     const getBadgeVariant = (type: string) => {
-        const mapping: Record<string, "default" | "success" | "warning" | "destructive" | "info"> = {
+        const mapping: Record<
+            string,
+            'default' | 'success' | 'warning' | 'destructive' | 'info'
+        > = {
             created: 'success',
             updated: 'warning',
             deleted: 'destructive',
         };
+
         return mapping[type] || 'default';
     };
 
-    return <>
-        <Head title={props.title} />
-        <h1 className="sr-only">{props.title}</h1>
-        <Header title={props.title} />
-        <BodyWrapper>
-            <DataTable
-                data={props.list}
-                columns={columns}
-                filters={filterOptions}
-                initialFilters={props.filters}
-            />
-        </BodyWrapper>
-    </>
-}
+    return (
+        <>
+            <Head title={props.title} />
+            <h1 className="sr-only">{props.title}</h1>
+            <Header title={props.title} />
+            <BodyWrapper>
+                <DataTable
+                    data={props.list}
+                    columns={columns}
+                    filters={filterOptions}
+                    initialFilters={props.filters}
+                />
+            </BodyWrapper>
+        </>
+    );
+};
 
 export default ActivityLogs;

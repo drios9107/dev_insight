@@ -46,7 +46,7 @@ class CommentFactory extends Factory
      */
     public function internal(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'is_internal' => true,
         ]);
     }

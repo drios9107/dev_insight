@@ -1,4 +1,5 @@
 import React from 'react';
+import { Label } from '@/components/ui/label';
 import {
     Select,
     SelectContent,
@@ -7,8 +8,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
-import { ICustomSelect, ICustomSelectItem } from '@/types';
-import { Label } from '@/components/ui/label';
+import type { ICustomSelect, ICustomSelectItem } from '@/types';
 
 const ShadSelect = ({
     id,
@@ -26,11 +26,13 @@ const ShadSelect = ({
     ...props
 }: ICustomSelect) => {
     return (
-        <div className={cn("flex flex-col gap-2 w-full", className)}>
+        <div className={cn('flex w-full flex-col gap-2', className)}>
             {label && (
                 <Label htmlFor={id ?? name} className={labelClassName}>
                     {label}
-                    {props.required && <span className="text-red-500 ml-1">*</span>}
+                    {props.required && (
+                        <span className="ml-1 text-red-500">*</span>
+                    )}
                 </Label>
             )}
 
@@ -42,37 +44,38 @@ const ShadSelect = ({
             >
                 <SelectTrigger
                     className={cn(
-                        "w-full",
+                        'w-full',
                         name &&
-                        errors?.[name] &&
-                        "border-red-500 focus-visible:ring-red-500 aria-invalid:border-red-500"
+                            errors?.[name] &&
+                            'border-red-500 focus-visible:ring-red-500 aria-invalid:border-red-500',
                     )}
                 >
                     <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
                 <SelectContent side={side}>
-                    {list.length === 0 ?
-                        <div className="py-2 px-4 text-sm text-muted-foreground">
+                    {list.length === 0 ? (
+                        <div className="px-4 py-2 text-sm text-muted-foreground">
                             No options available
                         </div>
-                        :
+                    ) : (
                         <>
-                            {addAll && <SelectItem value="all">
-                                All
-                            </SelectItem>}
+                            {addAll && <SelectItem value="all">All</SelectItem>}
                             {list.map((item: ICustomSelectItem) => (
-                                <SelectItem key={item.value} value={String(item.value)}>
+                                <SelectItem
+                                    key={item.value}
+                                    value={String(item.value)}
+                                >
                                     {item.label}
                                 </SelectItem>
                             ))}
                         </>
-                    }
+                    )}
                 </SelectContent>
             </Select>
 
             {name && errors?.[name] && (
                 <span
-                    className="text-red-600 text-sm px-1"
+                    className="px-1 text-sm text-red-600"
                     style={{ marginTop: -8 }}
                 >
                     {errors[name]}

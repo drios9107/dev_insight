@@ -1,18 +1,18 @@
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { cn } from "@/lib/utils"
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
 
 interface ShadDateProps {
-    label?: string
-    name: string
-    value?: string | null
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-    errors?: Record<string, string>
-    required?: boolean
-    className?: string
-    disabled?: boolean
-    min?: string
-    max?: string
+    label?: string;
+    name: string;
+    value?: string | null;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    errors?: Record<string, string>;
+    required?: boolean;
+    className?: string;
+    disabled?: boolean;
+    min?: string;
+    max?: string;
 }
 
 export function ShadDate({
@@ -28,11 +28,11 @@ export function ShadDate({
     max,
 }: ShadDateProps) {
     return (
-        <div className="flex flex-col gap-2 w-full">
+        <div className="flex w-full flex-col gap-2">
             {label && (
                 <Label htmlFor={name}>
                     {label}
-                    {required && <span className="text-red-500 ml-1">*</span>}
+                    {required && <span className="ml-1 text-red-500">*</span>}
                 </Label>
             )}
             <Input
@@ -42,8 +42,9 @@ export function ShadDate({
                 value={value || ''}
                 onChange={onChange}
                 className={cn(
-                    errors?.[name] && "border-red-500 focus-visible:ring-red-500",
-                    className
+                    errors?.[name] &&
+                        'border-red-500 focus-visible:ring-red-500',
+                    className,
                 )}
                 disabled={disabled}
                 required={required}
@@ -51,10 +52,13 @@ export function ShadDate({
                 max={max}
             />
             {name && errors?.[name] && (
-                <span className="text-red-600 text-sm px-1" style={{ marginTop: -8 }}>
+                <span
+                    className="px-1 text-sm text-red-600"
+                    style={{ marginTop: -8 }}
+                >
                     {errors[name]}
                 </span>
             )}
         </div>
-    )
+    );
 }

@@ -1,13 +1,22 @@
 import { Head, router } from '@inertiajs/react';
 import { useCallback, useState } from 'react';
-import { DashboardMetrics } from '@/types/metric';
-import { TeamMembersList, SectionTitle, MetricsSection, StatsSection, RankingCardsSection, ChartsSection, ManagementSection, CodeQualitySection, } from '@/components/custom/metrics'
-import Header from '@/components/custom/header';
 import BodyWrapper from '@/components/custom/body-wrapper';
-import metric from '@/routes/metric';
+import Header from '@/components/custom/header';
 import ShadSelect from '@/components/custom/inputs/shad-select';
-import { Label } from '@/components/ui/label';
+import {
+    TeamMembersList,
+    SectionTitle,
+    MetricsSection,
+    StatsSection,
+    RankingCardsSection,
+    ChartsSection,
+    ManagementSection,
+    CodeQualitySection,
+} from '@/components/custom/metrics';
 import { SyncButton } from '@/components/custom/metrics/section-components/sync-button';
+import { Label } from '@/components/ui/label';
+import metric from '@/routes/metric';
+import type { DashboardMetrics } from '@/types/metric';
 
 export interface MetricsPageProps {
     metrics: DashboardMetrics;
@@ -19,32 +28,51 @@ export interface MetricsPageProps {
     title: string;
 }
 
-export default function Metric({ metrics, repositories, selected_repository, title, ...props }: MetricsPageProps) {
+export default function Metric({
+    metrics,
+    repositories,
+    selected_repository,
+    title,
+}: MetricsPageProps) {
     const [selectedRepo, setSelectedRepo] = useState<string>(
-        selected_repository ? String(selected_repository) : 'all'
+        selected_repository ? String(selected_repository) : 'all',
     );
 
-    const handleRepoChange = useCallback((value: string) => {
-        setSelectedRepo(value);
-        router.get(
-            window.location.pathname,
-            { repository_id: value === 'all' ? null : value },
-            { preserveState: true }
-        );
-    }, [setSelectedRepo]);
+    const handleRepoChange = useCallback(
+        (value: string) => {
+            setSelectedRepo(value);
+            router.get(
+                window.location.pathname,
+                { repository_id: value === 'all' ? null : value },
+                { preserveState: true },
+            );
+        },
+        [setSelectedRepo],
+    );
 
     return (
         <>
             <Head title={title} />
             <h1 className="sr-only">{title}</h1>
             <Header title={title}>
-                <div className="flex items-center gap-4" style={{
-                    minWidth: '250px',
-                }}>
-                    <Label htmlFor="repo_id" className='font-normal'>
+                <div
+                    className="flex items-center gap-4"
+                    style={{
+                        minWidth: '250px',
+                    }}
+                >
+                    <Label htmlFor="repo_id" className="font-normal">
                         Repository
                     </Label>
-                    <ShadSelect name="repo_id" value={selectedRepo} onChange={handleRepoChange} list={repositories.map(i => ({ value: String(i.id), label: i.full_name }))} />
+                    <ShadSelect
+                        name="repo_id"
+                        value={selectedRepo}
+                        onChange={handleRepoChange}
+                        list={repositories.map((i) => ({
+                            value: String(i.id),
+                            label: i.full_name,
+                        }))}
+                    />
                     <SyncButton repositoryId={selectedRepo} />
                 </div>
             </Header>
@@ -76,7 +104,9 @@ export default function Metric({ metrics, repositories, selected_repository, tit
                 <ManagementSection
                     sprint_completion_rate={metrics.sprint_completion_rate}
                     task_completion_rate={metrics.task_completion_rate}
-                    avg_issue_resolution_time={metrics.avg_issue_resolution_time}
+                    avg_issue_resolution_time={
+                        metrics.avg_issue_resolution_time
+                    }
                     overdue_tasks={metrics.overdue_tasks}
                     stale_prs={metrics.stale_prs}
                     prs_needing_review={metrics.prs_needing_review}
@@ -91,7 +121,10 @@ export default function Metric({ metrics, repositories, selected_repository, tit
                 <TeamMembersList members={metrics.team_members} />
 
                 {/* ========== RANKING CARDS ========== */}
-                <RankingCardsSection top_committers={metrics.top_committers} top_contributors={metrics.top_contributors} />
+                <RankingCardsSection
+                    top_committers={metrics.top_committers}
+                    top_contributors={metrics.top_contributors}
+                />
 
                 {/* ========== CHARTS ========== */}
                 <ChartsSection

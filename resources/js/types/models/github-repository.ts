@@ -1,4 +1,3 @@
-
 export interface IGithubRepository {
     id: number;
     github_id: string;

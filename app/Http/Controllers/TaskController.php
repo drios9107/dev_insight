@@ -12,6 +12,7 @@ use Inertia\Inertia;
 class TaskController extends Controller
 {
     use ExtractsFilters;
+
     private TaskService $service;
 
     public function __construct(TaskService $service)
