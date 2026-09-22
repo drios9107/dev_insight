@@ -37,8 +37,8 @@ class DatabaseSeeder extends Seeder
         $useExpense ?
             $this->call($allSeeders) :
             $this->call($allSeeders, false, [
-                'ownerKey' => 'drios9107',
-                'repoName' => 'dev_insight',
+                'ownerKey' => config('services.github.default_username'),
+                'repoName' => config('services.github.default_repo'),
             ]);
     }
 }

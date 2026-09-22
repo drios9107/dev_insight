@@ -37,6 +37,8 @@ return [
 
     'github' => [
         'token' => env('GITHUB_TOKEN'),
+        'default_username' => env('GITHUB_DEFAULT_USERNAME'),
+        'default_repo' => env('GITHUB_DEFAULT_REPO'),
     ],
 
 ];
