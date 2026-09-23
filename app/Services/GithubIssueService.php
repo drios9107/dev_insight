@@ -16,7 +16,7 @@ class GithubIssueService
         $this->githubUserService = $githubUserService;
     }
 
-    public function fetchData(GithubService $service, string $ownerKey = 'drios9107', string $repoName = 'expenses')
+    public function fetchData(GithubService $service, string $ownerKey, string $repoName)
     {
         $issues = $service->getIssues($ownerKey, $repoName);
 
@@ -69,7 +69,7 @@ class GithubIssueService
             ->with('author', 'githubRepository', 'task');
 
         if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('body', 'ilike', $search)

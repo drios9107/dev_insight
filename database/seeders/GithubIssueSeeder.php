@@ -11,7 +11,7 @@ class GithubIssueSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(GithubIssueService $service, string $ownerKey = 'drios9107', string $repoName = 'expenses'): void
+    public function run(GithubIssueService $service, string $ownerKey, string $repoName): void
     {
         $gservice = new GithubService;
 

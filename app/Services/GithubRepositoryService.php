@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class GithubRepositoryService
 {
-    public function fetchData(GithubService $service, string $ownerKey = 'drios9107', string $repoName = 'expenses')
+    public function fetchData(GithubService $service, string $ownerKey, string $repoName)
     {
         $repo = $service->getRepository($ownerKey, $repoName);
 
@@ -97,7 +97,7 @@ class GithubRepositoryService
         $query = GithubRepository::query();
 
         if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('full_name', 'ilike', $search)
                     ->orWhere('name', 'ilike', $search)

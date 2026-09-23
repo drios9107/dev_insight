@@ -16,7 +16,7 @@ class CommitService
         $this->githubUserService = $githubUserService;
     }
 
-    public function fetchData(GithubService $service, string $ownerKey = 'drios9107', string $repoName = 'expenses')
+    public function fetchData(GithubService $service, string $ownerKey, string $repoName)
     {
         $commits = $service->getCommits($ownerKey, $repoName);
 
@@ -70,7 +70,7 @@ class CommitService
             ->with(['author', 'githubRepository', 'pullRequest']);
 
         if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('message', 'ilike', $search)
                     ->orWhere('sha', 'ilike', $search)

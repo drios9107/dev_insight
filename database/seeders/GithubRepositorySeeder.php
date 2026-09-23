@@ -12,7 +12,7 @@ class GithubRepositorySeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(GithubRepositoryService $service, string $ownerKey = 'drios9107', string $repoName = 'expenses'): void
+    public function run(GithubRepositoryService $service, string $ownerKey, string $repoName): void
     {
         // GithubRepository::factory(10)->create();
         $gservice = new GithubService;
