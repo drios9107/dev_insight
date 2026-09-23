@@ -19,15 +19,19 @@ class MetricController extends Controller
     public function index(Request $request)
     {
         $repositoryId = $request->get('repository_id');
+        $tab = $request->get('tab', 'repository');
 
-        $metrics = $this->metricService->getDashboardMetrics($repositoryId);
+        $repositoryMetrics = $this->metricsService->getRepositoryMetrics($repositoryId);
+        $projectMetrics = $this->metricsService->getProjectTabMetrics();
 
         $repositories = GithubRepository::select('id', 'full_name')->get();
 
-        return Inertia::render('metric/index', [
-            'metrics' => $metrics,
+        return Inertia::render('metrics/index', [
+            'repository_metrics' => $repositoryMetrics,
+            'project_metrics' => $projectMetrics,
             'repositories' => $repositories,
             'selected_repository' => $repositoryId,
+            'active_tab' => $tab,
             'title' => 'Metrics',
         ]);
     }

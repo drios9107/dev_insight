@@ -1,5 +1,9 @@
 // types/metrics.ts
 
+// =============================================
+// SHARED TYPES
+// =============================================
+
 export interface IMetricCard {
     label: string;
     value: number;
@@ -134,7 +138,17 @@ export interface DaysWithoutCommit {
     last_commit_date: string | null;
 }
 
-export interface DashboardMetrics {
+// =============================================
+// TABS
+// =============================================
+
+export type MetricsTab = 'repository' | 'project';
+
+// =============================================
+// REPOSITORY TAB
+// =============================================
+
+export interface RepositoryMetrics {
     // Cards
     cards: IMetricCard[];
 
@@ -196,4 +210,67 @@ export interface DashboardMetrics {
     total_tasks: number;
     task_completion_rate: number;
     overdue_tasks: number;
+}
+
+// =============================================
+// PROJECT TAB
+// =============================================
+
+export interface ProjectSummary {
+    active_projects: number;
+    total_projects: number;
+    total_developers: number;
+    total_tasks: number;
+    avg_tasks_per_project: number;
+}
+
+export interface ProjectWithStats {
+    id: number;
+    name: string;
+    status: string;
+    team: string | null;
+    developers_count: number;
+    tasks_count: number;
+    sprints_count: number;
+    progress: number;
+    tasks_by_status: {
+        backlog: number;
+        todo: number;
+        in_progress: number;
+        review: number;
+        done: number;
+    };
+}
+
+export interface DevelopersByProject {
+    project_id: number;
+    project_name: string;
+    developers: Array<{
+        id: number;
+        name: string;
+        avatar: string | null;
+    }>;
+    developers_count: number;
+}
+
+export interface TasksDistribution {
+    project_id: number;
+    project_name: string;
+    tasks_count: number;
+}
+
+export interface SprintsByProject {
+    project_id: number;
+    project_name: string;
+    total_sprints: number;
+    active_sprints: number;
+    completed_sprints: number;
+}
+
+export interface ProjectMetrics {
+    summary: ProjectSummary;
+    projects: ProjectWithStats[];
+    developers_by_project: DevelopersByProject[];
+    tasks_distribution: TasksDistribution[];
+    sprints_by_project: SprintsByProject[];
 }

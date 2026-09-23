@@ -10,8 +10,12 @@ import { SectionTitle } from '@/components/custom/metrics/section-components/sec
 import { TeamMembersList } from '@/components/custom/metrics/section-components/team-member-list';
 
 import StatsSection from '@/components/custom/metrics/stats-section';
+import ProjectTab from './tabs/project-tab';
+import RepositoryTab from './tabs/repository-tab';
 
 export {
+    ProjectTab,
+    RepositoryTab,
     MetricCard,
     TeamMembersList,
     ActionCard,
