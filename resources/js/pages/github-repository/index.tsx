@@ -187,7 +187,7 @@ const GithubRepositories = (props: any) => {
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                                 disabled={isSyncing}
-                                placeholder="drios9107"
+                                placeholder="Username"
                                 onKeyDown={(e) => {
                                     if (e.key === 'Enter') {
                                         handleSyncAll();

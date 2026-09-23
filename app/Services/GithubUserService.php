@@ -7,12 +7,33 @@ use Illuminate\Http\Request;
 
 class GithubUserService
 {
+    public function importFromGithub(GithubService $githubService, string $username): GithubUser
+    {
+        $githubUser = $githubService->getUser($username);
+
+        if ($githubUser === null) {
+            throw new \Exception("GitHub user '{$username}' not found");
+        }
+
+        return GithubUser::updateOrCreate(
+            ['github_id' => $githubUser['id']],
+            [
+                'username' => $githubUser['login'],
+                'email' => $githubUser['email'] ?? null,
+                'name' => $githubUser['name'] ?? null,
+                'avatar_url' => $githubUser['avatar_url'] ?? null,
+                'meta' => $githubUser,
+                'last_synced_at' => now(),
+            ]
+        );
+    }
+
     public function index(?Request $request = null)
     {
         $query = GithubUser::query();
 
         if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('username', 'ilike', $search)
                     ->orWhere('name', 'ilike', $search)

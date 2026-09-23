@@ -70,12 +70,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // dashboard
     Route::get('metric', [MetricController::class, 'index'])->name('metric.index');
 
-    // sync
+    // sync project
     Route::post('/github/sync/{repositoryId}', [GithubController::class, 'sync'])
         ->name('github.sync');
 
     Route::post('/github-repository/sync-all', [GithubRepositoryController::class, 'syncAll'])
         ->name('github-repository.sync-all');
+
+    //import github user
+    Route::post('/github-user/import', [GithubUserController::class, 'import'])
+        ->name('github-user.import');
 });
 
-require __DIR__.'/settings.php';
+require __DIR__ . '/settings.php';

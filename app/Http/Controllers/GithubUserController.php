@@ -6,6 +6,8 @@ use App\Http\Resources\GithubUserResource;
 use App\Services\GithubUserService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Validation\ValidationException;
+use App\Services\GithubService;
 
 class GithubUserController extends Controller
 {
@@ -19,6 +21,25 @@ class GithubUserController extends Controller
     public function all()
     {
         return GithubUserResource::collection($this->service->index());
+    }
+
+    public function import(GithubService $githubService, Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'username' => 'required|string|max:100',
+            ]);
+
+            $user = $this->service->importFromGithub($githubService, $validated['username']);
+
+            return redirect()->back();
+        } catch (ValidationException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            throw ValidationException::withMessages([
+                'username' => $e->getMessage(),
+            ]);
+        }
     }
 
     public function index(Request $request)

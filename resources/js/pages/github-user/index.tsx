@@ -10,9 +10,13 @@ import type { ICheck } from '@/components/custom/table/data-table-filters';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import githubUser from '@/routes/github-user';
 import type { IGithubUser } from '@/types/models/github-user';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
+import ImportGithubUserModal from '@/components/custom/import-github-user-modal';
 
 const GithubUsers = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<IGithubUser | null>(null);
+    const [showImportModal, setShowImportModal] = useState(false);
 
     const columns: IColumn[] = [
         {
@@ -109,7 +113,16 @@ const GithubUsers = (props: any) => {
         <>
             <Head title={props.title} />
             <h1 className="sr-only">{props.title}</h1>
-            <Header title={props.title} />
+            <Header title={props.title} >
+                <Button
+                    onClick={() => setShowImportModal(true)}
+                    className="gap-2"
+                    variant='outline'
+                >
+                    <Plus className="w-4 h-4" />
+                    Import
+                </Button>
+            </Header>
             <BodyWrapper>
                 <DataTable
                     data={props.list}
@@ -119,6 +132,12 @@ const GithubUsers = (props: any) => {
                     onDelete={setItemToDelete}
                 />
 
+                {showImportModal && (
+                    <ImportGithubUserModal
+                        onClose={() => setShowImportModal(false)}
+                        onSuccess={() => router.reload()}
+                    />
+                )}
                 {itemToDelete && (
                     <DeleteModal onClose={onClose} onClick={onDelete} />
                 )}
