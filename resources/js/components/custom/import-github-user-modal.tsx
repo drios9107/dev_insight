@@ -1,10 +1,10 @@
 // resources/js/components/custom/github-user/import-github-user-modal.tsx
 
-import { useCallback, useState } from 'react';
 import { router } from '@inertiajs/react';
+import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
-import { SimpleModal } from '@/components/custom/simple-modal';
 import ShadInput from '@/components/custom/inputs/shad-input';
+import { SimpleModal } from '@/components/custom/simple-modal';
 import githubUser from '@/routes/github-user';
 
 interface ImportGithubUserModalProps {
@@ -17,7 +17,7 @@ export function ImportGithubUserModal({ onClose, onSuccess }: ImportGithubUserMo
     const [isImporting, setIsImporting] = useState(false);
 
     const handleImport = useCallback(() => {
-        if (!username.trim()) return;
+        if (!username.trim()) { return; }
 
         setIsImporting(true);
 
@@ -38,7 +38,7 @@ export function ImportGithubUserModal({ onClose, onSuccess }: ImportGithubUserMo
                 onFinish: () => setIsImporting(false),
             }
         );
-    }, [username]);
+    }, [username, onSuccess, onClose]);
 
     return (
         <SimpleModal
@@ -59,7 +59,7 @@ export function ImportGithubUserModal({ onClose, onSuccess }: ImportGithubUserMo
                 placeholder="Username"
                 disabled={isImporting}
                 onKeyDown={(e) => {
-                    if (e.key === 'Enter') handleImport();
+                    if (e.key === 'Enter') { handleImport(); }
                 }}
             />
         </SimpleModal>

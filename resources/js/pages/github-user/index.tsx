@@ -1,18 +1,18 @@
 import { Head, router } from '@inertiajs/react';
+import { Plus } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import BodyWrapper from '@/components/custom/body-wrapper';
 import { DeleteModal } from '@/components/custom/delete-modal';
 import Header from '@/components/custom/header';
+import ImportGithubUserModal from '@/components/custom/import-github-user-modal';
 import { DataTable } from '@/components/custom/table/data-table';
 import type { IColumn } from '@/components/custom/table/data-table';
 import type { ICheck } from '@/components/custom/table/data-table-filters';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import githubUser from '@/routes/github-user';
 import type { IGithubUser } from '@/types/models/github-user';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
-import ImportGithubUserModal from '@/components/custom/import-github-user-modal';
 
 const GithubUsers = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<IGithubUser | null>(null);
