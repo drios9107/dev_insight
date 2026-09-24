@@ -179,15 +179,7 @@ class MetricService
     {
         $thirtyDaysAgo = now()->subDays(30);
 
-        $query = GithubUser::query()
-            ->whereHas('commits', function ($q) use ($repositoryId, $thirtyDaysAgo) {
-                $q->where('date', '>=', $thirtyDaysAgo);
-                if ($repositoryId) {
-                    $q->where('github_repository_id', $repositoryId);
-                }
-            });
-
-        $users = $query->get();
+        $users = GithubUser::query()->get();
 
         $data = $users->map(function ($user) use ($repositoryId, $thirtyDaysAgo) {
             $lastCommit = Commit::where('author_id', $user->id)
