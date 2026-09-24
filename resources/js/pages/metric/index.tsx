@@ -8,6 +8,7 @@ import { RepositoryMetrics, ProjectMetrics, MetricsTab } from '@/types/metric';
 import RepositoryTab from '@/components/custom/metrics/tabs/repository-tab';
 import ProjectTab from '@/components/custom/metrics/tabs/project-tab';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Label } from '@/components/ui/label';
 
 export interface MetricsPageProps {
     repository_metrics: RepositoryMetrics;
@@ -82,24 +83,31 @@ export default function Metric({
             <Head title={title} />
             <h1 className="sr-only">{title}</h1>
             <Header title={title}>
-                {/* ✅ Selector dinámico según el tab */}
-                {activeTab === 'repository' ? (
-                    <ShadSelect
-                        label="Repository"
-                        name="repository_id"
-                        value={selectedRepo}
-                        onChange={handleRepoChange}
-                        list={repositories.map(i => ({ value: String(i.id), label: i.full_name }))}
-                    />
-                ) : (
-                    <ShadSelect
-                        label="Project"
-                        name="project_id"
-                        value={selectedProj}
-                        onChange={handleProjectChange}
-                        list={projects.map(i => ({ value: String(i.id), label: i.name }))}
-                    />
-                )}
+                <div className="w-60 flex gap-2 items-center">
+                    {activeTab === 'repository' ? (<>
+                        <Label htmlFor={'repository_id'} className='font-normal'>
+                            Repository
+                        </Label>
+                        <ShadSelect
+                            name="repository_id"
+                            value={selectedRepo}
+                            onChange={handleRepoChange}
+                            list={repositories.map(i => ({ value: String(i.id), label: i.full_name }))}
+                        />
+                    </>
+                    ) : (<>
+                        <Label htmlFor={'project_id'} className='font-normal'>
+                            Project
+                        </Label>
+                        <ShadSelect
+                            name="project_id"
+                            value={selectedProj}
+                            onChange={handleProjectChange}
+                            list={projects.map(i => ({ value: String(i.id), label: i.name }))}
+                        />
+                    </>
+                    )}
+                </div>
             </Header>
 
             <BodyWrapper>
