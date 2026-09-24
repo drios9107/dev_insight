@@ -62,7 +62,7 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
 
     useEffect(() => {
         fetchSelectorsData();
-    }, [fetchSelectorsData]);
+    }, []);
 
     useEffect(() => {
         if (item) {
