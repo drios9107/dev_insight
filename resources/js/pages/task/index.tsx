@@ -79,14 +79,14 @@ const Tasks = (props: any) => {
             label: 'Due Date',
             sortable: true,
             render: (value) => value || '-',
-            className: 'min-w-[120px]',
+            className: 'min-w-[125px]',
         },
         {
             key: 'completed_at',
             label: 'Completed',
             sortable: true,
             render: (value) => value || '-',
-            className: 'min-w-[120px]',
+            className: 'min-w-[125px]',
         },
     ];
 

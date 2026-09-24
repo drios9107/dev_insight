@@ -38,7 +38,7 @@ const Projects = (props: any) => {
             key: 'team',
             label: 'Team',
             render: (value) => value?.name,
-            className: 'w-full',
+            className: 'min-w-[200px]',
         },
 
         {
@@ -63,14 +63,14 @@ const Projects = (props: any) => {
             key: 'start_date',
             label: 'Start date',
             sortable: true,
-            className: 'w-40',
+            className: 'min-w-[125px]',
             render: (value) => value ?? '-',
         },
         {
             key: 'end_date',
             label: 'End date',
             sortable: true,
-            className: 'w-40',
+            className: 'min-w-[125px]',
             render: (value) => value ?? '-',
         },
     ];
