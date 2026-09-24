@@ -16,19 +16,10 @@ use Illuminate\Support\Facades\DB;
 
 class MetricService
 {
-    public function getDashboardMetrics(?int $repositoryId = null, string $tab = 'repository'): array
-    {
-        if ($tab === 'project') {
-            return $this->getProjectTabMetrics();
-        }
-
-        return $this->getRepositoryTabMetrics($repositoryId);
-    }
-
     // =============================================
     // TAB: BY REPOSITORY
     // =============================================
-    private function getRepositoryTabMetrics(?int $repositoryId): array
+    public function getRepositoryTabMetrics(?int $repositoryId): array
     {
         $projectMetrics = $this->getProjectMetrics();
         $sprintMetrics = $this->getSprintMetrics();
@@ -101,31 +92,14 @@ class MetricService
     // =============================================
     // TAB: BY PROJECT
     // =============================================
-    private function getProjectTabMetrics(): array
+    public function getProjectTabMetrics(?int $projectId = null): array
     {
         return [
-            'tab' => 'project',
-
-            // SUMMARY CARDS
-            'summary' => [
-                'active_projects' => Project::where('status', 'active')->count(),
-                'total_projects' => Project::count(),
-                'total_developers' => GithubUser::count(),
-                'total_tasks' => Task::count(),
-                'avg_tasks_per_project' => round(Task::count() / max(Project::count(), 1), 1),
-            ],
-
-            // PROJECTS TABLE
-            'projects' => $this->getProjectsWithStats(),
-
-            // DEVELOPERS BY PROJECT
-            'developers_by_project' => $this->getDevelopersByProject(),
-
-            // TASKS DISTRIBUTION
-            'tasks_distribution' => $this->getTasksDistribution(),
-
-            // SPRINT STATS BY PROJECT
-            'sprints_by_project' => $this->getSprintsByProject(),
+            'summary' => $this->getProjectSummary($projectId),
+            'projects' => $this->getProjectsWithStats($projectId),
+            'developers_by_project' => $this->getDevelopersByProject($projectId),
+            'tasks_distribution' => $this->getTasksDistribution($projectId),
+            'sprints_by_project' => $this->getSprintsByProject($projectId),
         ];
     }
 
@@ -957,10 +931,28 @@ class MetricService
     // PROJECT TAB METHODS
     // =============================================
 
-    private function getProjectsWithStats(): array
+    private function getProjectSummary(?int $projectId = null): array
+    {
+        $projectQuery = Project::query()->when($projectId, fn($q) => $q->where('id', $projectId));
+        $taskQuery = Task::query()->when($projectId, fn($q) => $q->where('project_id', $projectId));
+
+        return [
+            'active_projects' => (clone $projectQuery)->where('status', 'active')->count(),
+            'total_projects' => $projectQuery->count(),
+            'total_developers' => GithubUser::count(),
+            'total_tasks' => $taskQuery->count(),
+            'avg_tasks_per_project' => round(
+                $taskQuery->count() / max($projectQuery->count(), 1),
+                1
+            ),
+        ];
+    }
+
+    private function getProjectsWithStats(?int $projectId = null): array
     {
         return Project::with(['team.users', 'tasks', 'sprints'])
             ->withCount(['tasks', 'sprints'])
+            ->when($projectId, fn($q) => $q->where('id', $projectId))
             ->get()
             ->map(function ($project) {
                 $tasksByStatus = $project->tasks->groupBy('status')->map->count();
@@ -990,9 +982,10 @@ class MetricService
             ->toArray();
     }
 
-    private function getDevelopersByProject(): array
+    private function getDevelopersByProject(?int $projectId = null): array
     {
         return Project::with(['team.users'])
+            ->when($projectId, fn($q) => $q->where('id', $projectId))
             ->get()
             ->map(function ($project) {
                 $developers = $project->team?->users ?? collect();
@@ -1011,10 +1004,11 @@ class MetricService
             ->toArray();
     }
 
-    private function getTasksDistribution(): array
+    private function getTasksDistribution(?int $projectId = null): array
     {
         return Project::withCount('tasks')
-            ->having('tasks_count', '>', 0)
+            ->whereHas('tasks')
+            ->when($projectId, fn($q) => $q->where('id', $projectId))
             ->orderByDesc('tasks_count')
             ->get()
             ->map(fn($project) => [
@@ -1025,14 +1019,15 @@ class MetricService
             ->toArray();
     }
 
-    private function getSprintsByProject(): array
+    private function getSprintsByProject(?int $projectId = null): array
     {
         return Project::withCount([
             'sprints',
             'sprints as active_sprints_count' => fn($q) => $q->where('status', 'active'),
             'sprints as completed_sprints_count' => fn($q) => $q->where('status', 'completed'),
         ])
-            ->having('sprints_count', '>', 0)
+            ->whereHas('sprints') // ✅ Solo proyectos con sprints
+            ->when($projectId, fn($q) => $q->where('id', $projectId))
             ->get()
             ->map(fn($project) => [
                 'project_id' => $project->id,

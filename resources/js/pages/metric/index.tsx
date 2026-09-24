@@ -9,11 +9,13 @@ import RepositoryTab from '@/components/custom/metrics/tabs/repository-tab';
 import ProjectTab from '@/components/custom/metrics/tabs/project-tab';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-interface MetricsPageProps {
+export interface MetricsPageProps {
     repository_metrics: RepositoryMetrics;
     project_metrics: ProjectMetrics;
     repositories: Array<{ id: number; full_name: string }>;
+    projects: Array<{ id: number; name: string }>;
     selected_repository: number | null;
+    selected_project: number | null;
     active_tab: MetricsTab;
     title: string;
 }
@@ -22,12 +24,17 @@ export default function Metric({
     repository_metrics,
     project_metrics,
     repositories,
+    projects,
     selected_repository,
+    selected_project,
     active_tab,
     title,
 }: MetricsPageProps) {
     const [selectedRepo, setSelectedRepo] = useState<string>(
         selected_repository ? String(selected_repository) : 'all'
+    );
+    const [selectedProj, setSelectedProj] = useState<string>(
+        selected_project ? String(selected_project) : 'all'
     );
     const [activeTab, setActiveTab] = useState<MetricsTab>(active_tab);
 
@@ -35,7 +42,24 @@ export default function Metric({
         setSelectedRepo(value);
         router.get(
             window.location.pathname,
-            { tab: activeTab, repository_id: value === 'all' ? null : value },
+            {
+                tab: activeTab,
+                repository_id: value === 'all' ? null : value,
+                project_id: selectedProj === 'all' ? null : selectedProj,
+            },
+            { preserveState: true, preserveScroll: true }
+        );
+    };
+
+    const handleProjectChange = (value: string) => {
+        setSelectedProj(value);
+        router.get(
+            window.location.pathname,
+            {
+                tab: activeTab,
+                repository_id: selectedRepo === 'all' ? null : selectedRepo,
+                project_id: value === 'all' ? null : value,
+            },
             { preserveState: true, preserveScroll: true }
         );
     };
@@ -44,7 +68,11 @@ export default function Metric({
         setActiveTab(value as MetricsTab);
         router.get(
             window.location.pathname,
-            { tab: value, repository_id: selectedRepo === 'all' ? null : selectedRepo },
+            {
+                tab: value,
+                repository_id: selectedRepo === 'all' ? null : selectedRepo,
+                project_id: selectedProj === 'all' ? null : selectedProj,
+            },
             { preserveState: true, preserveScroll: true }
         );
     };
@@ -54,13 +82,24 @@ export default function Metric({
             <Head title={title} />
             <h1 className="sr-only">{title}</h1>
             <Header title={title}>
-                <ShadSelect
-                    label="Repository"
-                    name="owner_id"
-                    value={selectedRepo}
-                    onChange={handleRepoChange}
-                    list={repositories.map(i => ({ value: String(i.id), label: i.full_name }))}
-                />
+                {/* ✅ Selector dinámico según el tab */}
+                {activeTab === 'repository' ? (
+                    <ShadSelect
+                        label="Repository"
+                        name="repository_id"
+                        value={selectedRepo}
+                        onChange={handleRepoChange}
+                        list={repositories.map(i => ({ value: String(i.id), label: i.full_name }))}
+                    />
+                ) : (
+                    <ShadSelect
+                        label="Project"
+                        name="project_id"
+                        value={selectedProj}
+                        onChange={handleProjectChange}
+                        list={projects.map(i => ({ value: String(i.id), label: i.name }))}
+                    />
+                )}
             </Header>
 
             <BodyWrapper>

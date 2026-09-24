@@ -16,6 +16,11 @@ class Project extends Model
         'end_date' => 'datetime',
     ];
 
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
+
     public function team()
     {
         return $this->belongsTo(Team::class);
@@ -34,11 +39,6 @@ class Project extends Model
     public function sprints()
     {
         return $this->hasMany(Sprint::class);
-    }
-
-    public function metrics()
-    {
-        return $this->hasMany(Metric::class);
     }
 
     public function activityLogs()
