@@ -19,9 +19,11 @@ class MetricController extends Controller
 
     public function index(Request $request)
     {
-        $repositoryId = $request->get('repository_id');
-        $projectId = $request->get('project_id');
         $tab = $request->get('tab', 'repository');
+        $isRepositoryTab = $tab === 'repository';
+
+        $repositoryId = $isRepositoryTab ? $request->get('repository_id') : null;
+        $projectId = !$isRepositoryTab ? $request->get('project_id') : null;
 
         $repositoryMetrics = $this->metricService->getRepositoryTabMetrics($repositoryId);
         $projectMetrics = $this->metricService->getProjectTabMetrics($projectId);

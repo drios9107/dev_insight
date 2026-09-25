@@ -8,7 +8,7 @@ const CardSectionWrapper = ({
     className: string;
 }) => {
     return (
-        <div className={cn(className, 'mb-6 grid w-full grid-cols-1 gap-4')}>
+        <div className={cn('mb-6 grid w-full grid-cols-1 gap-4', className)}>
             {children}
         </div>
     );

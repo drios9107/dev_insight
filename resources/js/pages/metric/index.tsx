@@ -74,7 +74,7 @@ export default function Metric({
                 repository_id: selectedRepo === 'all' ? null : selectedRepo,
                 project_id: selectedProj === 'all' ? null : selectedProj,
             },
-            { preserveState: true, preserveScroll: true }
+            { preserveScroll: true }
         );
     };
 
@@ -111,7 +111,7 @@ export default function Metric({
             </Header>
 
             <BodyWrapper>
-                <Tabs value={activeTab} onValueChange={handleTabChange}>
+                <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
                     <TabsList className="mb-6">
                         <TabsTrigger value="repository">📊 By Repository</TabsTrigger>
                         <TabsTrigger value="project">📁 By Project</TabsTrigger>

@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { FolderKanban, Users, ListCheck, TrendingUp } from 'lucide-react';
+import CardSectionWrapper from '../section-components/card-section-wrapper';
 
 interface ProjectTabProps {
     metrics: ProjectMetrics;
@@ -17,7 +18,7 @@ export default function ProjectTab({ metrics }: ProjectTabProps) {
     return (
         <>
             {/* ========== SUMMARY CARDS ========== */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 w-full">
+            <CardSectionWrapper className='sm:!grid-cols-2 lg:!grid-cols-4'>
                 <ActionCard
                     label="Active Projects"
                     value={`${summary.active_projects} / ${summary.total_projects}`}
@@ -46,11 +47,11 @@ export default function ProjectTab({ metrics }: ProjectTabProps) {
                     color="yellow"
                     sub="Average"
                 />
-            </div>
+            </CardSectionWrapper>
 
             {/* ========== PROJECTS OVERVIEW ========== */}
             <SectionTitle title="📁 Projects Overview" className="mt-6" />
-            <Card className="border-0 shadow-md mb-6">
+            <Card className="border-0 shadow-md mb-6 py-0 overflow-hidden">
                 <CardContent className="p-0">
                     <div className="overflow-x-auto">
                         <table className="w-full">
@@ -103,7 +104,7 @@ export default function ProjectTab({ metrics }: ProjectTabProps) {
 
             {/* ========== DEVELOPERS BY PROJECT ========== */}
             <SectionTitle title="👥 Developers by Project" className="mt-6" />
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <CardSectionWrapper className='sm:grid-cols-2 gap-6'>
                 {developers_by_project.length === 0 ? (
                     <Card className="border-0 shadow-md col-span-full">
                         <CardContent className="text-center py-8 text-gray-400">
@@ -146,7 +147,7 @@ export default function ProjectTab({ metrics }: ProjectTabProps) {
                         </Card>
                     ))
                 )}
-            </div>
+            </CardSectionWrapper>
 
             {/* ========== TASKS DISTRIBUTION ========== */}
             <SectionTitle title="📊 Tasks Distribution" className="mt-6" />
@@ -185,7 +186,7 @@ export default function ProjectTab({ metrics }: ProjectTabProps) {
 
             {/* ========== SPRINTS BY PROJECT ========== */}
             <SectionTitle title="🏃 Sprints by Project" className="mt-6" />
-            <Card className="border-0 shadow-md">
+            <Card className="border-0 shadow-md py-0 overflow-hidden">
                 <CardContent className="p-0">
                     <div className="overflow-x-auto">
                         <table className="w-full">
