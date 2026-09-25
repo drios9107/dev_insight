@@ -46,9 +46,7 @@ class TeamController extends Controller
      */
     public function store(TeamRequest $request)
     {
-        $validated = $request->validated();
-
-        $this->service->store($validated);
+        $this->service->store($request->validated());
 
         return redirect()->route('team.index')
             ->with('success', 'Team created successfully!');
@@ -59,9 +57,7 @@ class TeamController extends Controller
      */
     public function update(TeamRequest $request, int $id)
     {
-        $validated = $request->validated();
-
-        $this->service->update($id, $validated);
+        $this->service->update($id, $request->validated());
 
         return redirect()->route('team.index')
             ->with('success', 'Team updated successfully!');

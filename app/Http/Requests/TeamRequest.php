@@ -22,19 +22,14 @@ class TeamRequest extends FormRequest
      */
     public function rules(): array
     {
-        $teamId = $this->input('id') ?? $this->route('team');
-        $rules = [
-            'name' => 'required|string|max:255|unique:teams,name',
-            'description' => 'nullable|string|max:255',
+        return [
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
             'owner_id' => 'required|exists:users,id',
-            'avatar_url' => 'nullable|string|max:255',
-            'is_active' => 'required|boolean',
+            'avatar_url' => 'nullable|url',
+            'is_active' => 'boolean',
+            'github_user_ids' => 'nullable|array',
+            'github_user_ids.*' => 'exists:github_users,id',
         ];
-        if ($teamId) {
-            $rules['name'] = 'nullable|string|max:255|unique:teams,name,'.$teamId;
-            $rules['is_active'] = 'nullable|boolean';
-        }
-
-        return $rules;
     }
 }

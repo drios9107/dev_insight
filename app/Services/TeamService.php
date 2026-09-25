@@ -9,10 +9,10 @@ class TeamService
 {
     public function index(?Request $request = null)
     {
-        $query = Team::query()->with('owner');
+        $query = Team::query()->with(['owner', 'githubUsers']);
 
         if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
                     ->orWhere('description', 'ilike', $search)
@@ -32,9 +32,18 @@ class TeamService
     /**
      * Store a newly created item in storage.
      */
-    public function store(array $data): bool
+    public function store(array $data): Team
     {
-        return Team::create($data) !== null;
+        $githubUserIds = $data['github_user_ids'] ?? [];
+        unset($data['github_user_ids']);
+
+        $team = Team::create($data);
+
+        if (!empty($githubUserIds)) {
+            $team->githubUsers()->sync($githubUserIds);
+        }
+
+        return $team;
     }
 
     /**
@@ -53,9 +62,18 @@ class TeamService
     /**
      * Update the specified item in storage.
      */
-    public function update(int $id, array $data): bool
+    public function update(int $id, array $data): Team
     {
-        return Team::whereId($id)->update($data) !== null;
+        $team = Team::findOrFail($id);
+
+        $githubUserIds = $data['github_user_ids'] ?? [];
+        unset($data['github_user_ids']);
+
+        $team->update($data);
+
+        $team->githubUsers()->sync($githubUserIds);
+
+        return $team;
     }
 
     /**
