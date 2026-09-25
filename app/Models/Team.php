@@ -16,9 +16,14 @@ class Team extends Model
         return $this->belongsTo(User::class, 'owner_id');
     }
 
-    public function users()
+    public function githubUsers(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'team_user');
+        return $this->belongsToMany(
+            GithubUser::class,
+            'team_github_user',
+            'team_id',
+            'github_user_id'
+        );
     }
 
     public function projects()

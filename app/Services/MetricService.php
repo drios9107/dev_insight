@@ -942,7 +942,7 @@ class MetricService
 
     private function getProjectsWithStats(?int $projectId = null): array
     {
-        return Project::with(['team.users', 'tasks', 'sprints'])
+        return Project::with(['team.githubUsers', 'tasks', 'sprints'])
             ->withCount(['tasks', 'sprints'])
             ->when($projectId, fn($q) => $q->where('id', $projectId))
             ->get()
@@ -956,7 +956,7 @@ class MetricService
                     'name' => $project->name,
                     'status' => $project->status,
                     'team' => $project->team?->name,
-                    'developers_count' => $project->team?->users->count() ?? 0,
+                    'developers_count' => $project->team?->githubUsers->count() ?? 0, // ✅
                     'tasks_count' => $totalTasks,
                     'sprints_count' => $project->sprints_count,
                     'progress' => $totalTasks > 0
@@ -976,19 +976,19 @@ class MetricService
 
     private function getDevelopersByProject(?int $projectId = null): array
     {
-        return Project::with(['team.users'])
+        return Project::with(['team.githubUsers'])
             ->when($projectId, fn($q) => $q->where('id', $projectId))
             ->get()
             ->map(function ($project) {
-                $developers = $project->team?->users ?? collect();
+                $developers = $project->team?->githubUsers ?? collect();
 
                 return [
                     'project_id' => $project->id,
                     'project_name' => $project->name,
                     'developers' => $developers->map(fn($user) => [
                         'id' => $user->id,
-                        'name' => $user->name,
-                        'avatar' => $user->avatar_url,
+                        'name' => $user->displayName,
+                        'avatar' => $user->avatar,
                     ])->toArray(),
                     'developers_count' => $developers->count(),
                 ];

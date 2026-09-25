@@ -21,6 +21,16 @@ class GithubUser extends Model
         'avatar_url',
     ];
 
+    public function teams(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Team::class,
+            'team_github_user',
+            'github_user_id',
+            'team_id'
+        );
+    }
+
     public function commits(): HasMany
     {
         return $this->hasMany(Commit::class, 'author_id');
@@ -53,7 +63,7 @@ class GithubUser extends Model
 
     public function getAvatar(): string
     {
-        return $this->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($this->username);
+        return $this->avatar_url ?? 'https://ui-avatars.com/api/?name=' . urlencode($this->username);
     }
 
     public function getDisplayNameAttribute(): string

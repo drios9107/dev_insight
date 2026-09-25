@@ -48,11 +48,6 @@ class User extends Authenticatable
         return $this->hasMany(Notification::class, 'user_id');
     }
 
-    public function teams(): BelongsToMany
-    {
-        return $this->belongsToMany(Team::class, 'team_user');
-    }
-
     public function projects(): HasMany
     {
         return $this->hasMany(Project::class, 'owner_id');
