@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->string('description')->nullable();
             $table->foreignId('owner_id')->constrained('users');
-            $table->string('avatar_url')->nullable();
             $table->boolean('is_active')->default(true);
         });
     }

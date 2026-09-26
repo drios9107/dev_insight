@@ -20,19 +20,6 @@ const Teams = (props: any) => {
 
     const columns: IColumn[] = [
         {
-            key: 'avatar_url',
-            label: 'Avatar',
-            align: 'center',
-            render: (value: string) => (
-                <Avatar className="h-8 w-8">
-                    <AvatarImage src={value || undefined} />
-                    <AvatarFallback>
-                        <ImageOff />
-                    </AvatarFallback>
-                </Avatar>
-            ),
-        },
-        {
             key: 'name',
             label: 'Name',
             sortable: true,

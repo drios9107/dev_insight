@@ -6,7 +6,6 @@ export interface ITeam {
     name: string;
     description: string;
     owner: IUser;
-    avatar_url: string;
     is_active: boolean;
     github_users: IGithubUser[];
     github_users_count: number;

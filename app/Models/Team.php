@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['name', 'description', 'owner_id', 'avatar_url', 'is_active'])]
+#[Fillable(['name', 'description', 'owner_id', 'is_active'])]
 class Team extends Model
 {
     use HasFactory;

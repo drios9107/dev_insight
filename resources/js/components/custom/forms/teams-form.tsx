@@ -15,7 +15,6 @@ const defaultData = {
     name: '',
     description: '',
     owner_id: '',
-    avatar_url: '',
     is_active: true,
     github_user_ids: [] as number[],
 };
@@ -46,7 +45,6 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
                 name: item?.name ?? '',
                 description: item?.description ?? '',
                 owner_id: item?.owner?.id?.toString() ?? '',
-                avatar_url: item?.avatar_url ?? '',
                 is_active: item?.is_active ?? true,
                 github_user_ids: item?.github_users?.map((u: any) => u.id) ?? [],
             });
@@ -109,12 +107,6 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
                     list={githubUsers}
                     errors={errors}
                     placeholder="Select developers..."
-                />
-                <ShadInput
-                    label="Avatar URL"
-                    name="avatar_url"
-                    value={data.avatar_url}
-                    onChange={(e) => setData('avatar_url', e.target.value)}
                 />
                 <ShadSwitch
                     label="Is Active"

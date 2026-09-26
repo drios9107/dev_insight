@@ -26,7 +26,6 @@ class TeamRequest extends FormRequest
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'owner_id' => 'required|exists:users,id',
-            'avatar_url' => 'nullable|url',
             'is_active' => 'boolean',
             'github_user_ids' => 'nullable|array',
             'github_user_ids.*' => 'exists:github_users,id',
