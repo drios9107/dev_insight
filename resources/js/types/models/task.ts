@@ -1,27 +1,37 @@
-import type { TTaskPriority, TTaskStatus } from '@/enums/task';
-import type { IUser } from '../user';
-import type { IGithubsIssue } from './github-issue';
 import type { IProject } from './project';
+import type { IGithubUser } from './github-user';
 import type { ISprint } from './sprint';
+import type { IUser } from '../user';
+import { IGithubsIssue } from './github-issue';
+
+export type TTaskStatus = 'backlog' | 'todo' | 'in_progress' | 'review' | 'done' | 'cancelled';
+export type TTaskPriority = 'low' | 'medium' | 'high' | 'critical';
 
 export interface ITask {
     id: number;
     title: string;
-    description: string;
-    project?: IProject;
-    assignee?: IUser;
-    sprint?: ISprint;
-    reporter: IUser;
-    github_issue: IGithubsIssue;
     status: TTaskStatus;
     priority: TTaskPriority;
-    due_date: string;
-    completed_at: string;
-    story_points: number;
-    hours_estimate: number;
-    hours_spent: number;
-    order: number;
+    story_points: number | null;
+    due_date: string | null;
+    completed_at: string | null;
+
+    project: Pick<IProject, 'id' | 'name'> | null;
+    sprint: Pick<ISprint, 'id' | 'name'> | null;
+    assignee: Pick<IGithubUser, 'id' | 'username' | 'display_name' | 'avatar'> | null;
+    reporter: Pick<IUser, 'id' | 'name' | 'avatar_url'> | null;
+
     created_at: string;
     updated_at: string;
-    deleted_at?: string;
+}
+
+export interface ITaskList extends ITask { }
+
+export interface ITaskShow extends ITask {
+    description: string | null;
+    hours_estimate: number | null;
+    hours_spent: number | null;
+    order: number | null;
+
+    github_issue: Pick<IGithubsIssue, 'id' | 'number' | 'title' | 'state'> | null;
 }

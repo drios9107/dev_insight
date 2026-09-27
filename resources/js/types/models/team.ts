@@ -5,10 +5,21 @@ export interface ITeam {
     id: number;
     name: string;
     description: string;
-    owner: IUser;
     is_active: boolean;
-    github_users: IGithubUser[];
-    github_users_count: number;
+
+    owner: Pick<IUser, 'id' | 'name'> | null;
+
     created_at: string;
     updated_at: string;
+}
+
+export interface ITeamList extends ITeam {
+    github_users_count: number;
+}
+
+export interface ITeamShow extends ITeam {
+    owner: Pick<IUser, 'id' | 'name' | 'avatar_url'>;
+    github_users: Pick<IGithubUser, 'id' | 'username' | 'display_name' | 'avatar'>[];
+
+    github_users_count: number;
 }
