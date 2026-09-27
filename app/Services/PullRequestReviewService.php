@@ -71,7 +71,7 @@ class PullRequestReviewService
 
         return response()->json([
             'success' => true,
-            'message' => count($allReviews) . ' revisiones sincronizadas',
+            'message' => count($allReviews).' revisiones sincronizadas',
             'count' => count($allReviews),
         ]);
     }
@@ -81,7 +81,7 @@ class PullRequestReviewService
         $query = PullRequestReview::query()->with(['pullRequest', 'reviewer']);
 
         if ($request && $request->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('body', 'ilike', $search)
                     ->orWhereHas('reviewer', function ($r) use ($search) {

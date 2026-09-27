@@ -38,8 +38,9 @@ export function ActionCard({
     return (
         <CardWrapper {...wrapperProps}>
             <Card
-                className={`min-h-[172px] border-0 shadow-md transition-all duration-200 hover:shadow-lg ${link || onClick ? 'cursor-pointer hover:scale-[1.02]' : ''
-                    }`}
+                className={`min-h-[172px] border-0 shadow-md transition-all duration-200 hover:shadow-lg ${
+                    link || onClick ? 'cursor-pointer hover:scale-[1.02]' : ''
+                }`}
                 onClick={onClick}
             >
                 <CardContent className="p-4">

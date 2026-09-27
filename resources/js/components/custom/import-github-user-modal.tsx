@@ -12,12 +12,17 @@ interface ImportGithubUserModalProps {
     onSuccess?: () => void;
 }
 
-export function ImportGithubUserModal({ onClose, onSuccess }: ImportGithubUserModalProps) {
+export function ImportGithubUserModal({
+    onClose,
+    onSuccess,
+}: ImportGithubUserModalProps) {
     const [username, setUsername] = useState('');
     const [isImporting, setIsImporting] = useState(false);
 
     const handleImport = useCallback(() => {
-        if (!username.trim()) { return; }
+        if (!username.trim()) {
+            return;
+        }
 
         setIsImporting(true);
 
@@ -36,7 +41,7 @@ export function ImportGithubUserModal({ onClose, onSuccess }: ImportGithubUserMo
                     toast.error(errors.username || 'Import failed');
                 },
                 onFinish: () => setIsImporting(false),
-            }
+            },
         );
     }, [username, onSuccess, onClose]);
 
@@ -59,7 +64,9 @@ export function ImportGithubUserModal({ onClose, onSuccess }: ImportGithubUserMo
                 placeholder="Username"
                 disabled={isImporting}
                 onKeyDown={(e) => {
-                    if (e.key === 'Enter') { handleImport(); }
+                    if (e.key === 'Enter') {
+                        handleImport();
+                    }
                 }}
             />
         </SimpleModal>

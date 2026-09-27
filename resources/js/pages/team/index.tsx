@@ -1,5 +1,4 @@
 import { Head, router } from '@inertiajs/react';
-import { ImageOff } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import BodyWrapper from '@/components/custom/body-wrapper';
@@ -8,7 +7,6 @@ import CustomForm from '@/components/custom/forms/teams-form';
 import Header from '@/components/custom/header';
 import type { IColumn } from '@/components/custom/table/data-table';
 import { DataTable } from '@/components/custom/table/data-table';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import team from '@/routes/team';
 import type { ITeam } from '@/types/models/team';

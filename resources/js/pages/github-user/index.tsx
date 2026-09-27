@@ -113,13 +113,13 @@ const GithubUsers = (props: any) => {
         <>
             <Head title={props.title} />
             <h1 className="sr-only">{props.title}</h1>
-            <Header title={props.title} >
+            <Header title={props.title}>
                 <Button
                     onClick={() => setShowImportModal(true)}
                     className="gap-2"
-                    variant='outline'
+                    variant="outline"
                 >
-                    <Plus className="w-4 h-4" />
+                    <Plus className="h-4 w-4" />
                     Import
                 </Button>
             </Header>

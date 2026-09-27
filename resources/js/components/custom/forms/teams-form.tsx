@@ -1,15 +1,15 @@
 import { useForm } from '@inertiajs/react';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import user from '@/routes/user';
+import { useFetch } from '@/hooks/use-fetch';
 import githubUser from '@/routes/github-user';
+import user from '@/routes/user';
 import ShadInput from '../inputs/shad-input';
+import ShadMultiSelect from '../inputs/shad-multiselect';
 import ShadSelect from '../inputs/shad-select';
 import ShadSwitch from '../inputs/shad-switch';
 import ShadTextarea from '../inputs/shad-textarea';
 import { SimpleModal } from '../simple-modal';
-import { useFetch } from '@/hooks/use-fetch';
-import ShadMultiSelect from '../inputs/shad-multiselect';
 
 const defaultData = {
     name: '',
@@ -20,7 +20,8 @@ const defaultData = {
 };
 
 const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
-    const { data, setData, post, put, processing, errors } = useForm(defaultData);
+    const { data, setData, post, put, processing, errors } =
+        useForm(defaultData);
     const [users, setUsers] = useState([]);
     const [githubUsers, setGithubUsers] = useState([]);
     const [usersLoading, setUsersLoading] = useState(false);
@@ -29,14 +30,14 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
 
     useEffect(() => {
         setUsersLoading(true);
-        get(user.all().url, setUsers)
-            .finally(() => setUsersLoading(false));
+        get(user.all().url, setUsers).finally(() => setUsersLoading(false));
     }, []);
 
     useEffect(() => {
         setGithubUsersLoading(true);
-        get(githubUser.all().url, setGithubUsers, 'display_name')
-            .finally(() => setGithubUsersLoading(false));
+        get(githubUser.all().url, setGithubUsers, 'display_name').finally(() =>
+            setGithubUsersLoading(false),
+        );
     }, []);
 
     useEffect(() => {
@@ -46,7 +47,8 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
                 description: item?.description ?? '',
                 owner_id: item?.owner?.id?.toString() ?? '',
                 is_active: item?.is_active ?? true,
-                github_user_ids: item?.github_users?.map((u: any) => u.id) ?? [],
+                github_user_ids:
+                    item?.github_users?.map((u: any) => u.id) ?? [],
             });
         }
     }, [item, setData]);
@@ -103,7 +105,9 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
                     label="Developers"
                     name="github_user_ids"
                     value={data.github_user_ids}
-                    onChange={(value) => setData('github_user_ids', value as number[])}
+                    onChange={(value) =>
+                        setData('github_user_ids', value as number[])
+                    }
                     list={githubUsers}
                     errors={errors}
                     placeholder="Select developers..."

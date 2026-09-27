@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\GithubUserResource;
+use App\Services\GithubService;
 use App\Services\GithubUserService;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Validation\ValidationException;
-use App\Services\GithubService;
+use Inertia\Inertia;
 
 class GithubUserController extends Controller
 {

@@ -23,7 +23,7 @@ class MetricController extends Controller
         $isRepositoryTab = $tab === 'repository';
 
         $repositoryId = $isRepositoryTab ? $request->get('repository_id') : null;
-        $projectId = !$isRepositoryTab ? $request->get('project_id') : null;
+        $projectId = ! $isRepositoryTab ? $request->get('project_id') : null;
 
         $repositoryMetrics = $this->metricService->getRepositoryTabMetrics($repositoryId);
         $projectMetrics = $this->metricService->getProjectTabMetrics($projectId);

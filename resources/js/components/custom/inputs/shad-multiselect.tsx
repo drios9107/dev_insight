@@ -1,8 +1,8 @@
-import { useCallback, useMemo } from 'react';
 import { X } from 'lucide-react';
-import ShadSelect from './shad-select';
+import { useCallback, useMemo } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { ICustomSelectItem } from '@/types';
+import type { ICustomSelectItem } from '@/types';
+import ShadSelect from './shad-select';
 
 interface IShadMultiSelect {
     label?: string;
@@ -27,9 +27,12 @@ const ShadMultiSelect = ({
     disabled = false,
     required = false,
 }: IShadMultiSelect) => {
-    const normalizeValue = useCallback((v: string | number): string | number => {
-        return isNaN(Number(v)) ? v : Number(v);
-    }, []);
+    const normalizeValue = useCallback(
+        (v: string | number): string | number => {
+            return isNaN(Number(v)) ? v : Number(v);
+        },
+        [],
+    );
 
     const handleSelect = useCallback(
         (selected: string) => {
@@ -39,22 +42,24 @@ const ShadMultiSelect = ({
                 onChange([...value, normalized]);
             }
         },
-        [value, onChange, normalizeValue]
+        [value, onChange, normalizeValue],
     );
 
     const handleRemove = useCallback(
         (item: string | number) => {
             onChange(value.filter((v) => v !== item));
         },
-        [value, onChange]
+        [value, onChange],
     );
 
     const selectedItems = useMemo(
         () =>
             value
-                .map((v) => list.find((item) => String(item.value) === String(v)))
+                .map((v) =>
+                    list.find((item) => String(item.value) === String(v)),
+                )
                 .filter(Boolean),
-        [value, list]
+        [value, list],
     );
 
     const availableItems = useMemo(
@@ -63,20 +68,20 @@ const ShadMultiSelect = ({
                 ...item,
                 disabled: value.includes(normalizeValue(item.value)),
             })),
-        [list, value, normalizeValue]
+        [list, value, normalizeValue],
     );
 
     return (
-        <div className="flex flex-col gap-2 w-full">
+        <div className="flex w-full flex-col gap-2">
             {label && (
                 <label htmlFor={name} className="text-sm font-medium">
                     {label}
-                    {required && <span className="text-red-500 ml-1">*</span>}
+                    {required && <span className="ml-1 text-red-500">*</span>}
                 </label>
             )}
 
             {selectedItems.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 p-2 border rounded-md bg-gray-50">
+                <div className="flex flex-wrap gap-1.5 rounded-md border bg-gray-50 p-2">
                     {selectedItems.map((item) => (
                         <Badge
                             key={item!.value}
@@ -87,10 +92,10 @@ const ShadMultiSelect = ({
                             <button
                                 type="button"
                                 onClick={() => handleRemove(item!.value)}
-                                className="ml-1 hover:bg-gray-300 rounded-full p-0.5"
+                                className="ml-1 rounded-full p-0.5 hover:bg-gray-300"
                                 disabled={disabled}
                             >
-                                <X className="w-3 h-3" />
+                                <X className="h-3 w-3" />
                             </button>
                         </Badge>
                     ))}

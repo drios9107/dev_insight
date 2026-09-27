@@ -77,9 +77,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/github-repository/sync-all', [GithubRepositoryController::class, 'syncAll'])
         ->name('github-repository.sync-all');
 
-    //import github user
+    // import github user
     Route::post('/github-user/import', [GithubUserController::class, 'import'])
         ->name('github-user.import');
 });
 
-require __DIR__ . '/settings.php';
+require __DIR__.'/settings.php';

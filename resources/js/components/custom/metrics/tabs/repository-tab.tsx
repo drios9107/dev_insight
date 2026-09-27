@@ -1,5 +1,3 @@
-
-import { RepositoryMetrics } from '@/types/metric';
 import {
     MetricsSection,
     StatsSection,
@@ -10,6 +8,7 @@ import {
     ChartsSection,
     CodeQualitySection,
 } from '@/components/custom/metrics';
+import type { RepositoryMetrics } from '@/types/metric';
 
 interface RepositoryTabProps {
     metrics: RepositoryMetrics;

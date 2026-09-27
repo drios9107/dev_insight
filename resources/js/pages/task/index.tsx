@@ -133,13 +133,14 @@ const Tasks = (props: any) => {
                 router.get(
                     task.index().url,
                     { ...props?.filters, project_id: value, page: 1 },
-                    { preserveScroll: true }
+                    { preserveScroll: true },
                 );
             },
-            options: props?.projects?.map((p: any) => ({
-                value: String(p.id),
-                label: p.name,
-            })) || [],
+            options:
+                props?.projects?.map((p: any) => ({
+                    value: String(p.id),
+                    label: p.name,
+                })) || [],
             addAll: true,
         },
         {
@@ -150,13 +151,14 @@ const Tasks = (props: any) => {
                 router.get(
                     task.index().url,
                     { ...props?.filters, assignee_id: value, page: 1 },
-                    { preserveScroll: true }
+                    { preserveScroll: true },
                 );
             },
-            options: props?.github_users?.map((u: any) => ({
-                value: String(u.id),
-                label: u.display_name || u.username,
-            })) || [],
+            options:
+                props?.github_users?.map((u: any) => ({
+                    value: String(u.id),
+                    label: u.display_name || u.username,
+                })) || [],
             addAll: true,
         },
     ];
