@@ -21,5 +21,17 @@ export function useFetch() {
             .catch((err) => console.log('***fetch error', err));
     }, []);
 
-    return { get };
+    const getOne = useCallback(async (
+        url: string,
+    ) => {
+        return fetch(url)
+            .then(async (res) => {
+                if (res.ok) {
+                    return await res.json();
+                }
+            })
+            .catch((err) => console.log('***fetch error', err));
+    }, []);
+
+    return { get, getOne };
 }
