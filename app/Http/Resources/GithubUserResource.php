@@ -13,15 +13,21 @@ class GithubUserResource extends JsonResource
             'id' => $this->id,
             'github_id' => $this->github_id,
             'username' => $this->username,
-            'email' => $this->email,
-            'name' => $this->name,
-            'avatar_url' => $this->avatar_url,
             'display_name' => $this->displayName,
-            'commits_count' => $this->commits()->count(),
-            'prs_count' => $this->authoredPullRequests()->count(),
-            'reviews_count' => $this->pullRequestReviews()->count(),
-            'last_synced_at' => $this->last_synced_at?->format('Y-m-d H:i:s'),
-            'created_at' => $this->created_at?->format('Y-m-d H:i:s'),
+            'name' => $this->name,
+            'email' => $this->email,
+            'avatar' => $this->avatar,
+
+            'commits_count' => $this->whenCounted('commits'),
+            'prs_count' => $this->whenCounted('authoredPullRequests'),
+            'reviews_count' => $this->whenCounted('pullRequestReviews'),
+            'issues_count' => $this->whenCounted('githubIssues'),
+
+            'last_synced_at' => $this->last_synced_at ? date('Y-m-d', strtotime($this->last_synced_at)) : null,
+
+            'created_at' => $this->created_at ? date('Y-m-d', strtotime($this->created_at)) : null,
+            'updated_at' => $this->updated_at ? date('Y-m-d', strtotime($this->updated_at)) : null,
+
         ];
     }
 }

@@ -33,7 +33,7 @@ class GithubUserService
         $query = GithubUser::query();
 
         if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('username', 'ilike', $search)
                     ->orWhere('name', 'ilike', $search)
@@ -92,9 +92,14 @@ class GithubUserService
      *
      * @param  int  $id
      */
-    public function show($id): GithubUser
+    public function show(int $id): GithubUser
     {
-        return GithubUser::findOrFail($id);
+        return GithubUser::withCount([
+            'commits',
+            'authoredPullRequests',
+            'pullRequestReviews',
+            'githubIssues',
+        ])->findOrFail($id);
     }
 
     /**

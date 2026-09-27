@@ -12,13 +12,15 @@ import type { ICheck } from '@/components/custom/table/data-table-filters';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import githubUser from '@/routes/github-user';
-import type { IGithubUser } from '@/types/models/github-user';
+import type { IGithubUser, IGithubUserList } from '@/types/models/github-user';
+import { GithubUserDetails } from '@/components/custom/details/github-user-details';
 
 const GithubUsers = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<IGithubUser | null>(null);
     const [showImportModal, setShowImportModal] = useState(false);
+    const [itemToViewId, setItemToViewId] = useState<number | null>(null);
 
-    const columns: IColumn[] = [
+    const columns: IColumn<IGithubUserList>[] = [
         {
             key: 'avatar_url',
             label: 'Avatar',
@@ -129,9 +131,13 @@ const GithubUsers = (props: any) => {
                     columns={columns}
                     checks={checksOptions}
                     initialFilters={props.filters}
+                    onView={item => setItemToViewId(item?.id)}
                     onDelete={setItemToDelete}
                 />
 
+                {itemToViewId && (
+                    <GithubUserDetails itemId={itemToViewId} onClose={() => setItemToViewId(null)} />
+                )}
                 {showImportModal && (
                     <ImportGithubUserModal
                         onClose={() => setShowImportModal(false)}

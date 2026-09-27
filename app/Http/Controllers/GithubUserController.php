@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\GithubUserResource;
+use App\Models\GithubUser;
 use App\Services\GithubService;
 use App\Services\GithubUserService;
 use Illuminate\Http\Request;
@@ -55,14 +56,9 @@ class GithubUserController extends Controller
         ]);
     }
 
-    public function show(int $id)
+    public function show(GithubUser $githubUser)
     {
-        $user = $this->service->show($id);
-
-        return Inertia::render('github-user/show', [
-            'user' => new GithubUserResource($user),
-            'title' => 'GitHub User Details',
-        ]);
+        return new GithubUserResource($this->service->show($githubUser->id));
     }
 
     public function destroy(int $id)
