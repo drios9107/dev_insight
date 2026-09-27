@@ -125,6 +125,40 @@ const Tasks = (props: any) => {
             })),
             addAll: true,
         },
+        {
+            key: 'project_id',
+            label: 'Project',
+            value: props?.filters?.project_id ?? 'all',
+            onChange: (value: string) => {
+                router.get(
+                    task.index().url,
+                    { ...props?.filters, project_id: value, page: 1 },
+                    { preserveScroll: true }
+                );
+            },
+            options: props?.projects?.map((p: any) => ({
+                value: String(p.id),
+                label: p.name,
+            })) || [],
+            addAll: true,
+        },
+        {
+            key: 'assignee_id',
+            label: 'Assignee',
+            value: props?.filters?.assignee_id ?? 'all',
+            onChange: (value: string) => {
+                router.get(
+                    task.index().url,
+                    { ...props?.filters, assignee_id: value, page: 1 },
+                    { preserveScroll: true }
+                );
+            },
+            options: props?.github_users?.map((u: any) => ({
+                value: String(u.id),
+                label: u.display_name || u.username,
+            })) || [],
+            addAll: true,
+        },
     ];
 
     const checksOptions = [

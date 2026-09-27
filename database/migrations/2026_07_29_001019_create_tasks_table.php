@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->foreignId('project_id')->nullable()->constrained('projects');
             $table->foreignId('sprint_id')->nullable()->constrained('sprints');
-            $table->foreignId('assignee_id')->nullable()->constrained('users');
+            $table->foreignId('assignee_id')->nullable()->constrained('github_users');
             $table->foreignId('github_issue_id')->nullable()->constrained('github_issues');
             $table->foreignId('reporter_id')->constrained('users');
             $table->enum('status', array_column(TaskStatusEnum::cases(), 'value'))->default(TaskStatusEnum::Backlog->value);

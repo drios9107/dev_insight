@@ -23,7 +23,7 @@ class Task extends Model
 
     public function assignee()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(GithubUser::class);
     }
 
     public function reporter()

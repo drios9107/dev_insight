@@ -10,10 +10,17 @@ class TaskService
 {
     public function index(?Request $request = null)
     {
-        $query = Task::query();
+        $query = Task::query()
+            ->with([
+                'project',
+                'sprint',
+                'assignee',
+                'reporter',
+                'githubIssue',
+            ]);;
 
         if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('description', 'ilike', $search)
@@ -21,7 +28,8 @@ class TaskService
                         $p->where('name', 'ilike', $search);
                     })
                     ->orWhereHas('assignee', function ($a) use ($search) {
-                        $a->where('name', 'ilike', $search);
+                        $a->where('username', 'ilike', $search)
+                            ->orWhere('name', 'ilike', $search);
                     })
                     ->orWhereHas('reporter', function ($r) use ($search) {
                         $r->where('name', 'ilike', $search);

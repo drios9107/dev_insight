@@ -35,12 +35,17 @@ class TaskController extends Controller
     {
         $data = TaskResource::collection($this->service->index($request));
 
-        $filters = $this->extractFilters($request, ['status', 'priority', 'overdue']);
+        $filters = $this->extractFilters($request, ['status', 'priority', 'overdue', 'project_id', 'assignee_id']);
+
+        $projects = Project::select('id', 'name')->get();
+        $githubUsers = GithubUser::select('id', 'username', 'name')->get();
 
         return Inertia::render('task/index', [
             'list' => $data,
             'title' => 'Tasks',
             'filters' => $filters,
+            'projects' => $projects,
+            'github_users' => $githubUsers,
         ]);
     }
 
