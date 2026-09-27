@@ -1,0 +1,134 @@
+
+import { useEffect, useState } from 'react';
+import { IProjectShow, TProjectStatus } from '@/types/models/project';
+import { ProjectStatusEnum } from '@/enums/project';
+import { useFetch } from '@/hooks/use-fetch';
+import project from '@/routes/project';
+import ShadDrawer from '../shad-drawer';
+import { Badge } from '@/components/ui/badge';
+import {
+    Users,
+    ListCheck,
+    Calendar,
+    User,
+    Github,
+    ListStart,
+} from 'lucide-react';
+import StatCard from '../stat-card';
+import DetailItem from '../detail-item';
+
+interface ProjectDetailsProps {
+    itemId: number;
+    onClose: () => void;
+}
+
+const getProjectStatusColor = (status: TProjectStatus) => {
+    const mapping = {
+        planning: 'warning',
+        active: 'info',
+        paused: 'destructive',
+        completed: 'success',
+        archived: 'secondary',
+    };
+    return mapping[status] as 'warning' | 'info' | 'destructive' | 'success' | 'secondary';
+};
+
+export function ProjectDetails({ itemId, onClose }: ProjectDetailsProps) {
+    const [itemToView, setItemToView] = useState<IProjectShow | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const { getOne } = useFetch();
+
+    useEffect(() => {
+        setIsLoading(true);
+        getOne(project.show(itemId).url)
+            .then((res) => setItemToView(res?.data))
+            .finally(() => setIsLoading(false));
+    }, [itemId, getOne]);
+
+    return (
+        <ShadDrawer
+            title="Project Details"
+            isOpen
+            setIsOpen={(open) => !open && onClose()}
+        >
+            {isLoading || !itemToView ? (
+                <div className="flex items-center justify-center py-12">
+                    <p className="text-sm text-gray-400">Loading...</p>
+                </div>
+            ) : (
+                <div className="space-y-6">
+                    {/* HEADER */}
+                    <div>
+                        <h2 className="text-xl font-bold text-gray-900 mb-2">
+                            {itemToView.name}
+                        </h2>
+                        <Badge variant={getProjectStatusColor(itemToView.status)}>
+                            {ProjectStatusEnum[itemToView.status]}
+                        </Badge>
+                    </div>
+
+                    {/* STATS */}
+                    <div className="grid grid-cols-3 gap-3">
+                        <StatCard icon={Users} label="Developers" value={itemToView.github_users_count ?? 0} color="blue" />
+                        <StatCard icon={ListCheck} label="Tasks" value={itemToView.tasks_count ?? 0} color="green" />
+                        <StatCard icon={ListStart} label="Sprints" value={itemToView.sprints_count ?? 0} color="purple" />
+                    </div>
+
+                    {/* PROGRESS */}
+                    {itemToView.progress !== undefined && (
+                        <div>
+                            <div className="flex items-center justify-between mb-2">
+                                <h3 className="text-sm font-semibold text-gray-700">Progress</h3>
+                                <span className="text-sm font-medium text-gray-900">
+                                    {itemToView.progress}%
+                                </span>
+                            </div>
+                            <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
+                                <div
+                                    className="h-full bg-green-500 rounded-full transition-all duration-500"
+                                    style={{ width: `${itemToView.progress}%` }}
+                                />
+                            </div>
+                        </div>
+                    )}
+
+                    {/* METADATA */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <DetailItem icon={Users} label="Team" value={itemToView.team?.name} />
+                        <DetailItem
+                            icon={User}
+                            label="Owner"
+                            value={itemToView.owner?.name}
+                            avatar={itemToView.owner?.avatar_url}
+                        />
+                        <DetailItem icon={Calendar} label="Start Date" value={itemToView.start_date} />
+                        <DetailItem icon={Calendar} label="End Date" value={itemToView.end_date} />
+                        {itemToView.github_repository && (
+                            <DetailItem
+                                icon={Github}
+                                label="Repository"
+                                value={itemToView.github_repository.full_name}
+                            />
+                        )}
+                    </div>
+
+                    {/* DESCRIPTION */}
+                    {itemToView.description && (
+                        <div>
+                            <h3 className="text-sm font-semibold text-gray-700 mb-2">Description</h3>
+                            <div className="text-sm text-gray-600 whitespace-pre-wrap bg-gray-50 rounded-lg p-3">
+                                {itemToView.description}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* DATES */}
+                    <div className="grid grid-cols-2 gap-4 text-xs text-gray-400 pt-4 border-t">
+                        <div><span className="font-medium">Created:</span> {itemToView.created_at}</div>
+                        <div><span className="font-medium">Updated:</span> {itemToView.updated_at}</div>
+                    </div>
+                </div>
+            )}
+        </ShadDrawer>
+    );
+}

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Project\ProjectStoreRequest;
 use App\Http\Requests\Project\ProjectUpdateRequest;
 use App\Http\Resources\ProjectResource;
+use App\Models\Project;
 use App\Services\ProjectService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -53,6 +54,11 @@ class ProjectController extends Controller
 
         return redirect()->route('project.index')
             ->with('success', 'Project created successfully!');
+    }
+
+    public function show(Project $project)
+    {
+        return new ProjectResource($this->service->show($project->id));
     }
 
     /**
