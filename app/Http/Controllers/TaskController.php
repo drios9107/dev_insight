@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Concerns\ExtractsFilters;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskResource;
+use App\Models\GithubUser;
+use App\Models\Project;
 use App\Services\TaskService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;

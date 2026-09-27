@@ -1,5 +1,7 @@
+import { useCallback } from "react";
+
 export function useFetch() {
-    const get = async (
+    const get = useCallback(async (
         url: string,
         setItems: (list: []) => void,
         labelField: string = 'name',
@@ -17,7 +19,7 @@ export function useFetch() {
                 }
             })
             .catch((err) => console.log('***fetch error', err));
-    };
+    }, []);
 
     return { get };
 }

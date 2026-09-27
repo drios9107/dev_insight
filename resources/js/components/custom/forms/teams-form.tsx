@@ -31,14 +31,14 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
     useEffect(() => {
         setUsersLoading(true);
         get(user.all().url, setUsers).finally(() => setUsersLoading(false));
-    }, []);
+    }, [get]);
 
     useEffect(() => {
         setGithubUsersLoading(true);
         get(githubUser.all().url, setGithubUsers, 'display_name').finally(() =>
             setGithubUsersLoading(false),
         );
-    }, []);
+    }, [get]);
 
     useEffect(() => {
         if (item) {

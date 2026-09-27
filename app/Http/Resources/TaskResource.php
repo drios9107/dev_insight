@@ -14,30 +14,30 @@ class TaskResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
 
-            'project' => $this->whenLoaded('project', fn () => [
+            'project' => $this->whenLoaded('project', fn() => [
                 'id' => $this->project->id,
                 'name' => $this->project->name,
             ]),
 
-            'sprint' => $this->whenLoaded('sprint', fn () => $this->sprint ? [
+            'sprint' => $this->whenLoaded('sprint', fn() => $this->sprint ? [
                 'id' => $this->sprint->id,
                 'name' => $this->sprint->name,
             ] : null),
 
-            'assignee' => $this->whenLoaded('assignee', fn () => $this->assignee ? [
+            'assignee' => $this->whenLoaded('assignee', fn() => $this->assignee ? [
                 'id' => $this->assignee->id,
                 'username' => $this->assignee->username,
                 'display_name' => $this->assignee->displayName,
                 'avatar' => $this->assignee->avatar,
             ] : null),
 
-            'reporter' => $this->whenLoaded('reporter', fn () => $this->reporter ? [
+            'reporter' => $this->whenLoaded('reporter', fn() => $this->reporter ? [
                 'id' => $this->reporter->id,
                 'name' => $this->reporter->name,
                 'avatar' => $this->reporter->avatar_url,
             ] : null),
 
-            'github_issue' => $this->whenLoaded('githubIssue', fn () => $this->githubIssue ? [
+            'github_issue' => $this->whenLoaded('githubIssue', fn() => $this->githubIssue ? [
                 'id' => $this->githubIssue->id,
                 'number' => $this->githubIssue->number,
                 'title' => $this->githubIssue->title,
@@ -47,8 +47,8 @@ class TaskResource extends JsonResource
             'status' => $this->status,
             'priority' => $this->priority,
             'story_points' => $this->story_points,
-            'due_date' => $this->due_date?->format('Y-m-d'),
-            'completed_at' => $this->completed_at?->format('Y-m-d'),
+            'due_date' => $this->due_date ? date('Y-m-d', strtotime($this->due_date)) : null,
+            'completed_at' => $this->completed_at ? date('Y-m-d', strtotime($this->completed_at)) : null,
             'hours_estimate' => $this->hours_estimate ?? 0,
             'hours_spent' => $this->hours_spent ?? 0,
             'order' => $this->order ?? 0,

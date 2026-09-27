@@ -12,6 +12,7 @@ import ShadInput from '../inputs/shad-input';
 import ShadSelect from '../inputs/shad-select';
 import ShadTextarea from '../inputs/shad-textarea';
 import { SimpleModal } from '../simple-modal';
+import githubUser from '@/routes/github-user';
 
 const defaultData = {
     title: '',
@@ -38,6 +39,9 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
     const [users, setUsers] = useState([]);
     const [usersLoading, setUsersLoading] = useState(false);
 
+    const [githubUsers, setGithubUsers] = useState([]);
+    const [githubUsersLoading, setGithubUsersLoading] = useState(false);
+
     const [projects, setProjects] = useState([]);
     const [projectsLoading, setProjectsLoading] = useState(false);
 
@@ -46,15 +50,18 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
 
     const fetchSelectorsData = useCallback(async () => {
         setUsersLoading(true);
+        setGithubUsersLoading(true);
         setProjectsLoading(true);
         setSprintsLoading(true);
 
         await Promise.all([
             get(user.all().url, setUsers),
+            get(githubUser.all().url, setGithubUsers, 'username'),
             get(project.all().url, setProjects),
             get(sprint.all().url, setSprints),
         ]).finally(() => {
             setUsersLoading(false);
+            setGithubUsersLoading(false);
             setProjectsLoading(false);
             setSprintsLoading(false);
         });
@@ -62,7 +69,7 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
 
     useEffect(() => {
         fetchSelectorsData();
-    }, []);
+    }, [fetchSelectorsData]);
 
     useEffect(() => {
         if (item) {
@@ -135,7 +142,7 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
             title="Create Task"
             description="Create a new task"
             isLoading={
-                processing || usersLoading || projectsLoading || sprintsLoading
+                processing || usersLoading || projectsLoading || sprintsLoading || githubUsersLoading
             }
         >
             <>
@@ -153,7 +160,7 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
                     name="assignee_id"
                     value={data.assignee_id}
                     onChange={(e: string) => setData('assignee_id', e)}
-                    list={users}
+                    list={githubUsers}
                     errors={errors}
                 />
                 <ShadSelect

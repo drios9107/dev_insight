@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Enums\TaskPriorityEnum;
 use App\Enums\TaskStatusEnum;
 use App\Models\GithubIssue;
+use App\Models\GithubUser;
 use App\Models\Project;
 use App\Models\Sprint;
 use App\Models\Task;
