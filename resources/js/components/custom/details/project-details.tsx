@@ -1,11 +1,4 @@
 
-import { useEffect, useState } from 'react';
-import { IProjectShow, TProjectStatus } from '@/types/models/project';
-import { ProjectStatusEnum } from '@/enums/project';
-import { useFetch } from '@/hooks/use-fetch';
-import project from '@/routes/project';
-import ShadDrawer from '../shad-drawer';
-import { Badge } from '@/components/ui/badge';
 import {
     Users,
     ListCheck,
@@ -14,9 +7,16 @@ import {
     Github,
     ListStart,
 } from 'lucide-react';
-import StatCard from '../stat-card';
+import { useEffect, useState } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { ProjectStatusEnum } from '@/enums/project';
+import { useFetch } from '@/hooks/use-fetch';
+import project from '@/routes/project';
+import type { IProjectShow, TProjectStatus } from '@/types/models/project';
 import DetailItem from '../detail-item';
 import { Loader } from '../loader';
+import ShadDrawer from '../shad-drawer';
+import StatCard from '../stat-card';
 
 interface ProjectDetailsProps {
     itemId: number;
@@ -31,6 +31,7 @@ const getProjectStatusColor = (status: TProjectStatus) => {
         completed: 'success',
         archived: 'secondary',
     };
+
     return mapping[status] as 'warning' | 'info' | 'destructive' | 'success' | 'secondary';
 };
 

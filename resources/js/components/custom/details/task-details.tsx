@@ -1,15 +1,15 @@
+import { Clock, User, FolderKanban, ListStart, Calendar, Award, TrendingUp, Bug } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { ITaskShow } from '@/types/models/task';
-import { useFetch } from '@/hooks/use-fetch';
-import task from '@/routes/task';
-import ShadDrawer from '../shad-drawer';
 import { Badge } from '@/components/ui/badge';
 import { TaskPriorityEnum, TaskStatusEnum } from '@/enums/task';
-import { Clock, User, FolderKanban, ListStart, Calendar, Award, TrendingUp, Bug } from 'lucide-react';
+import { useFetch } from '@/hooks/use-fetch';
 import { getTaskPriorityColor, getTaskStatusColor } from '@/lib/utils/task';
+import task from '@/routes/task';
+import type { ITaskShow } from '@/types/models/task';
 import DetailItem from '../detail-item';
 import { TaskComments } from '../forms/task-comment';
 import { Loader } from '../loader';
+import ShadDrawer from '../shad-drawer';
 
 interface TaskDetailsProps {
     itemId: number;

@@ -3,6 +3,7 @@ import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import BodyWrapper from '@/components/custom/body-wrapper';
 import { DeleteModal } from '@/components/custom/delete-modal';
+import { TeamDetails } from '@/components/custom/details/team-details';
 import CustomForm from '@/components/custom/forms/teams-form';
 import Header from '@/components/custom/header';
 import type { IColumn } from '@/components/custom/table/data-table';
@@ -10,7 +11,6 @@ import { DataTable } from '@/components/custom/table/data-table';
 import { Badge } from '@/components/ui/badge';
 import team from '@/routes/team';
 import type { ITeam } from '@/types/models/team';
-import { TeamDetails } from '@/components/custom/details/team-details';
 
 const Teams = (props: any) => {
     const [isOpen, setIsOpen] = useState(false);

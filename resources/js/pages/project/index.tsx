@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import BodyWrapper from '@/components/custom/body-wrapper';
 import { DeleteModal } from '@/components/custom/delete-modal';
+import { ProjectDetails } from '@/components/custom/details/project-details';
 import CustomForm from '@/components/custom/forms/projects-form';
 import Header from '@/components/custom/header';
 import type { IColumn } from '@/components/custom/table/data-table';
@@ -12,7 +13,6 @@ import { Badge } from '@/components/ui/badge';
 import { ProjectStatusEnum } from '@/enums/project';
 import project from '@/routes/project';
 import type { IProject, IProjectList, TProjectStatus } from '@/types/models/project';
-import { ProjectDetails } from '@/components/custom/details/project-details';
 
 const Projects = (props: any) => {
     const [isOpen, setIsOpen] = useState(false);

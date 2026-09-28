@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import BodyWrapper from '@/components/custom/body-wrapper';
 import { DeleteModal } from '@/components/custom/delete-modal';
+import { GithubUserDetails } from '@/components/custom/details/github-user-details';
 import Header from '@/components/custom/header';
 import ImportGithubUserModal from '@/components/custom/import-github-user-modal';
 import { DataTable } from '@/components/custom/table/data-table';
@@ -13,7 +14,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import githubUser from '@/routes/github-user';
 import type { IGithubUser, IGithubUserList } from '@/types/models/github-user';
-import { GithubUserDetails } from '@/components/custom/details/github-user-details';
 
 const GithubUsers = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<IGithubUser | null>(null);

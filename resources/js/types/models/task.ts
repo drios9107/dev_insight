@@ -1,8 +1,8 @@
-import type { IProject } from './project';
-import type { IGithubUser } from './github-user';
-import type { ISprint } from './sprint';
 import type { IUser } from '../user';
-import { IGithubsIssue } from './github-issue';
+import type { IGithubsIssue } from './github-issue';
+import type { IGithubUser } from './github-user';
+import type { IProject } from './project';
+import type { ISprint } from './sprint';
 
 export type TTaskStatus = 'backlog' | 'todo' | 'in_progress' | 'review' | 'done' | 'cancelled';
 export type TTaskPriority = 'low' | 'medium' | 'high' | 'critical';

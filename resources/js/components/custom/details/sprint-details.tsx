@@ -1,14 +1,14 @@
+import { Calendar, FolderKanban, TrendingUp, Award, Target, ListCheck } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { ISprintShow, TSprintStatus } from '@/types/models/sprint';
-import { useFetch } from '@/hooks/use-fetch';
-import sprint from '@/routes/sprint';
-import ShadDrawer from '../shad-drawer';
 import { Badge } from '@/components/ui/badge';
 import { SprintStatusEnum } from '@/enums/sprint';
-import { Calendar, FolderKanban, TrendingUp, Award, Target, ListCheck } from 'lucide-react';
-import TaskStat from '../task-stat';
+import { useFetch } from '@/hooks/use-fetch';
+import sprint from '@/routes/sprint';
+import type { ISprintShow, TSprintStatus } from '@/types/models/sprint';
 import DetailItem from '../detail-item';
 import { Loader } from '../loader';
+import ShadDrawer from '../shad-drawer';
+import TaskStat from '../task-stat';
 
 interface SprintDetailsProps {
     itemId: number;
@@ -22,6 +22,7 @@ const getSprintStatusColor = (status: TSprintStatus) => {
         completed: 'success',
         cancelled: 'destructive',
     };
+
     return mapping[status] as 'warning' | 'info' | 'success' | 'destructive';
 };
 

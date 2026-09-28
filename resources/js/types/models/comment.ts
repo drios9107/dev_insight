@@ -1,4 +1,4 @@
-import { IUser } from '../user';
+import type { IUser } from '../user';
 import type { ITask } from './task';
 
 export interface IComment {

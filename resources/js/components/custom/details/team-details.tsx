@@ -1,14 +1,14 @@
+import { Users, User, Calendar, Shield } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { ITeamShow } from '@/types/models/team';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { useFetch } from '@/hooks/use-fetch';
 import team from '@/routes/team';
-import ShadDrawer from '../shad-drawer';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Loader } from '../loader';
-import { Users, User, Calendar, Shield } from 'lucide-react';
-import StatCard from '../stat-card';
+import type { ITeamShow } from '@/types/models/team';
 import DetailItem from '../detail-item';
+import { Loader } from '../loader';
+import ShadDrawer from '../shad-drawer';
+import StatCard from '../stat-card';
 
 interface TeamDetailsProps {
     itemId: number;

@@ -3,6 +3,7 @@ import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import BodyWrapper from '@/components/custom/body-wrapper';
 import { DeleteModal } from '@/components/custom/delete-modal';
+import { SprintDetails } from '@/components/custom/details/sprint-details';
 import CustomForm from '@/components/custom/forms/sprints-form';
 import Header from '@/components/custom/header';
 import { DataTable } from '@/components/custom/table/data-table';
@@ -11,7 +12,6 @@ import { Badge } from '@/components/ui/badge';
 import { SprintStatusEnum } from '@/enums/sprint';
 import sprint from '@/routes/sprint';
 import type { ISprint, ISprintList, TSprintStatus } from '@/types/models/sprint';
-import { SprintDetails } from '@/components/custom/details/sprint-details';
 
 const Sprints = (props: any) => {
     const [isOpen, setIsOpen] = useState(false);

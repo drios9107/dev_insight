@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import type { TTaskPriority, TTaskStatus } from '@/enums/task';
 import { TaskPriorityEnum, TaskStatusEnum } from '@/enums/task';
 import { useFetch } from '@/hooks/use-fetch';
+import githubUser from '@/routes/github-user';
 import project from '@/routes/project';
 import sprint from '@/routes/sprint';
 import user from '@/routes/user';
@@ -12,7 +13,6 @@ import ShadInput from '../inputs/shad-input';
 import ShadSelect from '../inputs/shad-select';
 import ShadTextarea from '../inputs/shad-textarea';
 import { SimpleModal } from '../simple-modal';
-import githubUser from '@/routes/github-user';
 
 const defaultData = {
     title: '',

@@ -1,6 +1,6 @@
-import type { ITeam } from './team';
-import type { IGithubRepository } from './github-repository';
 import type { IUser } from '../user';
+import type { IGithubRepository } from './github-repository';
+import type { ITeam } from './team';
 
 export type TProjectStatus = 'planning' | 'active' | 'paused' | 'completed' | 'archived';
 
