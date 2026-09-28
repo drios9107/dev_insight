@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import InfoRow from '../info-row';
 import StatCard from '../stat-card';
+import { Loader } from '../loader';
 
 interface GithubUserDetailsProps {
     itemId: number;
@@ -40,11 +41,7 @@ export function GithubUserDetails({ itemId, onClose }: GithubUserDetailsProps) {
             isOpen
             setIsOpen={(open) => !open && onClose()}
         >
-            {isLoading || !itemToView ? (
-                <div className="flex items-center justify-center py-12">
-                    <p className="text-sm text-gray-400">Loading...</p>
-                </div>
-            ) : (
+            {isLoading || !itemToView ? <Loader /> : (
                 <div className="space-y-6">
                     {/* HEADER */}
                     <div className="flex items-center gap-4">

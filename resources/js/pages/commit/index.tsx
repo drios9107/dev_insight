@@ -44,12 +44,14 @@ const Commits = (props: any) => {
             label: 'Date',
             sortable: true,
             render: (value) => value ?? '-',
+            className: 'min-w-[125px]',
         },
         {
             key: 'pull_request',
             label: 'PR',
             render: (value) =>
                 value?.title ? `#${value.number} - ${value.title}` : '-',
+            className: 'min-w-[200px]',
         },
     ];
 

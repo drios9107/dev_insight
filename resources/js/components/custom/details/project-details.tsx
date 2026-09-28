@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import StatCard from '../stat-card';
 import DetailItem from '../detail-item';
+import { Loader } from '../loader';
 
 interface ProjectDetailsProps {
     itemId: number;
@@ -51,11 +52,7 @@ export function ProjectDetails({ itemId, onClose }: ProjectDetailsProps) {
             isOpen
             setIsOpen={(open) => !open && onClose()}
         >
-            {isLoading || !itemToView ? (
-                <div className="flex items-center justify-center py-12">
-                    <p className="text-sm text-gray-400">Loading...</p>
-                </div>
-            ) : (
+            {isLoading || !itemToView ? <Loader /> : (
                 <div className="space-y-6">
                     {/* HEADER */}
                     <div>

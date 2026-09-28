@@ -8,7 +8,7 @@ function StatCard({
 }: {
     icon: React.ComponentType<{ className?: string }>;
     label: string;
-    value: number;
+    value: number | string;
     color: string;
 }) {
     const colorMap: Record<string, string> = {
@@ -16,6 +16,7 @@ function StatCard({
         purple: 'text-purple-600 bg-purple-50',
         green: 'text-green-600 bg-green-50',
         red: 'text-red-600 bg-red-50',
+        gray: 'text-gray-600 bg-gray-50',
     };
 
     return (

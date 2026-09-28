@@ -47,6 +47,7 @@ const GithubRepositories = (props: any) => {
             key: 'last_synced_at',
             label: 'Last Synced',
             sortable: true,
+            className: 'min-w-[125px]',
             render: (value) => value ?? 'Never',
         },
         {
