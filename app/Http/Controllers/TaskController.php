@@ -7,6 +7,7 @@ use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\GithubUser;
 use App\Models\Project;
+use App\Models\Task;
 use App\Services\TaskService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -62,6 +63,11 @@ class TaskController extends Controller
 
         return redirect()->route('task.index')
             ->with('success', 'Task created successfully!');
+    }
+
+    public function show(Task $task)
+    {
+        return new TaskResource($this->service->show($task->id));
     }
 
     /**

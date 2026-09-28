@@ -77,11 +77,15 @@ class TaskService
      * @param  int  $id
      * @return Task
      */
-    public function show($id)
+    public function show(int $id): Task
     {
-        $item = Task::findOrFail($id);
-
-        return $item;
+        return Task::with([
+            'project',
+            'sprint',
+            'assignee',
+            'reporter',
+            'githubIssue',
+        ])->findOrFail($id);
     }
 
     /**

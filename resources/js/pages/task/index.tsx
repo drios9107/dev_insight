@@ -13,15 +13,15 @@ import { TaskPriorityEnum, TaskStatusEnum } from '@/enums/task';
 import type { TTaskPriority, TTaskStatus } from '@/enums/task';
 import { getTaskPriorityColor, getTaskStatusColor } from '@/lib/utils/task';
 import task from '@/routes/task';
-import type { ITask } from '@/types/models/task';
+import type { ITask, ITaskList } from '@/types/models/task';
 
 const Tasks = (props: any) => {
     const [isOpen, setIsOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState<ITask | null>(null);
     const [itemToEdit, setItemToEdit] = useState<ITask | null>(null);
-    const [itemToView, setItemToView] = useState<ITask | null>(null);
+    const [itemToViewId, setItemToViewId] = useState<number | null>(null);
 
-    const columns: IColumn[] = [
+    const columns: IColumn<ITaskList>[] = [
         {
             key: 'title',
             label: 'Title',
@@ -51,22 +51,26 @@ const Tasks = (props: any) => {
         {
             key: 'assignee',
             label: 'Assignee',
-            render: (value) => value?.name || '-',
+            render: (value) => value?.display_name || '-',
+            className: 'min-w-[125px]',
         },
         {
             key: 'reporter',
             label: 'Reporter',
             render: (value) => value?.name || '-',
+            className: 'min-w-[125px]',
         },
         {
             key: 'project',
             label: 'Project',
             render: (value) => value?.name || '-',
+            className: 'min-w-[180px]',
         },
         {
             key: 'sprint',
             label: 'Sprint',
             render: (value) => value?.name || '-',
+            className: 'min-w-[125px]',
         },
         {
             key: 'story_points',
@@ -219,9 +223,9 @@ const Tasks = (props: any) => {
                     filters={filterOptions}
                     checks={checksOptions}
                     initialFilters={props.filters}
+                    onView={item => setItemToViewId(item?.id)}
                     onEdit={onEdit}
                     onDelete={setItemToDelete}
-                    onView={(item) => setItemToView(item)}
                 />
 
                 {isOpen && (
@@ -230,11 +234,8 @@ const Tasks = (props: any) => {
                 {itemToDelete && (
                     <DeleteModal onClose={onCloseForm} onClick={onDelete} />
                 )}
-                {itemToView && (
-                    <TaskDetails
-                        itemToView={itemToView}
-                        onClose={() => setItemToView(null)}
-                    />
+                {itemToViewId && (
+                    <TaskDetails itemId={itemToViewId} onClose={() => setItemToViewId(null)} />
                 )}
             </BodyWrapper>
         </>
