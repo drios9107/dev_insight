@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SprintRequest;
 use App\Http\Resources\SprintResource;
+use App\Models\Sprint;
 use App\Services\SprintService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -52,6 +53,11 @@ class SprintController extends Controller
 
         return redirect()->route('sprint.index')
             ->with('success', 'Sprint created successfully!');
+    }
+
+    public function show(Sprint $sprint)
+    {
+        return new SprintResource($this->service->show($sprint->id));
     }
 
     /**

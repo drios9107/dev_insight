@@ -9,10 +9,11 @@ class SprintService
 {
     public function index(?Request $request = null)
     {
-        $query = Sprint::query();
+        $query = Sprint::query()
+            ->with(['project']);
 
         if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
                     ->orWhere('goal', 'ilike', $search)
@@ -43,11 +44,12 @@ class SprintService
      * @param  int  $id
      * @return Sprint
      */
-    public function show($id)
+    public function show(int $id): Sprint
     {
-        $item = Sprint::findOrFail($id);
-
-        return $item;
+        return Sprint::with([
+            'project',
+            'tasks',
+        ])->findOrFail($id);
     }
 
     /**

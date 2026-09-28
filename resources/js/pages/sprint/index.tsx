@@ -10,23 +10,27 @@ import type { IColumn } from '@/components/custom/table/data-table';
 import { Badge } from '@/components/ui/badge';
 import { SprintStatusEnum } from '@/enums/sprint';
 import sprint from '@/routes/sprint';
-import type { ISprint, TSprintStatus } from '@/types/models/sprint';
+import type { ISprint, ISprintList, TSprintStatus } from '@/types/models/sprint';
+import { SprintDetails } from '@/components/custom/details/sprint-details';
 
 const Sprints = (props: any) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [itemToViewId, setItemToViewId] = useState<number | null>(null);
     const [itemToDelete, setItemToDelete] = useState<ISprint | null>(null);
     const [itemToEdit, setItemToEdit] = useState<ISprint | null>(null);
 
-    const columns: IColumn[] = [
+    const columns: IColumn<ISprintList>[] = [
         {
             key: 'name',
             label: 'Name',
             sortable: true,
+            className: 'min-w-[125px]',
         },
         {
             key: 'project',
             label: 'Project',
             render: (value) => value?.name || '-',
+            className: 'min-w-[180px]',
         },
         {
             key: 'status',
@@ -43,12 +47,14 @@ const Sprints = (props: any) => {
             label: 'Start Date',
             sortable: true,
             render: (value) => value ?? '-',
+            className: 'min-w-[125px]',
         },
         {
             key: 'end_date',
             label: 'End Date',
             sortable: true,
             render: (value) => value ?? '-',
+            className: 'min-w-[125px]',
         },
         {
             key: 'velocity',
@@ -132,10 +138,14 @@ const Sprints = (props: any) => {
                     columns={columns}
                     filters={filterOptions}
                     initialFilters={props.filters}
+                    onView={item => setItemToViewId(item?.id)}
                     onEdit={onEdit}
                     onDelete={setItemToDelete}
                 />
 
+                {itemToViewId && (
+                    <SprintDetails itemId={itemToViewId} onClose={() => setItemToViewId(null)} />
+                )}
                 {isOpen && (
                     <CustomForm onClose={onCloseForm} item={itemToEdit} />
                 )}
