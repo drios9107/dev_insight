@@ -5,6 +5,8 @@ import type { IColumn } from '@/components/custom/table/data-table';
 import { DataTable } from '@/components/custom/table/data-table';
 import { Badge } from '@/components/ui/badge';
 import activityLog from '@/routes/activity-log';
+import { ActivityLogTypeEnum } from '@/enums/activity-log';
+import { TActivityLogType } from '@/types/models/activity-log';
 
 const ActivityLogs = (props: any) => {
     const columns: IColumn[] = [
@@ -13,7 +15,7 @@ const ActivityLogs = (props: any) => {
             label: 'Type',
             sortable: true,
             render: (value: string) => (
-                <Badge variant={getBadgeVariant(value)}>{value}</Badge>
+                <Badge variant={getBadgeVariant(value)}>{ActivityLogTypeEnum[value as TActivityLogType]}</Badge>
             ),
         },
         {
@@ -47,6 +49,7 @@ const ActivityLogs = (props: any) => {
             key: 'created_at',
             label: 'Date',
             sortable: true,
+            className: 'min-w-[125px]',
             render: (value) => (value ? new Date(value).toLocaleString() : '-'),
         },
     ];

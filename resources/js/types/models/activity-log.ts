@@ -3,9 +3,11 @@ import type { IProject } from './project';
 import type { ITask } from './task';
 import type { ITeam } from './team';
 
+export type TActivityLogType = 'created' | 'updated' | 'deleted';
+
 export interface IActivityLog {
     id: number;
-    type: 'created' | 'updated' | 'deleted';
+    type: TActivityLogType;
     description: string;
     user?: Pick<IUser, 'id' | 'name'> | null;
     team?: Pick<ITeam, 'id' | 'name'> | null;
