@@ -12,7 +12,7 @@ class TeamService
         $query = Team::query()->with(['owner', 'githubUsers']);
 
         if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
                     ->orWhere('description', 'ilike', $search)
@@ -52,11 +52,12 @@ class TeamService
      * @param  int  $id
      * @return Team
      */
-    public function show($id)
+    public function show(int $id): Team
     {
-        $item = Team::findOrFail($id);
-
-        return $item;
+        return Team::with([
+            'owner',
+            'githubUsers'
+        ])->findOrFail($id);
     }
 
     /**

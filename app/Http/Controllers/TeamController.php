@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TeamRequest;
 use App\Http\Resources\TeamResource;
+use App\Models\Team;
 use App\Services\TeamService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -50,6 +51,11 @@ class TeamController extends Controller
 
         return redirect()->route('team.index')
             ->with('success', 'Team created successfully!');
+    }
+
+    public function show(Team $team)
+    {
+        return new TeamResource($this->service->show($team->id));
     }
 
     /**

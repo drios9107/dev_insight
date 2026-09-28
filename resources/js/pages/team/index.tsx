@@ -10,11 +10,13 @@ import { DataTable } from '@/components/custom/table/data-table';
 import { Badge } from '@/components/ui/badge';
 import team from '@/routes/team';
 import type { ITeam } from '@/types/models/team';
+import { TeamDetails } from '@/components/custom/details/team-details';
 
 const Teams = (props: any) => {
     const [isOpen, setIsOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState<ITeam | null>(null);
     const [itemToEdit, setItemToEdit] = useState<ITeam | null>(null);
+    const [itemToViewId, setItemToViewId] = useState<number | null>(null);
 
     const columns: IColumn[] = [
         {
@@ -102,10 +104,14 @@ const Teams = (props: any) => {
                     columns={columns}
                     filters={filterOptions}
                     initialFilters={props.filters}
+                    onView={(item) => setItemToViewId(item.id)}
                     onEdit={onEdit}
                     onDelete={setItemToDelete}
                 />
 
+                {itemToViewId && (
+                    <TeamDetails itemId={itemToViewId} onClose={() => setItemToViewId(null)} />
+                )}
                 {isOpen && (
                     <CustomForm onClose={onCloseForm} item={itemToEdit} />
                 )}
