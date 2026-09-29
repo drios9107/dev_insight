@@ -4,9 +4,9 @@ import Header from '@/components/custom/header';
 import type { IColumn } from '@/components/custom/table/data-table';
 import { DataTable } from '@/components/custom/table/data-table';
 import { Badge } from '@/components/ui/badge';
-import activityLog from '@/routes/activity-log';
 import { ActivityLogTypeEnum } from '@/enums/activity-log';
-import { TActivityLogType } from '@/types/models/activity-log';
+import activityLog from '@/routes/activity-log';
+import type { TActivityLogType } from '@/types/models/activity-log';
 
 const ActivityLogs = (props: any) => {
     const columns: IColumn[] = [
@@ -15,7 +15,9 @@ const ActivityLogs = (props: any) => {
             label: 'Type',
             sortable: true,
             render: (value: string) => (
-                <Badge variant={getBadgeVariant(value)}>{ActivityLogTypeEnum[value as TActivityLogType]}</Badge>
+                <Badge variant={getBadgeVariant(value)}>
+                    {ActivityLogTypeEnum[value as TActivityLogType]}
+                </Badge>
             ),
         },
         {

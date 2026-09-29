@@ -17,7 +17,7 @@ export interface ISprint {
     updated_at: string;
 }
 
-export interface ISprintList extends ISprint { }
+export interface ISprintList extends ISprint {}
 
 export interface ISprintShow extends ISprint {
     goal: string | null;

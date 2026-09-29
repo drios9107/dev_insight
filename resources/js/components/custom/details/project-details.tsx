@@ -1,4 +1,3 @@
-
 import {
     Users,
     ListCheck,
@@ -32,7 +31,8 @@ const getProjectStatusColor = (status: TProjectStatus) => {
         archived: 'secondary',
     };
 
-    return mapping[status] as 'warning' | 'info' | 'destructive' | 'success' | 'secondary';
+    return mapping[status] as
+        'warning' | 'info' | 'destructive' | 'success' | 'secondary';
 };
 
 export function ProjectDetails({ itemId, onClose }: ProjectDetailsProps) {
@@ -53,37 +53,58 @@ export function ProjectDetails({ itemId, onClose }: ProjectDetailsProps) {
             isOpen
             setIsOpen={(open) => !open && onClose()}
         >
-            {isLoading || !itemToView ? <Loader /> : (
+            {isLoading || !itemToView ? (
+                <Loader />
+            ) : (
                 <div className="space-y-6">
                     {/* HEADER */}
                     <div>
-                        <h2 className="text-xl font-bold text-gray-900 mb-2">
+                        <h2 className="mb-2 text-xl font-bold text-gray-900">
                             {itemToView.name}
                         </h2>
-                        <Badge variant={getProjectStatusColor(itemToView.status)}>
+                        <Badge
+                            variant={getProjectStatusColor(itemToView.status)}
+                        >
                             {ProjectStatusEnum[itemToView.status]}
                         </Badge>
                     </div>
 
                     {/* STATS */}
                     <div className="grid grid-cols-3 gap-3">
-                        <StatCard icon={Users} label="Developers" value={itemToView.github_users_count ?? 0} color="blue" />
-                        <StatCard icon={ListCheck} label="Tasks" value={itemToView.tasks_count ?? 0} color="green" />
-                        <StatCard icon={ListStart} label="Sprints" value={itemToView.sprints_count ?? 0} color="purple" />
+                        <StatCard
+                            icon={Users}
+                            label="Developers"
+                            value={itemToView.github_users_count ?? 0}
+                            color="blue"
+                        />
+                        <StatCard
+                            icon={ListCheck}
+                            label="Tasks"
+                            value={itemToView.tasks_count ?? 0}
+                            color="green"
+                        />
+                        <StatCard
+                            icon={ListStart}
+                            label="Sprints"
+                            value={itemToView.sprints_count ?? 0}
+                            color="purple"
+                        />
                     </div>
 
                     {/* PROGRESS */}
                     {itemToView.progress !== undefined && (
                         <div>
-                            <div className="flex items-center justify-between mb-2">
-                                <h3 className="text-sm font-semibold text-gray-700">Progress</h3>
+                            <div className="mb-2 flex items-center justify-between">
+                                <h3 className="text-sm font-semibold text-gray-700">
+                                    Progress
+                                </h3>
                                 <span className="text-sm font-medium text-gray-900">
                                     {itemToView.progress}%
                                 </span>
                             </div>
-                            <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
+                            <div className="h-3 overflow-hidden rounded-full bg-gray-100">
                                 <div
-                                    className="h-full bg-green-500 rounded-full transition-all duration-500"
+                                    className="h-full rounded-full bg-green-500 transition-all duration-500"
                                     style={{ width: `${itemToView.progress}%` }}
                                 />
                             </div>
@@ -91,16 +112,28 @@ export function ProjectDetails({ itemId, onClose }: ProjectDetailsProps) {
                     )}
 
                     {/* METADATA */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <DetailItem icon={Users} label="Team" value={itemToView.team?.name} />
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <DetailItem
+                            icon={Users}
+                            label="Team"
+                            value={itemToView.team?.name}
+                        />
                         <DetailItem
                             icon={User}
                             label="Owner"
                             value={itemToView.owner?.name}
                             avatar={itemToView.owner?.avatar_url}
                         />
-                        <DetailItem icon={Calendar} label="Start Date" value={itemToView.start_date} />
-                        <DetailItem icon={Calendar} label="End Date" value={itemToView.end_date} />
+                        <DetailItem
+                            icon={Calendar}
+                            label="Start Date"
+                            value={itemToView.start_date}
+                        />
+                        <DetailItem
+                            icon={Calendar}
+                            label="End Date"
+                            value={itemToView.end_date}
+                        />
                         {itemToView.github_repository && (
                             <DetailItem
                                 icon={Github}
@@ -113,17 +146,25 @@ export function ProjectDetails({ itemId, onClose }: ProjectDetailsProps) {
                     {/* DESCRIPTION */}
                     {itemToView.description && (
                         <div>
-                            <h3 className="text-sm font-semibold text-gray-700 mb-2">Description</h3>
-                            <div className="text-sm text-gray-600 whitespace-pre-wrap bg-gray-50 rounded-lg p-3">
+                            <h3 className="mb-2 text-sm font-semibold text-gray-700">
+                                Description
+                            </h3>
+                            <div className="rounded-lg bg-gray-50 p-3 text-sm whitespace-pre-wrap text-gray-600">
                                 {itemToView.description}
                             </div>
                         </div>
                     )}
 
                     {/* DATES */}
-                    <div className="grid grid-cols-2 gap-4 text-xs text-gray-400 pt-4 border-t">
-                        <div><span className="font-medium">Created:</span> {itemToView.created_at}</div>
-                        <div><span className="font-medium">Updated:</span> {itemToView.updated_at}</div>
+                    <div className="grid grid-cols-2 gap-4 border-t pt-4 text-xs text-gray-400">
+                        <div>
+                            <span className="font-medium">Created:</span>{' '}
+                            {itemToView.created_at}
+                        </div>
+                        <div>
+                            <span className="font-medium">Updated:</span>{' '}
+                            {itemToView.updated_at}
+                        </div>
                     </div>
                 </div>
             )}

@@ -131,12 +131,15 @@ const GithubUsers = (props: any) => {
                     columns={columns}
                     checks={checksOptions}
                     initialFilters={props.filters}
-                    onView={item => setItemToViewId(item?.id)}
+                    onView={(item) => setItemToViewId(item?.id)}
                     onDelete={setItemToDelete}
                 />
 
                 {itemToViewId && (
-                    <GithubUserDetails itemId={itemToViewId} onClose={() => setItemToViewId(null)} />
+                    <GithubUserDetails
+                        itemId={itemToViewId}
+                        onClose={() => setItemToViewId(null)}
+                    />
                 )}
                 {showImportModal && (
                     <ImportGithubUserModal

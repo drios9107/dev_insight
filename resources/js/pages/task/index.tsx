@@ -223,7 +223,7 @@ const Tasks = (props: any) => {
                     filters={filterOptions}
                     checks={checksOptions}
                     initialFilters={props.filters}
-                    onView={item => setItemToViewId(item?.id)}
+                    onView={(item) => setItemToViewId(item?.id)}
                     onEdit={onEdit}
                     onDelete={setItemToDelete}
                 />
@@ -235,7 +235,10 @@ const Tasks = (props: any) => {
                     <DeleteModal onClose={onCloseForm} onClick={onDelete} />
                 )}
                 {itemToViewId && (
-                    <TaskDetails itemId={itemToViewId} onClose={() => setItemToViewId(null)} />
+                    <TaskDetails
+                        itemId={itemToViewId}
+                        onClose={() => setItemToViewId(null)}
+                    />
                 )}
             </BodyWrapper>
         </>

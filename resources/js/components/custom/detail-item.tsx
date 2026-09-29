@@ -14,7 +14,9 @@ function DetailItem({ icon: Icon, label, value, avatar }: DetailItemProps) {
                 <Avatar className="h-8 w-8 shrink-0">
                     <AvatarImage src={avatar || undefined} />
                     <AvatarFallback className="text-xs">
-                        {String(value || 'U').charAt(0).toUpperCase()}
+                        {String(value || 'U')
+                            .charAt(0)
+                            .toUpperCase()}
                     </AvatarFallback>
                 </Avatar>
             ) : (

@@ -8,7 +8,11 @@ import RepositoryTab from '@/components/custom/metrics/tabs/repository-tab';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import metric from '@/routes/metric';
-import type { RepositoryMetrics, ProjectMetrics, MetricsTab } from '@/types/metric';
+import type {
+    RepositoryMetrics,
+    ProjectMetrics,
+    MetricsTab,
+} from '@/types/metric';
 
 export interface MetricsPageProps {
     repository_metrics: RepositoryMetrics;

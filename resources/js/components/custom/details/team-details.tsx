@@ -33,14 +33,20 @@ export function TeamDetails({ itemId, onClose }: TeamDetailsProps) {
             isOpen
             setIsOpen={(open) => !open && onClose()}
         >
-            {isLoading || !itemToView ? <Loader /> : (
+            {isLoading || !itemToView ? (
+                <Loader />
+            ) : (
                 <div className="space-y-6">
                     {/* HEADER */}
                     <div className="flex items-center justify-between">
                         <h2 className="text-xl font-bold text-gray-900">
                             {itemToView.name}
                         </h2>
-                        <Badge variant={itemToView.is_active ? 'success' : 'secondary'}>
+                        <Badge
+                            variant={
+                                itemToView.is_active ? 'success' : 'secondary'
+                            }
+                        >
                             {itemToView.is_active ? 'Active' : 'Inactive'}
                         </Badge>
                     </div>
@@ -62,7 +68,7 @@ export function TeamDetails({ itemId, onClose }: TeamDetailsProps) {
                     </div>
 
                     {/* METADATA */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <DetailItem
                             icon={User}
                             label="Owner"
@@ -79,10 +85,10 @@ export function TeamDetails({ itemId, onClose }: TeamDetailsProps) {
                     {/* DESCRIPTION */}
                     {itemToView.description && (
                         <div>
-                            <h3 className="text-sm font-semibold text-gray-700 mb-2">
+                            <h3 className="mb-2 text-sm font-semibold text-gray-700">
                                 Description
                             </h3>
-                            <div className="text-sm text-gray-600 whitespace-pre-wrap bg-gray-50 rounded-lg p-3">
+                            <div className="rounded-lg bg-gray-50 p-3 text-sm whitespace-pre-wrap text-gray-600">
                                 {itemToView.description}
                             </div>
                         </div>
@@ -90,31 +96,36 @@ export function TeamDetails({ itemId, onClose }: TeamDetailsProps) {
 
                     {/* DEVELOPERS */}
                     <div>
-                        <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                            <Users className="w-4 h-4" /> Developers ({itemToView.github_users_count})
+                        <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-700">
+                            <Users className="h-4 w-4" /> Developers (
+                            {itemToView.github_users_count})
                         </h3>
                         {itemToView?.github_users?.length === 0 ? (
-                            <p className="text-sm text-gray-400 text-center py-4">
+                            <p className="py-4 text-center text-sm text-gray-400">
                                 No developers assigned
                             </p>
                         ) : (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                                 {itemToView.github_users.map((dev) => (
                                     <div
                                         key={dev.id}
-                                        className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors"
+                                        className="flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-gray-50"
                                     >
-                                        <Avatar className="w-8 h-8 shrink-0">
-                                            <AvatarImage src={dev.avatar || undefined} />
+                                        <Avatar className="h-8 w-8 shrink-0">
+                                            <AvatarImage
+                                                src={dev.avatar || undefined}
+                                            />
                                             <AvatarFallback className="text-xs">
-                                                {dev.display_name.charAt(0).toUpperCase()}
+                                                {dev.display_name
+                                                    .charAt(0)
+                                                    .toUpperCase()}
                                             </AvatarFallback>
                                         </Avatar>
                                         <div className="min-w-0 flex-1">
-                                            <p className="text-sm font-medium text-gray-900 truncate">
+                                            <p className="truncate text-sm font-medium text-gray-900">
                                                 {dev.display_name}
                                             </p>
-                                            <p className="text-xs text-gray-400 truncate">
+                                            <p className="truncate text-xs text-gray-400">
                                                 @{dev.username}
                                             </p>
                                         </div>
@@ -125,12 +136,14 @@ export function TeamDetails({ itemId, onClose }: TeamDetailsProps) {
                     </div>
 
                     {/* DATES */}
-                    <div className="grid grid-cols-2 gap-4 text-xs text-gray-400 pt-4 border-t">
+                    <div className="grid grid-cols-2 gap-4 border-t pt-4 text-xs text-gray-400">
                         <div>
-                            <span className="font-medium">Created:</span> {itemToView.created_at}
+                            <span className="font-medium">Created:</span>{' '}
+                            {itemToView.created_at}
                         </div>
                         <div>
-                            <span className="font-medium">Updated:</span> {itemToView.updated_at}
+                            <span className="font-medium">Updated:</span>{' '}
+                            {itemToView.updated_at}
                         </div>
                     </div>
                 </div>

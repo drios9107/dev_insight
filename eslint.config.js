@@ -41,6 +41,7 @@ export default [
             'react/react-in-jsx-scope': 'off',
             'react/prop-types': 'off',
             'react/no-unescaped-entities': 'off',
+            '@typescript-eslint/no-empty-object-type': 'off',
         },
         settings: {
             react: {
@@ -121,7 +122,6 @@ export default [
             'resources/js/wayfinder/**',
         ],
     },
-    prettier,
     {
         plugins: {
             '@stylistic': stylistic,
@@ -134,4 +134,5 @@ export default [
             ],
         },
     },
+    prettier,
 ];

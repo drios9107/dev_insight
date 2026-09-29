@@ -110,7 +110,10 @@ const Teams = (props: any) => {
                 />
 
                 {itemToViewId && (
-                    <TeamDetails itemId={itemToViewId} onClose={() => setItemToViewId(null)} />
+                    <TeamDetails
+                        itemId={itemToViewId}
+                        onClose={() => setItemToViewId(null)}
+                    />
                 )}
                 {isOpen && (
                     <CustomForm onClose={onCloseForm} item={itemToEdit} />

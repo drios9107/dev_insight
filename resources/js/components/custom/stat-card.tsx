@@ -1,4 +1,4 @@
-import { Card, CardContent } from "../ui/card";
+import { Card, CardContent } from '../ui/card';
 
 function StatCard({
     icon: Icon,
@@ -21,9 +21,9 @@ function StatCard({
 
     return (
         <Card className="border-0 shadow-sm">
-            <CardContent className="p-4 flex items-center gap-3">
-                <div className={`p-2 rounded-lg ${colorMap[color]}`}>
-                    <Icon className="w-5 h-5" />
+            <CardContent className="flex items-center gap-3 p-4">
+                <div className={`rounded-lg p-2 ${colorMap[color]}`}>
+                    <Icon className="h-5 w-5" />
                 </div>
                 <div>
                     <p className="text-2xl font-bold text-gray-900">{value}</p>
@@ -34,4 +34,4 @@ function StatCard({
     );
 }
 
-export default StatCard
+export default StatCard;

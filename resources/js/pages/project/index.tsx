@@ -12,7 +12,11 @@ import { DataTable } from '@/components/custom/table/data-table';
 import { Badge } from '@/components/ui/badge';
 import { ProjectStatusEnum } from '@/enums/project';
 import project from '@/routes/project';
-import type { IProject, IProjectList, TProjectStatus } from '@/types/models/project';
+import type {
+    IProject,
+    IProjectList,
+    TProjectStatus,
+} from '@/types/models/project';
 
 const Projects = (props: any) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -143,13 +147,16 @@ const Projects = (props: any) => {
                     data={props.list}
                     columns={columns}
                     filters={filterOptions}
-                    onView={item => setItemToViewId(item?.id)}
+                    onView={(item) => setItemToViewId(item?.id)}
                     onEdit={onEdit}
                     onDelete={setItemToDelete}
                 />
 
                 {itemToViewId && (
-                    <ProjectDetails itemId={itemToViewId} onClose={() => setItemToViewId(null)} />
+                    <ProjectDetails
+                        itemId={itemToViewId}
+                        onClose={() => setItemToViewId(null)}
+                    />
                 )}
                 {isOpen && (
                     <CustomForm onClose={onCloseForm} item={itemToEdit} />

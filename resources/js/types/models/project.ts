@@ -2,7 +2,8 @@ import type { IUser } from '../user';
 import type { IGithubRepository } from './github-repository';
 import type { ITeam } from './team';
 
-export type TProjectStatus = 'planning' | 'active' | 'paused' | 'completed' | 'archived';
+export type TProjectStatus =
+    'planning' | 'active' | 'paused' | 'completed' | 'archived';
 
 export interface IProject {
     id: number;
@@ -19,14 +20,17 @@ export interface IProject {
     updated_at: string;
 }
 
-export interface IProjectList extends IProject { }
+export interface IProjectList extends IProject {}
 
 export interface IProjectShow extends IProject {
     description: string | null;
-    github_repository: Pick<IGithubRepository, 'id' | 'name' | 'full_name'> | null;
+    github_repository: Pick<
+        IGithubRepository,
+        'id' | 'name' | 'full_name'
+    > | null;
 
     github_users_count?: number;
     tasks_count?: number;
     sprints_count?: number;
     progress?: number;
-}   
+}

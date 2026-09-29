@@ -11,7 +11,11 @@ import type { IColumn } from '@/components/custom/table/data-table';
 import { Badge } from '@/components/ui/badge';
 import { SprintStatusEnum } from '@/enums/sprint';
 import sprint from '@/routes/sprint';
-import type { ISprint, ISprintList, TSprintStatus } from '@/types/models/sprint';
+import type {
+    ISprint,
+    ISprintList,
+    TSprintStatus,
+} from '@/types/models/sprint';
 
 const Sprints = (props: any) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -138,13 +142,16 @@ const Sprints = (props: any) => {
                     columns={columns}
                     filters={filterOptions}
                     initialFilters={props.filters}
-                    onView={item => setItemToViewId(item?.id)}
+                    onView={(item) => setItemToViewId(item?.id)}
                     onEdit={onEdit}
                     onDelete={setItemToDelete}
                 />
 
                 {itemToViewId && (
-                    <SprintDetails itemId={itemToViewId} onClose={() => setItemToViewId(null)} />
+                    <SprintDetails
+                        itemId={itemToViewId}
+                        onClose={() => setItemToViewId(null)}
+                    />
                 )}
                 {isOpen && (
                     <CustomForm onClose={onCloseForm} item={itemToEdit} />

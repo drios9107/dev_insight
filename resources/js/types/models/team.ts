@@ -19,7 +19,10 @@ export interface ITeamList extends ITeam {
 
 export interface ITeamShow extends ITeam {
     owner: Pick<IUser, 'id' | 'name' | 'avatar_url'>;
-    github_users: Pick<IGithubUser, 'id' | 'username' | 'display_name' | 'avatar'>[];
+    github_users: Pick<
+        IGithubUser,
+        'id' | 'username' | 'display_name' | 'avatar'
+    >[];
 
     github_users_count: number;
 }

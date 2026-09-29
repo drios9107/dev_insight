@@ -142,7 +142,11 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
             title="Create Task"
             description="Create a new task"
             isLoading={
-                processing || usersLoading || projectsLoading || sprintsLoading || githubUsersLoading
+                processing ||
+                usersLoading ||
+                projectsLoading ||
+                sprintsLoading ||
+                githubUsersLoading
             }
         >
             <>
