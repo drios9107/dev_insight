@@ -1,3 +1,5 @@
+import { ITeam } from './team';
+
 export interface IGithubUser {
     id: number;
     username: string;
@@ -21,6 +23,8 @@ export interface IGithubUserShow extends IGithubUser {
     prs_count?: number;
     reviews_count?: number;
     issues_count?: number;
+
+    teams?: Pick<ITeam, 'id' | 'name'>[];
 
     last_synced_at: string | null;
     created_at: string;

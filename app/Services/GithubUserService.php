@@ -30,7 +30,13 @@ class GithubUserService
 
     public function index(?Request $request = null)
     {
-        $query = GithubUser::query();
+        $query = GithubUser::query()
+            ->withCount([
+                'commits',
+                'authoredPullRequests',
+                'pullRequestReviews',
+                'githubIssues',
+            ]);
 
         if ($request && $request->filled('search')) {
             $search = '%' . $request->search . '%';
@@ -52,16 +58,22 @@ class GithubUserService
 
     public function findOrCreate(array $githubData): GithubUser
     {
+        $attributes = [
+            'username' => $githubData['login'],
+            'avatar_url' => $githubData['avatar_url'] ?? null,
+            'last_synced_at' => now(),
+        ];
+
+        if (isset($githubData['email'])) {
+            $attributes['email'] = $githubData['email'];
+        }
+        if (isset($githubData['name'])) {
+            $attributes['name'] = $githubData['name'];
+        }
+
         $user = GithubUser::where('github_id', $githubData['id'])->first();
-
         if ($user) {
-            $user->update([
-                'username' => $githubData['login'],
-                'email' => $githubData['email'] ?? $user->email,
-                'name' => $githubData['name'] ?? $user->name,
-                'avatar_url' => $githubData['avatar_url'] ?? $user->avatar_url,
-            ]);
-
+            $user->update($attributes);
             return $user;
         }
 
@@ -69,21 +81,16 @@ class GithubUserService
             $user = GithubUser::where('email', $githubData['email'])->first();
             if ($user) {
                 $user->update([
+                    ...$attributes,
                     'github_id' => $githubData['id'],
-                    'username' => $githubData['login'],
-                    'avatar_url' => $githubData['avatar_url'] ?? null,
                 ]);
-
                 return $user;
             }
         }
 
         return GithubUser::create([
+            ...$attributes,
             'github_id' => $githubData['id'],
-            'username' => $githubData['login'],
-            'email' => $githubData['email'] ?? null,
-            'name' => $githubData['name'] ?? null,
-            'avatar_url' => $githubData['avatar_url'] ?? null,
         ]);
     }
 
@@ -94,12 +101,14 @@ class GithubUserService
      */
     public function show(int $id): GithubUser
     {
-        return GithubUser::withCount([
-            'commits',
-            'authoredPullRequests',
-            'pullRequestReviews',
-            'githubIssues',
-        ])->findOrFail($id);
+        return GithubUser::with(['teams'])
+            ->withCount([
+                'commits',
+                'authoredPullRequests',
+                'pullRequestReviews',
+                'githubIssues',
+            ])
+            ->findOrFail($id);
     }
 
     /**

@@ -59,17 +59,20 @@ const GithubsIssues = (props: any) => {
             label: 'Created',
             sortable: true,
             render: (value) => value ?? '-',
+            className: 'min-w-[125px]',
         },
         {
             key: 'closed_at',
             label: 'Closed',
             sortable: true,
             render: (value) => value ?? '-',
+            className: 'min-w-[125px]',
         },
         {
             key: 'task',
             label: 'Task',
             render: (value) => value?.title ?? '-',
+            className: 'min-w-[250px]',
         },
     ];
 

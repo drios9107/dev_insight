@@ -7,6 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class GithubUserResource extends JsonResource
 {
+
     public function toArray(Request $request): array
     {
         return [
@@ -23,11 +24,18 @@ class GithubUserResource extends JsonResource
             'reviews_count' => $this->whenCounted('pullRequestReviews'),
             'issues_count' => $this->whenCounted('githubIssues'),
 
-            'last_synced_at' => $this->last_synced_at ? date('Y-m-d', strtotime($this->last_synced_at)) : null,
+            'teams' => $this->whenLoaded(
+                'teams',
+                fn() =>
+                $this->teams->map(fn($team) => [
+                    'id' => $team->id,
+                    'name' => $team->name,
+                ])
+            ),
 
+            'last_synced_at' => $this->last_synced_at ? date('Y-m-d H:i:s', strtotime($this->last_synced_at)) : null,
             'created_at' => $this->created_at ? date('Y-m-d', strtotime($this->created_at)) : null,
             'updated_at' => $this->updated_at ? date('Y-m-d', strtotime($this->updated_at)) : null,
-
         ];
     }
 }

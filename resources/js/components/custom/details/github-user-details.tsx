@@ -1,3 +1,11 @@
+import { useEffect, useState } from 'react';
+import { IGithubUserShow } from '@/types/models/github-user';
+import { useFetch } from '@/hooks/use-fetch';
+import githubUser from '@/routes/github-user';
+import ShadDrawer from '../shad-drawer';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Loader } from '../loader';
 import {
     GitCommit,
     GitPullRequest,
@@ -7,23 +15,17 @@ import {
     Mail,
     AtSign,
     Github,
+    Users,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useFetch } from '@/hooks/use-fetch';
-import githubUser from '@/routes/github-user';
-import type { IGithubUserShow } from '@/types/models/github-user';
 import InfoRow from '../info-row';
-import { Loader } from '../loader';
-import ShadDrawer from '../shad-drawer';
 import StatCard from '../stat-card';
 
-interface GithubUserDetailsProps {
+interface GithuUserDetailsProps {
     itemId: number;
     onClose: () => void;
 }
 
-export function GithubUserDetails({ itemId, onClose }: GithubUserDetailsProps) {
+export function GithubUserDetails({ itemId, onClose }: GithuUserDetailsProps) {
     const [itemToView, setItemToView] = useState<IGithubUserShow | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const { getOne } = useFetch();
@@ -42,7 +44,9 @@ export function GithubUserDetails({ itemId, onClose }: GithubUserDetailsProps) {
             setIsOpen={(open) => !open && onClose()}
         >
             {isLoading || !itemToView ? (
-                <Loader />
+                <div className="relative h-64">
+                    <Loader />
+                </div>
             ) : (
                 <div className="space-y-6">
                     {/* HEADER */}
@@ -65,7 +69,7 @@ export function GithubUserDetails({ itemId, onClose }: GithubUserDetailsProps) {
                         </div>
                     </div>
 
-                    {/* STATS CARDS */}
+                    {/* STATS */}
                     <div className="grid grid-cols-2 gap-4">
                         <StatCard
                             icon={GitCommit}
@@ -91,6 +95,27 @@ export function GithubUserDetails({ itemId, onClose }: GithubUserDetailsProps) {
                             value={itemToView.issues_count ?? 0}
                             color="red"
                         />
+                    </div>
+
+                    {/* TEAMS */}
+                    <div>
+                        <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-700">
+                            <Users className="h-4 w-4" /> Teams (
+                            {itemToView.teams?.length ?? 0})
+                        </h3>
+                        {!itemToView.teams || itemToView.teams.length === 0 ? (
+                            <p className="py-4 text-center text-sm text-gray-400">
+                                Not assigned to any team
+                            </p>
+                        ) : (
+                            <div className="flex flex-wrap gap-2">
+                                {itemToView.teams.map((team) => (
+                                    <Badge key={team.id} variant="secondary">
+                                        {team.name}
+                                    </Badge>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     {/* INFO */}
