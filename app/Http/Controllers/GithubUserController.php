@@ -24,6 +24,22 @@ class GithubUserController extends Controller
         return GithubUserResource::collection($this->service->index());
     }
 
+    public function sync(GithubService $githubService, int $id)
+    {
+        try {
+            $user = GithubUser::findOrFail($id);
+            $this->service->syncFromGithub($githubService, $user->username);
+
+            return redirect()->back();
+        } catch (ValidationException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            throw ValidationException::withMessages([
+                'sync' => 'Sync failed: ' . $e->getMessage(),
+            ]);
+        }
+    }
+
     public function import(GithubService $githubService, Request $request)
     {
         try {
@@ -31,14 +47,14 @@ class GithubUserController extends Controller
                 'username' => 'required|string|max:100',
             ]);
 
-            $user = $this->service->importFromGithub($githubService, $validated['username']);
+            $this->service->syncFromGithub($githubService, $validated['username']);
 
             return redirect()->back();
         } catch (ValidationException $e) {
             throw $e;
         } catch (\Exception $e) {
             throw ValidationException::withMessages([
-                'username' => $e->getMessage(),
+                'username' => 'Import failed: ' . $e->getMessage(),
             ]);
         }
     }

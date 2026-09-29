@@ -33,7 +33,7 @@ class GithubUserResource extends JsonResource
                 ])
             ),
 
-            'last_synced_at' => $this->last_synced_at ? date('Y-m-d H:i:s', strtotime($this->last_synced_at)) : null,
+            'last_synced_at' => $this->last_synced_at ? date('Y-m-d H:i', strtotime($this->last_synced_at)) : null,
             'created_at' => $this->created_at ? date('Y-m-d', strtotime($this->created_at)) : null,
             'updated_at' => $this->updated_at ? date('Y-m-d', strtotime($this->updated_at)) : null,
         ];

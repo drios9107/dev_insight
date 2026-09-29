@@ -19,6 +19,11 @@ class GithubUser extends Model
         'email',
         'name',
         'avatar_url',
+        'last_synced_at'
+    ];
+
+    protected $casts = [
+        'last_synced_at' => 'datetime',
     ];
 
     public function teams(): BelongsToMany
@@ -63,7 +68,7 @@ class GithubUser extends Model
 
     public function getAvatar(): string
     {
-        return $this->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($this->username);
+        return $this->avatar_url ?? 'https://ui-avatars.com/api/?name=' . urlencode($this->username);
     }
 
     public function getDisplayNameAttribute(): string

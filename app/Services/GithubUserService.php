@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class GithubUserService
 {
-    public function importFromGithub(GithubService $githubService, string $username): GithubUser
+    public function syncFromGithub(GithubService $githubService, string $username): GithubUser
     {
         $githubUser = $githubService->getUser($username);
 
@@ -22,7 +22,6 @@ class GithubUserService
                 'email' => $githubUser['email'] ?? null,
                 'name' => $githubUser['name'] ?? null,
                 'avatar_url' => $githubUser['avatar_url'] ?? null,
-                'meta' => $githubUser,
                 'last_synced_at' => now(),
             ]
         );

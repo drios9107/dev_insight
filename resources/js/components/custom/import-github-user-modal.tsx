@@ -37,9 +37,8 @@ export function ImportGithubUserModal({
                     onSuccess?.();
                     onClose();
                 },
-                onError: (errors) => {
-                    toast.error(errors.username || 'Import failed');
-                },
+                onError: (errors) =>
+                    toast.error(errors.username || 'Import failed'),
                 onFinish: () => setIsImporting(false),
             },
         );

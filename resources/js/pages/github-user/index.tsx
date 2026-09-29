@@ -73,6 +73,7 @@ const GithubUsers = (props: any) => {
             label: 'Last Synced',
             sortable: true,
             render: (value: string) => value ?? 'Never',
+            className: 'min-w-[200px]',
         },
     ];
 
@@ -94,6 +95,18 @@ const GithubUsers = (props: any) => {
             },
         },
     ];
+
+    const onSync = useCallback((item: IGithubUser) => {
+        router.post(
+            githubUser.sync(item.id).url,
+            {},
+            {
+                preserveScroll: true,
+                onSuccess: () => toast.success('Synced'),
+                onError: (errors) => toast.error(errors.sync || 'Sync failed'),
+            },
+        );
+    }, []);
 
     const onDelete = useCallback(() => {
         if (itemToDelete) {
@@ -131,6 +144,7 @@ const GithubUsers = (props: any) => {
                     columns={columns}
                     checks={checksOptions}
                     initialFilters={props.filters}
+                    onSync={onSync}
                     onView={(item) => setItemToViewId(item?.id)}
                     onDelete={setItemToDelete}
                 />

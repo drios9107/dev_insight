@@ -28,6 +28,29 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('/activity-log', ActivityLogController::class)->only($apiRoutes);
     });
 
+
+    // task comments
+    Route::get('/task/{task}/comments', [CommentController::class, 'indexForTask'])
+        ->name('task.comments.index');
+
+    Route::post('/task/{task}/comment', [CommentController::class, 'storeForTask'])
+        ->name('task.comments.store');
+
+    // sync project
+    Route::post('/github/sync/{repositoryId}', [GithubController::class, 'sync'])
+        ->name('github.sync');
+
+    Route::post('/github-repository/sync-all', [GithubRepositoryController::class, 'syncAll'])
+        ->name('github-repository.sync-all');
+
+    // sync github user
+    Route::post('/github-user/sync/{id}', [GithubUserController::class, 'sync'])
+        ->name('github-user.sync');
+
+    // import github user
+    Route::post('/github-user/import', [GithubUserController::class, 'import'])
+        ->name('github-user.import');
+
     // selectors
     Route::get('all-comments', [CommentController::class, 'all'])->name('comment.all');
     Route::get('all-commits', [CommitController::class, 'all'])->name('commit.all');
@@ -60,26 +83,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/user', UserController::class)->only($apiRoutes);
     Route::resource('/github-user', GithubUserController::class)->only($apiRoutes);
 
-    // task comments
-    Route::get('/task/{task}/comments', [CommentController::class, 'indexForTask'])
-        ->name('task.comments.index');
-
-    Route::post('/task/{task}/comment', [CommentController::class, 'storeForTask'])
-        ->name('task.comments.store');
-
     // dashboard
     Route::get('metric', [MetricController::class, 'index'])->name('metric.index');
-
-    // sync project
-    Route::post('/github/sync/{repositoryId}', [GithubController::class, 'sync'])
-        ->name('github.sync');
-
-    Route::post('/github-repository/sync-all', [GithubRepositoryController::class, 'syncAll'])
-        ->name('github-repository.sync-all');
-
-    // import github user
-    Route::post('/github-user/import', [GithubUserController::class, 'import'])
-        ->name('github-user.import');
 });
 
-require __DIR__.'/settings.php';
+require __DIR__ . '/settings.php';

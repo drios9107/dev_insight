@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('name')->nullable();
             $table->string('avatar_url')->nullable();
+            $table->timestamp('last_synced_at')->nullable();
             $table->timestamps();
         });
     }
