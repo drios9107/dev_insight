@@ -1,13 +1,16 @@
+import { Link } from '@inertiajs/react';
 import { useMemo } from 'react';
 
-function TaskStat({
+export default function TaskStat({
     label,
     value,
     color,
+    href,
 }: {
     label: string;
     value: number;
     color: string;
+    href: string;
 }) {
     const colorMap: Record<string, string> = useMemo(
         () => ({
@@ -16,16 +19,18 @@ function TaskStat({
             yellow: 'text-yellow-600 bg-yellow-50',
             purple: 'text-purple-600 bg-purple-50',
             green: 'text-green-600 bg-green-50',
+            red: 'text-red-600 bg-red-50',
         }),
         [],
     );
 
     return (
-        <div className={`rounded-lg p-3 text-center ${colorMap[color]}`}>
-            <p className="text-2xl font-bold">{value}</p>
-            <p className="text-xs">{label}</p>
-        </div>
+        <Link
+            href={href}
+            className={`rounded-lg p-2 text-center transition-transform hover:scale-105 ${colorMap[color]}`}
+        >
+            <p className="text-lg font-bold">{value}</p>
+            <p className="text-[10px]">{label}</p>
+        </Link>
     );
 }
-
-export default TaskStat;

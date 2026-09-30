@@ -38,8 +38,8 @@ const PrCycle = ({ pr_cycle_time }: IPrCycle) => {
                     />
                 </div>
                 <div className="mt-4 flex items-center justify-center gap-4 text-xs text-gray-500">
-                    <span>P25: {pr_cycle_time.p25}h</span>
-                    <span>P75: {pr_cycle_time.p75}h</span>
+                    <span>25% ≤ {pr_cycle_time.p25}h</span>
+                    <span>75% ≤ {pr_cycle_time.p75}h</span>
                 </div>
             </CardContent>
         </Card>

@@ -1173,10 +1173,12 @@ class MetricService
                     'name' => $user->displayName,
                     'username' => $user->username,
                     'avatar' => $user->avatar,
-                    'open' => $tasks->whereNotIn('status', ['done', 'cancelled'])->count(),
+                    'backlog' => $tasks->where('status', 'backlog')->count(),
+                    'todo' => $tasks->where('status', 'todo')->count(),
                     'in_progress' => $tasks->where('status', 'in_progress')->count(),
                     'review' => $tasks->where('status', 'review')->count(),
                     'done' => $tasks->where('status', 'done')->count(),
+                    'cancelled' => $tasks->where('status', 'cancelled')->count(),
                     'total' => $tasks->count(),
                 ];
             })

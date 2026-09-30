@@ -155,7 +155,8 @@ export default function ProjectTab({ metrics }: ProjectTabProps) {
                                     </Badge>
                                     {item.developers_without_tasks > 0 && (
                                         <Badge variant="warning">
-                                            {item.developers_without_tasks} idle
+                                            {item.developers_without_tasks}{' '}
+                                            available
                                         </Badge>
                                     )}
                                 </div>
@@ -198,9 +199,14 @@ export default function ProjectTab({ metrics }: ProjectTabProps) {
                                             </div>
                                             <div className="flex shrink-0 items-center gap-2">
                                                 {dev.tasks_total === 0 ? (
-                                                    <Badge variant="warning">
-                                                        Available
-                                                    </Badge>
+                                                    <div className="flex items-center gap-1.5">
+                                                        <Badge variant="warning">
+                                                            Available
+                                                        </Badge>
+                                                        <span className="text-xs text-gray-500">
+                                                            0 done
+                                                        </span>
+                                                    </div>
                                                 ) : (
                                                     <>
                                                         <span className="text-xs text-gray-500">

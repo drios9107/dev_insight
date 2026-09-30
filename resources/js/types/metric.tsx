@@ -310,10 +310,12 @@ export interface TasksByDeveloperRow {
     name: string;
     username: string;
     avatar: string | null;
-    open: number;
+    backlog: number;
+    todo: number;
     in_progress: number;
     review: number;
     done: number;
+    cancelled: number;
     total: number;
 }
 

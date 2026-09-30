@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Users, GitCommit, UserCheck, UserX } from 'lucide-react';
+import { Link } from '@inertiajs/react';
 import TaskStat from '../../task-stat';
 
 interface DeveloperTabProps {
@@ -50,7 +51,7 @@ export default function DeveloperTab({ metrics }: DeveloperTabProps) {
 
             {/* ========== RANKING TABLE ========== */}
             <SectionTitle title="🏆 Developer Ranking" className="mt-6" />
-            <Card className="mb-6 overflow-hidden border-0 shadow-md">
+            <Card className="overflow-hidden border-0 py-0 shadow-md">
                 <CardContent className="p-0">
                     <div className="overflow-x-auto">
                         <table className="w-full">
@@ -185,26 +186,43 @@ export default function DeveloperTab({ metrics }: DeveloperTabProps) {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="p-4">
-                                <div className="grid grid-cols-4 gap-2">
+                                <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
                                     <TaskStat
-                                        label="Open"
-                                        value={dev.open}
+                                        label="Backlog"
+                                        value={dev.backlog}
                                         color="gray"
+                                        href={`/task?assignee_id=${dev.id}&status=backlog&page=1`}
+                                    />
+                                    <TaskStat
+                                        label="To Do"
+                                        value={dev.todo}
+                                        color="blue"
+                                        href={`/task?assignee_id=${dev.id}&status=todo&page=1`}
                                     />
                                     <TaskStat
                                         label="In Progress"
                                         value={dev.in_progress}
                                         color="yellow"
+                                        href={`/task?assignee_id=${dev.id}&status=in_progress&page=1`}
                                     />
                                     <TaskStat
                                         label="Review"
                                         value={dev.review}
                                         color="purple"
+                                        href={`/task?assignee_id=${dev.id}&status=review&page=1`}
                                     />
                                     <TaskStat
                                         label="Done"
                                         value={dev.done}
                                         color="green"
+                                        href={`/task?assignee_id=${dev.id}&status=done&page=1`}
+                                    />
+
+                                    <TaskStat
+                                        label="Cancelled"
+                                        value={dev.cancelled}
+                                        color="red"
+                                        href={`/task?assignee_id=${dev.id}&status=cancelled&page=1`}
                                     />
                                 </div>
                             </CardContent>
@@ -253,12 +271,18 @@ export default function DeveloperTab({ metrics }: DeveloperTabProps) {
                                 ) : (
                                     <div className="flex flex-wrap gap-2">
                                         {dev.projects.map((project) => (
-                                            <Badge
+                                            <Link
                                                 key={project.id}
-                                                variant="outline"
+                                                href={`/metric?tab=project&project_id=${project.id}`}
+                                                className="transition-transform hover:scale-105"
                                             >
-                                                {project.name}
-                                            </Badge>
+                                                <Badge
+                                                    variant="outline"
+                                                    className="cursor-pointer hover:bg-gray-100"
+                                                >
+                                                    {project.name}
+                                                </Badge>
+                                            </Link>
                                         ))}
                                     </div>
                                 )}

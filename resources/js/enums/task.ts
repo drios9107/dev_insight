@@ -8,7 +8,7 @@ export const TaskPriorityEnum = {
 export const TaskStatusEnum = {
     backlog: 'Backlog',
     todo: 'Todo',
-    in_progress: 'In_progress',
+    in_progress: 'In progress',
     review: 'Review',
     done: 'Done',
     cancelled: 'Cancelled',
