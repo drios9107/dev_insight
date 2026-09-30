@@ -143,40 +143,38 @@ export default function ProjectTab({ metrics }: ProjectTabProps) {
 
             {/* ========== DEVELOPERS BY PROJECT ========== */}
             <SectionTitle title="👥 Developers by Project" className="mt-6" />
-            <CardSectionWrapper className="gap-6 sm:grid-cols-2">
-                {developers_by_project.length === 0 ? (
-                    <Card className="col-span-full border-0 shadow-md">
-                        <CardContent className="py-8 text-center text-gray-400">
-                            No developers assigned
-                        </CardContent>
-                    </Card>
-                ) : (
-                    developers_by_project.map((item) => (
-                        <Card
-                            key={item.project_id}
-                            className="border-0 shadow-md"
-                        >
-                            <CardHeader className="pb-2">
-                                <CardTitle className="flex items-center justify-between text-base font-semibold text-gray-700">
-                                    <span>{item.project_name}</span>
+            <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+                {developers_by_project.map((item) => (
+                    <Card key={item.project_id} className="border-0 shadow-md">
+                        <CardHeader className="pb-2">
+                            <CardTitle className="flex items-center justify-between text-base font-semibold text-gray-700">
+                                <span>{item.project_name}</span>
+                                <div className="flex items-center gap-1.5">
                                     <Badge variant="secondary">
                                         {item.developers_count}
                                     </Badge>
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-4">
-                                {item.developers.length === 0 ? (
-                                    <p className="py-2 text-center text-sm text-gray-400">
-                                        No developers
-                                    </p>
-                                ) : (
-                                    <div className="flex flex-wrap gap-2">
-                                        {item.developers.map((dev) => (
-                                            <div
-                                                key={dev.id}
-                                                className="flex items-center gap-2 rounded-lg bg-gray-50 px-2 py-1 transition-colors hover:bg-gray-100"
-                                            >
-                                                <Avatar className="h-6 w-6">
+                                    {item.developers_without_tasks > 0 && (
+                                        <Badge variant="warning">
+                                            {item.developers_without_tasks} idle
+                                        </Badge>
+                                    )}
+                                </div>
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="p-4">
+                            {item.developers.length === 0 ? (
+                                <p className="py-2 text-center text-sm text-gray-400">
+                                    No developers in team
+                                </p>
+                            ) : (
+                                <div className="space-y-2">
+                                    {item.developers.map((dev) => (
+                                        <div
+                                            key={dev.id}
+                                            className="flex items-center justify-between rounded-lg p-2 transition-colors hover:bg-gray-50"
+                                        >
+                                            <div className="flex min-w-0 items-center gap-2">
+                                                <Avatar className="h-7 w-7 shrink-0">
                                                     <AvatarImage
                                                         src={
                                                             dev.avatar ||
@@ -189,18 +187,44 @@ export default function ProjectTab({ metrics }: ProjectTabProps) {
                                                             .toUpperCase()}
                                                     </AvatarFallback>
                                                 </Avatar>
-                                                <span className="text-sm text-gray-700">
-                                                    {dev.name}
-                                                </span>
+                                                <div className="min-w-0">
+                                                    <p className="truncate text-sm font-medium text-gray-900">
+                                                        {dev.name}
+                                                    </p>
+                                                    <p className="truncate text-xs text-gray-400">
+                                                        @{dev.username}
+                                                    </p>
+                                                </div>
                                             </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </CardContent>
-                        </Card>
-                    ))
-                )}
-            </CardSectionWrapper>
+                                            <div className="flex shrink-0 items-center gap-2">
+                                                {dev.tasks_total === 0 ? (
+                                                    <Badge variant="warning">
+                                                        Available
+                                                    </Badge>
+                                                ) : (
+                                                    <>
+                                                        <span className="text-xs text-gray-500">
+                                                            {dev.tasks_open}{' '}
+                                                            open
+                                                        </span>
+                                                        <span className="text-xs text-gray-300">
+                                                            ·
+                                                        </span>
+                                                        <span className="text-xs text-gray-500">
+                                                            {dev.tasks_done}{' '}
+                                                            done
+                                                        </span>
+                                                    </>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
 
             {/* ========== TASKS DISTRIBUTION ========== */}
             <SectionTitle title="📊 Tasks Distribution" className="mt-6" />

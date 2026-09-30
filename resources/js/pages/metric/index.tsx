@@ -24,7 +24,7 @@ export interface MetricsPageProps {
     developer_metrics: DeveloperMetrics;
     repositories: Array<{ id: number; full_name: string }>;
     projects: Array<{ id: number; name: string }>;
-    developers: Pick<IGithubUser, 'id' | 'display_name'>[];
+    developers: Array<{ id: number; name: string }>;
     selected_repository: number | null;
     selected_project: number | null;
     selected_developer: number | null;
@@ -123,7 +123,7 @@ export default function Metric({
         () =>
             developers.map((i) => ({
                 value: String(i.id),
-                label: i.display_name,
+                label: i.name,
             })),
         [developers],
     );

@@ -242,15 +242,23 @@ export interface ProjectWithStats {
     };
 }
 
+export interface DeveloperByProject {
+    id: number;
+    name: string;
+    username: string;
+    avatar: string | null;
+    tasks_total: number;
+    tasks_open: number;
+    tasks_done: number;
+}
+
 export interface DevelopersByProject {
     project_id: number;
     project_name: string;
-    developers: Array<{
-        id: number;
-        name: string;
-        avatar: string | null;
-    }>;
+    developers: DeveloperByProject[];
     developers_count: number;
+    developers_with_tasks: number;
+    developers_without_tasks: number;
 }
 
 export interface TasksDistribution {

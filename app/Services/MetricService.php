@@ -956,11 +956,16 @@ class MetricService
 
     private function getProjectsWithStats(?int $projectId = null): array
     {
-        return Project::with(['team.githubUsers', 'tasks', 'sprints'])
+        return Project::with(['team', 'tasks', 'sprints'])
             ->withCount(['tasks', 'sprints'])
             ->when($projectId, fn($q) => $q->where('id', $projectId))
             ->get()
             ->map(function ($project) {
+                $developersCount = Task::where('project_id', $project->id)
+                    ->whereNotNull('assignee_id')
+                    ->distinct('assignee_id')
+                    ->count('assignee_id');
+
                 $tasksByStatus = $project->tasks->groupBy('status')->map->count();
                 $completedTasks = $tasksByStatus['done'] ?? 0;
                 $totalTasks = $project->tasks_count;
@@ -970,7 +975,7 @@ class MetricService
                     'name' => $project->name,
                     'status' => $project->status,
                     'team' => $project->team?->name,
-                    'developers_count' => $project->team?->githubUsers->count() ?? 0, // ✅
+                    'developers_count' => $developersCount,
                     'tasks_count' => $totalTasks,
                     'sprints_count' => $project->sprints_count,
                     'progress' => $totalTasks > 0
@@ -994,17 +999,43 @@ class MetricService
             ->when($projectId, fn($q) => $q->where('id', $projectId))
             ->get()
             ->map(function ($project) {
-                $developers = $project->team?->githubUsers ?? collect();
+                $users = $project->team?->githubUsers ?? collect();
+
+                $developers = $users->map(function ($user) use ($project) {
+                    $tasksTotal = Task::where('assignee_id', $user->id)
+                        ->where('project_id', $project->id)
+                        ->count();
+
+                    $tasksOpen = Task::where('assignee_id', $user->id)
+                        ->where('project_id', $project->id)
+                        ->whereNotIn('status', ['done', 'cancelled'])
+                        ->count();
+
+                    $tasksDone = Task::where('assignee_id', $user->id)
+                        ->where('project_id', $project->id)
+                        ->where('status', 'done')
+                        ->count();
+
+                    return [
+                        'id' => $user->id,
+                        'name' => $user->displayName,
+                        'username' => $user->username,
+                        'avatar' => $user->avatar,
+                        'tasks_total' => $tasksTotal,
+                        'tasks_open' => $tasksOpen,
+                        'tasks_done' => $tasksDone,
+                    ];
+                })
+                    ->sortByDesc('tasks_total')
+                    ->values();
 
                 return [
                     'project_id' => $project->id,
                     'project_name' => $project->name,
-                    'developers' => $developers->map(fn($user) => [
-                        'id' => $user->id,
-                        'name' => $user->displayName,
-                        'avatar' => $user->avatar,
-                    ])->toArray(),
+                    'developers' => $developers->toArray(),
                     'developers_count' => $developers->count(),
+                    'developers_with_tasks' => $developers->where('tasks_total', '>', 0)->count(),
+                    'developers_without_tasks' => $developers->where('tasks_total', 0)->count(),
                 ];
             })
             ->toArray();
@@ -1080,7 +1111,7 @@ class MetricService
 
     private function getDeveloperRankingTable(?int $developerId = null): array
     {
-        return GithubUser::query()
+        return GithubUser::with(['teams.projects'])
             ->withCount([
                 'commits',
                 'authoredPullRequests',
@@ -1091,18 +1122,20 @@ class MetricService
             ->get()
             ->map(function ($user) {
                 $tasksTotal = Task::where('assignee_id', $user->id)->count();
-                $tasksDone = Task::where('assignee_id', $user->id)
-                    ->where('status', 'done')
-                    ->count();
+                $tasksDone = Task::where('assignee_id', $user->id)->where('status', 'done')->count();
                 $tasksOpen = Task::where('assignee_id', $user->id)
-                    ->whereNotIn('status', ['done', 'cancelled'])
-                    ->count();
+                    ->whereNotIn('status', ['done', 'cancelled'])->count();
 
-                $projectsCount = $user->teams()
-                    ->with('projects')
+                // projects from teams and tasks
+                $projectsFromTeams = $user->teams->pluck('projects')->flatten();
+                $projectsFromTasks = Task::where('assignee_id', $user->id)
+                    ->with('project')
                     ->get()
-                    ->pluck('projects')
-                    ->flatten()
+                    ->pluck('project')
+                    ->filter();
+
+                $projectsCount = $projectsFromTeams
+                    ->merge($projectsFromTasks)
                     ->unique('id')
                     ->count();
 
@@ -1158,10 +1191,23 @@ class MetricService
             ->when($developerId, fn($q) => $q->where('id', $developerId))
             ->get()
             ->map(function ($user) {
-                $projects = $user->teams
+                // projects from teams
+                $projectsFromTeams = $user->teams
                     ->pluck('projects')
-                    ->flatten()
-                    ->unique('id');
+                    ->flatten();
+
+                // projects from tasks
+                $projectsFromTasks = Task::where('assignee_id', $user->id)
+                    ->with('project')
+                    ->get()
+                    ->pluck('project')
+                    ->filter();
+
+                // Merge and deduplicate
+                $projects = $projectsFromTeams
+                    ->merge($projectsFromTasks)
+                    ->unique('id')
+                    ->values();
 
                 return [
                     'id' => $user->id,
@@ -1171,7 +1217,7 @@ class MetricService
                     'projects' => $projects->map(fn($p) => [
                         'id' => $p->id,
                         'name' => $p->name,
-                    ])->values()->toArray(),
+                    ])->toArray(),
                     'projects_count' => $projects->count(),
                 ];
             })
