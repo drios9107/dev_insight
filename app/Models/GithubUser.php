@@ -56,6 +56,11 @@ class GithubUser extends Model
         );
     }
 
+    public function assignedTasks(): HasMany
+    {
+        return $this->hasMany(Task::class, 'assignee_id');
+    }
+
     public function githubIssues(): HasMany
     {
         return $this->hasMany(GithubIssue::class, 'author_id');

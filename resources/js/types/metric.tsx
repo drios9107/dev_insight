@@ -142,7 +142,7 @@ export interface DaysWithoutCommit {
 // TABS
 // =============================================
 
-export type MetricsTab = 'repository' | 'project';
+export type MetricsTab = 'repository' | 'project' | 'developer';
 
 // =============================================
 // REPOSITORY TAB
@@ -273,4 +273,57 @@ export interface ProjectMetrics {
     developers_by_project: DevelopersByProject[];
     tasks_distribution: TasksDistribution[];
     sprints_by_project: SprintsByProject[];
+}
+
+export interface DeveloperSummary {
+    total: number;
+    active: number;
+    inactive: number;
+    avg_commits: number;
+}
+
+export interface DeveloperRankingRow {
+    id: number;
+    name: string;
+    username: string;
+    avatar: string | null;
+    commits: number;
+    prs: number;
+    reviews: number;
+    issues: number;
+    tasks_total: number;
+    tasks_open: number;
+    tasks_done: number;
+    projects: number;
+}
+
+export interface TasksByDeveloperRow {
+    id: number;
+    name: string;
+    username: string;
+    avatar: string | null;
+    open: number;
+    in_progress: number;
+    review: number;
+    done: number;
+    total: number;
+}
+
+export interface ProjectsByDeveloperRow {
+    id: number;
+    name: string;
+    username: string;
+    avatar: string | null;
+    projects: Array<{
+        id: number;
+        name: string;
+    }>;
+    projects_count: number;
+}
+
+export interface DeveloperMetrics {
+    summary: DeveloperSummary;
+    ranking: DeveloperRankingRow[];
+    tasks_by_developer: TasksByDeveloperRow[];
+    projects_by_developer: ProjectsByDeveloperRow[];
 }
