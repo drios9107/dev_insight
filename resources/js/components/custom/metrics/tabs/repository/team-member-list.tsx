@@ -1,7 +1,7 @@
+import CustomAvatar from '@/components/custom/custom-avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import CardSectionWrapper from './card-section-wrapper';
-import CustomAvatar from '../../custom-avatar';
+import CardSectionWrapper from '../../section-components/card-section-wrapper';
 
 interface TeamMember {
     name: string;
@@ -24,7 +24,7 @@ const statusMap = {
     away: { label: 'Away', className: 'bg-red-100 text-red-800' },
 };
 
-export function TeamMembersList({ members }: TeamMembersListProps) {
+export default function TeamMembersList({ members }: TeamMembersListProps) {
     return (
         <CardSectionWrapper className="gap-6 lg:grid-cols-2">
             <Card className="border-0 shadow-md">

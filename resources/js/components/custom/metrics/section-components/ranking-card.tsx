@@ -1,4 +1,3 @@
-
 import type { ReactNode } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CustomAvatar from '../../custom-avatar';

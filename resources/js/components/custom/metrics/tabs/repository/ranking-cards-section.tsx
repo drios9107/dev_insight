@@ -1,8 +1,8 @@
 import { GitCommit, Star } from 'lucide-react';
 import { useMemo } from 'react';
+import CardSectionWrapper from '@/components/custom/metrics/section-components/card-section-wrapper';
 import type { TopCommitter, TopContributor } from '@/types/metric';
-import CardSectionWrapper from './section-components/card-section-wrapper';
-import { RankingCard } from './section-components/ranking-card';
+import { RankingCard } from '../../section-components/ranking-card';
 
 interface IRankingCardsSection {
     top_contributors: TopContributor[];

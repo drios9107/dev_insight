@@ -1,11 +1,11 @@
 import { GitCommit } from 'lucide-react';
+import CardSectionWrapper from '@/components/custom/metrics/section-components/card-section-wrapper';
 import commit from '@/routes/commit';
 import githubIssue from '@/routes/github-issue';
 import pullRequest from '@/routes/pull-request';
 import pullRequestReview from '@/routes/pull-request-review';
 import type { IMetricCard } from '@/types/metric';
-import CardSectionWrapper from './section-components/card-section-wrapper';
-import { MetricCard } from './section-components/metric-card';
+import { MetricCard } from '../../section-components/metric-card';
 
 const cardRoutes: Record<string, string> = {
     'Total Commits': commit.index().url,

@@ -2,9 +2,11 @@ import { Head, router } from '@inertiajs/react';
 import { useCallback, useMemo, useState } from 'react';
 import BodyWrapper from '@/components/custom/body-wrapper';
 import Header from '@/components/custom/header';
-import DeveloperTab from '@/components/custom/metrics/tabs/developer-tab';
-import ProjectTab from '@/components/custom/metrics/tabs/project-tab';
-import RepositoryTab from '@/components/custom/metrics/tabs/repository-tab';
+import DeveloperTab from '@/components/custom/metrics/tabs/developer/developer-tab';
+import ProjectTab from '@/components/custom/metrics/tabs/project/project-tab';
+import RepositoryTab from '@/components/custom/metrics/tabs/repository/repository-tab';
+import type { ITabSelector } from '@/components/custom/metrics/tabs/tab-selector';
+import TabSelector from '@/components/custom/metrics/tabs/tab-selector';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import metric from '@/routes/metric';
 import type {
@@ -13,10 +15,6 @@ import type {
     MetricsTab,
     DeveloperMetrics,
 } from '@/types/metric';
-import type { IGithubUser } from '@/types/models/github-user';
-import TabSelector, {
-    ITabSelector,
-} from '@/components/custom/metrics/tabs/tab-selector';
 
 export interface MetricsPageProps {
     repository_metrics: RepositoryMetrics;

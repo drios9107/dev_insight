@@ -38,7 +38,7 @@ class GithubUserService
             ]);
 
         if ($request && $request->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('username', 'ilike', $search)
                     ->orWhere('name', 'ilike', $search)
@@ -73,6 +73,7 @@ class GithubUserService
         $user = GithubUser::where('github_id', $githubData['id'])->first();
         if ($user) {
             $user->update($attributes);
+
             return $user;
         }
 
@@ -83,6 +84,7 @@ class GithubUserService
                     ...$attributes,
                     'github_id' => $githubData['id'],
                 ]);
+
                 return $user;
             }
         }
@@ -95,8 +97,6 @@ class GithubUserService
 
     /**
      * Display the specified item.
-     *
-     * @param  int  $id
      */
     public function show(int $id): GithubUser
     {

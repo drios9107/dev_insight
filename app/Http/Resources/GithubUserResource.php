@@ -7,7 +7,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class GithubUserResource extends JsonResource
 {
-
     public function toArray(Request $request): array
     {
         return [
@@ -26,8 +25,7 @@ class GithubUserResource extends JsonResource
 
             'teams' => $this->whenLoaded(
                 'teams',
-                fn() =>
-                $this->teams->map(fn($team) => [
+                fn () => $this->teams->map(fn ($team) => [
                     'id' => $team->id,
                     'name' => $team->name,
                 ])

@@ -28,7 +28,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('/activity-log', ActivityLogController::class)->only($apiRoutes);
     });
 
-
     // task comments
     Route::get('/task/{task}/comments', [CommentController::class, 'indexForTask'])
         ->name('task.comments.index');
@@ -87,4 +86,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('metric', [MetricController::class, 'index'])->name('metric.index');
 });
 
-require __DIR__ . '/settings.php';
+require __DIR__.'/settings.php';

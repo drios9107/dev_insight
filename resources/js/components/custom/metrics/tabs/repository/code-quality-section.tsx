@@ -1,8 +1,8 @@
+import CardSectionWrapper from '@/components/custom/metrics/section-components/card-section-wrapper';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { CodeQualityMetrics, PrCycleTime } from '@/types/metric';
-import CardSectionWrapper from './section-components/card-section-wrapper';
-import PrCycle from './section-components/pr-cycle';
-import SingleData from './section-components/single-data';
+import PrCycle from '../../section-components/pr-cycle';
+import SingleData from '../../section-components/single-data';
 
 interface ICodeQualitySection {
     code_quality: CodeQualityMetrics;

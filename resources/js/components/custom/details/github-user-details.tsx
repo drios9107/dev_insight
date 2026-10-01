@@ -1,10 +1,3 @@
-import { useEffect, useState } from 'react';
-import { IGithubUserShow } from '@/types/models/github-user';
-import { useFetch } from '@/hooks/use-fetch';
-import githubUser from '@/routes/github-user';
-import ShadDrawer from '../shad-drawer';
-import { Badge } from '@/components/ui/badge';
-import { Loader } from '../loader';
 import {
     GitCommit,
     GitPullRequest,
@@ -16,9 +9,16 @@ import {
     Github,
     Users,
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import CustomAvatar from '@/components/custom/custom-avatar';
+import { Badge } from '@/components/ui/badge';
+import { useFetch } from '@/hooks/use-fetch';
+import githubUser from '@/routes/github-user';
+import type { IGithubUserShow } from '@/types/models/github-user';
 import InfoRow from '../info-row';
+import { Loader } from '../loader';
+import ShadDrawer from '../shad-drawer';
 import StatCard from '../stat-card';
-import CustomAvatar from '../custom-avatar';
 
 interface GithuUserDetailsProps {
     itemId: number;

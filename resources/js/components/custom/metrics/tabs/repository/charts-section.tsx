@@ -1,9 +1,9 @@
 import moment from 'moment';
 import { useMemo } from 'react';
+import CustomAvatar from '@/components/custom/custom-avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { CommitByDay, DaysWithoutCommit } from '@/types/metric';
-import CardSectionWrapper from './section-components/card-section-wrapper';
-import CustomAvatar from '../custom-avatar';
+import CardSectionWrapper from '../../section-components/card-section-wrapper';
 
 interface IChartsSection {
     commits_by_day: CommitByDay[];

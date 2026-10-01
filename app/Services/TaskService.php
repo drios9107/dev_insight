@@ -15,11 +15,11 @@ class TaskService
                 'project',
                 'sprint',
                 'assignee',
-                'reporter'
+                'reporter',
             ]);
 
         if ($request && $request->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('description', 'ilike', $search)
@@ -73,9 +73,6 @@ class TaskService
 
     /**
      * Display the specified item.
-     *
-     * @param  int  $id
-     * @return Task
      */
     public function show(int $id): Task
     {

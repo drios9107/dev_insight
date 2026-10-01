@@ -27,22 +27,21 @@ class GithubUserFactory extends Factory
 
     public function withEmail(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'email' => $this->faker->safeEmail(),
         ]);
     }
 
     public function withName(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'name' => $this->faker->name(),
         ]);
     }
 
-
     public function synced(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'last_synced_at' => now(),
         ]);
     }

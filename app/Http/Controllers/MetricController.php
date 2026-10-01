@@ -34,7 +34,7 @@ class MetricController extends Controller
         $developers = GithubUser::select('id', 'username', 'name')
             ->orderBy('username')
             ->get()
-            ->map(fn($u) => [
+            ->map(fn ($u) => [
                 'id' => $u->id,
                 'name' => $u->displayName,
             ]);

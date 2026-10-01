@@ -1,4 +1,4 @@
-import { ITeam } from './team';
+import type { ITeam } from './team';
 
 export interface IGithubUser {
     id: number;

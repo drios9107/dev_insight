@@ -3,6 +3,7 @@ import { Plus } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import BodyWrapper from '@/components/custom/body-wrapper';
+import CustomAvatar from '@/components/custom/custom-avatar';
 import { DeleteModal } from '@/components/custom/delete-modal';
 import { GithubUserDetails } from '@/components/custom/details/github-user-details';
 import Header from '@/components/custom/header';
@@ -13,7 +14,6 @@ import type { ICheck } from '@/components/custom/table/data-table-filters';
 import { Button } from '@/components/ui/button';
 import githubUser from '@/routes/github-user';
 import type { IGithubUser, IGithubUserList } from '@/types/models/github-user';
-import CustomAvatar from '@/components/custom/custom-avatar';
 
 const GithubUsers = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<IGithubUser | null>(null);

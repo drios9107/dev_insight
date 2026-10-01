@@ -2,6 +2,7 @@ import { Head, router } from '@inertiajs/react';
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import BodyWrapper from '@/components/custom/body-wrapper';
+import CustomAvatar from '@/components/custom/custom-avatar';
 import { DeleteModal } from '@/components/custom/delete-modal';
 import Header from '@/components/custom/header';
 import { DataTable } from '@/components/custom/table/data-table';
@@ -15,7 +16,6 @@ import type {
     IPullRequest,
     TPullRequestState,
 } from '@/types/models/pull-request';
-import CustomAvatar from '@/components/custom/custom-avatar';
 
 const PullRequests = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<IPullRequest | null>(null);

@@ -8,8 +8,8 @@ import {
     Users,
     FileCheck,
 } from 'lucide-react';
-import { ActionCard } from './section-components/action-card';
-import CardSectionWrapper from './section-components/card-section-wrapper';
+import CardSectionWrapper from '@/components/custom/metrics/section-components/card-section-wrapper';
+import { ActionCard } from '../../section-components/action-card';
 
 interface ManagementSectionProps {
     sprint_completion_rate: number;

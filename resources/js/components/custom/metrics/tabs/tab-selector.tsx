@@ -1,6 +1,6 @@
 import ShadSelect from '@/components/custom/inputs/shad-select';
 import { Label } from '@/components/ui/label';
-import { ICustomSelectItem } from '@/types';
+import type { ICustomSelectItem } from '@/types';
 
 export interface ITabSelector {
     id: string;

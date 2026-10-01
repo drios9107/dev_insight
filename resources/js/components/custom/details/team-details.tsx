@@ -1,5 +1,6 @@
 import { Users, User, Calendar, Shield } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import CustomAvatar from '@/components/custom/custom-avatar';
 import { Badge } from '@/components/ui/badge';
 import { useFetch } from '@/hooks/use-fetch';
 import team from '@/routes/team';
@@ -8,7 +9,6 @@ import DetailItem from '../detail-item';
 import { Loader } from '../loader';
 import ShadDrawer from '../shad-drawer';
 import StatCard from '../stat-card';
-import CustomAvatar from '../custom-avatar';
 
 interface TeamDetailsProps {
     itemId: number;

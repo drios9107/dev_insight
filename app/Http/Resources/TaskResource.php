@@ -14,30 +14,30 @@ class TaskResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
 
-            'project' => $this->whenLoaded('project', fn() => [
+            'project' => $this->whenLoaded('project', fn () => [
                 'id' => $this->project->id,
                 'name' => $this->project->name,
             ]),
 
-            'sprint' => $this->whenLoaded('sprint', fn() => $this->sprint ? [
+            'sprint' => $this->whenLoaded('sprint', fn () => $this->sprint ? [
                 'id' => $this->sprint->id,
                 'name' => $this->sprint->name,
             ] : null),
 
-            'assignee' => $this->whenLoaded('assignee', fn() => $this->assignee ? [
+            'assignee' => $this->whenLoaded('assignee', fn () => $this->assignee ? [
                 'id' => $this->assignee->id,
                 'username' => $this->assignee->username,
                 'display_name' => $this->assignee->displayName,
                 'avatar' => $this->assignee->avatar,
             ] : null),
 
-            'reporter' => $this->whenLoaded('reporter', fn() => $this->reporter ? [
+            'reporter' => $this->whenLoaded('reporter', fn () => $this->reporter ? [
                 'id' => $this->reporter->id,
                 'name' => $this->reporter->name,
                 'avatar' => $this->reporter->avatar_url,
             ] : null),
 
-            'github_issue' => $this->whenLoaded('githubIssue', fn() => $this->githubIssue ? [
+            'github_issue' => $this->whenLoaded('githubIssue', fn () => $this->githubIssue ? [
                 'id' => $this->githubIssue->id,
                 'number' => $this->githubIssue->number,
                 'title' => $this->githubIssue->title,

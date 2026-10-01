@@ -1,11 +1,11 @@
 import { Head, router } from '@inertiajs/react';
 import BodyWrapper from '@/components/custom/body-wrapper';
+import CustomAvatar from '@/components/custom/custom-avatar';
 import Header from '@/components/custom/header';
 import { DataTable } from '@/components/custom/table/data-table';
 import type { IColumn } from '@/components/custom/table/data-table';
 import user from '@/routes/user';
 import type { IUser } from '@/types/user';
-import CustomAvatar from '@/components/custom/custom-avatar';
 
 const Users = (props: any) => {
     const columns: IColumn[] = [

@@ -13,7 +13,7 @@ class SprintService
             ->with(['project']);
 
         if ($request && $request->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
                     ->orWhere('goal', 'ilike', $search)
@@ -40,9 +40,6 @@ class SprintService
 
     /**
      * Display the specified item.
-     *
-     * @param  int  $id
-     * @return Sprint
      */
     public function show(int $id): Sprint
     {

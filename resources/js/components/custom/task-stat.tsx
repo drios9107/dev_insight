@@ -1,17 +1,14 @@
 import { Link } from '@inertiajs/react';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 
-export default function TaskStat({
-    label,
-    value,
-    color,
-    href,
-}: {
+interface TaskStatProps {
     label: string;
     value: number;
     color: string;
-    href: string;
-}) {
+    href?: string;
+}
+
+export default function TaskStat({ label, value, color, href }: TaskStatProps) {
     const colorMap: Record<string, string> = useMemo(
         () => ({
             gray: 'text-gray-600 bg-gray-50',
@@ -24,13 +21,33 @@ export default function TaskStat({
         [],
     );
 
+    const getClassName = useCallback(
+        (hasLink: boolean) =>
+            `rounded-lg p-2 text-center ${colorMap[color]} ${
+                hasLink
+                    ? 'transition-transform hover:scale-105 cursor-pointer'
+                    : ''
+            }`,
+        [color, colorMap],
+    );
+
+    const content = useMemo(
+        () => (
+            <>
+                <p className="text-lg font-bold">{value}</p>
+                <p className="text-[10px]">{label}</p>
+            </>
+        ),
+        [value, label],
+    );
+
+    if (!href) {
+        return <div className={getClassName(false)}>{content}</div>;
+    }
+
     return (
-        <Link
-            href={href}
-            className={`rounded-lg p-2 text-center transition-transform hover:scale-105 ${colorMap[color]}`}
-        >
-            <p className="text-lg font-bold">{value}</p>
-            <p className="text-[10px]">{label}</p>
+        <Link href={href} className={getClassName(true)}>
+            {content}
         </Link>
     );
 }

@@ -8,8 +8,8 @@ import {
     ListCheck,
     Eye,
 } from 'lucide-react';
-import { ActionCard } from './section-components/action-card';
-import CardSectionWrapper from './section-components/card-section-wrapper';
+import CardSectionWrapper from '@/components/custom/metrics/section-components/card-section-wrapper';
+import { ActionCard } from '../../section-components/action-card';
 
 interface StatsSectionProps {
     // Key Metrics
