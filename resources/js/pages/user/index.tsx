@@ -3,9 +3,9 @@ import BodyWrapper from '@/components/custom/body-wrapper';
 import Header from '@/components/custom/header';
 import { DataTable } from '@/components/custom/table/data-table';
 import type { IColumn } from '@/components/custom/table/data-table';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import user from '@/routes/user';
 import type { IUser } from '@/types/user';
+import CustomAvatar from '@/components/custom/custom-avatar';
 
 const Users = (props: any) => {
     const columns: IColumn[] = [
@@ -14,12 +14,11 @@ const Users = (props: any) => {
             label: 'Avatar',
             align: 'center',
             render: (value: string, row: IUser) => (
-                <Avatar className="h-8 w-8">
-                    <AvatarImage src={value || undefined} />
-                    <AvatarFallback>
-                        {row.name?.charAt(0).toUpperCase() || 'U'}
-                    </AvatarFallback>
-                </Avatar>
+                <CustomAvatar
+                    src={value ?? undefined}
+                    title={row.name?.charAt(0)?.toUpperCase() ?? 'U'}
+                    className="h-8 w-8"
+                />
             ),
         },
         {

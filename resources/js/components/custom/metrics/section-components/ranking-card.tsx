@@ -1,8 +1,7 @@
-// resources/js/components/metrics/RankingCard.tsx
 
 import type { ReactNode } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import CustomAvatar from '../../custom-avatar';
 
 interface RankingItem {
     name: string;
@@ -42,14 +41,11 @@ export function RankingCard({ title, items, icon }: RankingCardProps) {
                                 <span className="w-6 text-right text-sm font-medium text-gray-400">
                                     #{index + 1}
                                 </span>
-                                <Avatar className="h-8 w-8">
-                                    <AvatarImage
-                                        src={item.avatar || undefined}
-                                    />
-                                    <AvatarFallback>
-                                        {item.name.charAt(0).toUpperCase()}
-                                    </AvatarFallback>
-                                </Avatar>
+                                <CustomAvatar
+                                    src={item.avatar ?? undefined}
+                                    title={item.name.charAt(0).toUpperCase()}
+                                    className="h-8 w-8"
+                                />
                                 <div>
                                     <p className="font-medium text-gray-900">
                                         {item.name}

@@ -10,10 +10,10 @@ import ImportGithubUserModal from '@/components/custom/import-github-user-modal'
 import { DataTable } from '@/components/custom/table/data-table';
 import type { IColumn } from '@/components/custom/table/data-table';
 import type { ICheck } from '@/components/custom/table/data-table-filters';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import githubUser from '@/routes/github-user';
 import type { IGithubUser, IGithubUserList } from '@/types/models/github-user';
+import CustomAvatar from '@/components/custom/custom-avatar';
 
 const GithubUsers = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<IGithubUser | null>(null);
@@ -26,12 +26,11 @@ const GithubUsers = (props: any) => {
             label: 'Avatar',
             align: 'center',
             render: (value: string, row: IGithubUser) => (
-                <Avatar className="h-8 w-8">
-                    <AvatarImage src={value || undefined} />
-                    <AvatarFallback>
-                        {row.display_name?.charAt(0).toUpperCase() || 'U'}
-                    </AvatarFallback>
-                </Avatar>
+                <CustomAvatar
+                    src={value ?? undefined}
+                    title={row.display_name?.charAt(0)?.toUpperCase() ?? 'U'}
+                    className="h-8 w-8"
+                />
             ),
         },
         {

@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import CustomAvatar from './custom-avatar';
 
 interface DetailItemProps {
     icon: React.ComponentType<{ className?: string }>;
@@ -11,14 +11,13 @@ function DetailItem({ icon: Icon, label, value, avatar }: DetailItemProps) {
     return (
         <div className="flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-gray-50">
             {avatar !== undefined ? (
-                <Avatar className="h-8 w-8 shrink-0">
-                    <AvatarImage src={avatar || undefined} />
-                    <AvatarFallback className="text-xs">
-                        {String(value || 'U')
-                            .charAt(0)
-                            .toUpperCase()}
-                    </AvatarFallback>
-                </Avatar>
+                <CustomAvatar
+                    src={avatar ?? undefined}
+                    title={String(value || 'U')
+                        .charAt(0)
+                        .toUpperCase()}
+                    className="h-8 w-8 shrink-0"
+                />
             ) : (
                 <div className="rounded-lg bg-gray-100 p-2 text-gray-600">
                     <Icon className="h-4 w-4" />

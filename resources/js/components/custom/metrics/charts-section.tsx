@@ -1,9 +1,9 @@
 import moment from 'moment';
 import { useMemo } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { CommitByDay, DaysWithoutCommit } from '@/types/metric';
 import CardSectionWrapper from './section-components/card-section-wrapper';
+import CustomAvatar from '../custom-avatar';
 
 interface IChartsSection {
     commits_by_day: CommitByDay[];
@@ -130,18 +130,14 @@ const ChartsSection = ({
                                         className="flex items-center gap-2"
                                     >
                                         <div className="flex w-24 flex-shrink-0 items-center gap-1">
-                                            <Avatar className="h-5 w-5">
-                                                <AvatarImage
-                                                    src={
-                                                        item.avatar || undefined
-                                                    }
-                                                />
-                                                <AvatarFallback className="text-[10px]">
-                                                    {item.name
-                                                        .charAt(0)
-                                                        .toUpperCase()}
-                                                </AvatarFallback>
-                                            </Avatar>
+                                            <CustomAvatar
+                                                src={item.avatar ?? undefined}
+                                                title={item.name
+                                                    .charAt(0)
+                                                    .toUpperCase()}
+                                                className="h-5 w-5"
+                                                fallbackClassName="text-[10px]"
+                                            />
                                             <span className="truncate text-xs text-gray-600">
                                                 {item.username}
                                             </span>

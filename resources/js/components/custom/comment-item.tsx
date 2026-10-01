@@ -1,8 +1,8 @@
 import { Trash2 } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { IComment } from '@/types/models/comment';
+import CustomAvatar from './custom-avatar';
 
 interface CommentItemProps {
     comment: IComment;
@@ -19,13 +19,11 @@ function CommentItem({
 
     return (
         <div className={cn('group flex gap-3', isRight && 'flex-row-reverse')}>
-            <Avatar className="h-8 w-8 flex-shrink-0">
-                <AvatarImage src={comment?.user?.avatar} />
-                <AvatarFallback className="text-xs">
-                    {comment.user.name.charAt(0).toUpperCase()}
-                </AvatarFallback>
-            </Avatar>
-
+            <CustomAvatar
+                src={comment?.user?.avatar_url ?? undefined}
+                title={comment.user.name.charAt(0).toUpperCase()}
+                className="h-8 w-8 flex-shrink-0"
+            />
             <div
                 className={cn(
                     'min-w-0 flex-1',

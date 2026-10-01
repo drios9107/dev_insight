@@ -16,7 +16,7 @@ export default function CustomAvatar({
 }) {
     return (
         <Avatar className={cn('h-7 w-7', className)}>
-            {src && <AvatarImage src={src || undefined} alt={alt ?? src} />}
+            {src && <AvatarImage src={src} alt={alt ?? src} />}
             <AvatarFallback className={cn('text-xs', fallbackClassName)}>
                 {title}
             </AvatarFallback>

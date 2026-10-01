@@ -1,10 +1,10 @@
 import { FolderKanban, Users, ListCheck, TrendingUp } from 'lucide-react';
 import { ActionCard, SectionTitle } from '@/components/custom/metrics';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { ProjectMetrics } from '@/types/metric';
 import CardSectionWrapper from '../section-components/card-section-wrapper';
+import CustomAvatar from '../../custom-avatar';
 
 interface ProjectTabProps {
     metrics: ProjectMetrics;
@@ -175,19 +175,15 @@ export default function ProjectTab({ metrics }: ProjectTabProps) {
                                             className="flex items-center justify-between rounded-lg p-2 transition-colors hover:bg-gray-50"
                                         >
                                             <div className="flex min-w-0 items-center gap-2">
-                                                <Avatar className="h-7 w-7 shrink-0">
-                                                    <AvatarImage
-                                                        src={
-                                                            dev.avatar ||
-                                                            undefined
-                                                        }
-                                                    />
-                                                    <AvatarFallback className="text-xs">
-                                                        {dev.name
-                                                            .charAt(0)
-                                                            .toUpperCase()}
-                                                    </AvatarFallback>
-                                                </Avatar>
+                                                <CustomAvatar
+                                                    src={
+                                                        dev.avatar ?? undefined
+                                                    }
+                                                    title={dev.name
+                                                        .charAt(0)
+                                                        .toUpperCase()}
+                                                    className="shrink-0"
+                                                />
                                                 <div className="min-w-0">
                                                     <p className="truncate text-sm font-medium text-gray-900">
                                                         {dev.name}

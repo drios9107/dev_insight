@@ -1,6 +1,5 @@
 import { Users, User, Calendar, Shield } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { useFetch } from '@/hooks/use-fetch';
 import team from '@/routes/team';
@@ -9,6 +8,7 @@ import DetailItem from '../detail-item';
 import { Loader } from '../loader';
 import ShadDrawer from '../shad-drawer';
 import StatCard from '../stat-card';
+import CustomAvatar from '../custom-avatar';
 
 interface TeamDetailsProps {
     itemId: number;
@@ -111,16 +111,13 @@ export function TeamDetails({ itemId, onClose }: TeamDetailsProps) {
                                         key={dev.id}
                                         className="flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-gray-50"
                                     >
-                                        <Avatar className="h-8 w-8 shrink-0">
-                                            <AvatarImage
-                                                src={dev.avatar || undefined}
-                                            />
-                                            <AvatarFallback className="text-xs">
-                                                {dev.display_name
-                                                    .charAt(0)
-                                                    .toUpperCase()}
-                                            </AvatarFallback>
-                                        </Avatar>
+                                        <CustomAvatar
+                                            src={dev.avatar ?? undefined}
+                                            title={dev.display_name
+                                                .charAt(0)
+                                                .toUpperCase()}
+                                            className="h-8 w-8 shrink-0"
+                                        />
                                         <div className="min-w-0 flex-1">
                                             <p className="truncate text-sm font-medium text-gray-900">
                                                 {dev.display_name}

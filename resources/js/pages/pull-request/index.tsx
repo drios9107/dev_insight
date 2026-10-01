@@ -8,7 +8,6 @@ import { DataTable } from '@/components/custom/table/data-table';
 import type { IColumn } from '@/components/custom/table/data-table';
 import type { ICheck } from '@/components/custom/table/data-table-filters';
 import { CustomTooltip } from '@/components/custom/tooltip';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { PullRequestStateEnum } from '@/enums/pull-requests';
 import pullRequest from '@/routes/pull-request';
@@ -16,6 +15,7 @@ import type {
     IPullRequest,
     TPullRequestState,
 } from '@/types/models/pull-request';
+import CustomAvatar from '@/components/custom/custom-avatar';
 
 const PullRequests = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<IPullRequest | null>(null);
@@ -63,15 +63,13 @@ const PullRequests = (props: any) => {
                     <div className="flex -space-x-2">
                         {value.slice(0, 3).map((user: any) => (
                             <CustomTooltip key={user.id} text={user.name}>
-                                <Avatar
-                                    key={user.id}
+                                <CustomAvatar
+                                    title={
+                                        user?.name?.charAt(0)?.toUpperCase() ??
+                                        'U'
+                                    }
                                     className="h-6 w-6 border-2 border-white"
-                                >
-                                    <AvatarFallback className="text-xs">
-                                        {user.name?.charAt(0).toUpperCase() ||
-                                            'U'}
-                                    </AvatarFallback>
-                                </Avatar>
+                                />
                             </CustomTooltip>
                         ))}
                         {value.length > 3 && (

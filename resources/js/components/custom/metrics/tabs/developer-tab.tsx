@@ -1,11 +1,12 @@
 import { DeveloperMetrics } from '@/types/metric';
 import { ActionCard, SectionTitle } from '@/components/custom/metrics';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Users, GitCommit, UserCheck, UserX } from 'lucide-react';
 import { Link } from '@inertiajs/react';
 import TaskStat from '../../task-stat';
+import NoItemAssignedCard from '../../no-item-assigned-card';
+import CustomAvatar from '../../custom-avatar';
 
 interface DeveloperTabProps {
     metrics: DeveloperMetrics;
@@ -98,19 +99,16 @@ export default function DeveloperTab({ metrics }: DeveloperTabProps) {
                                         >
                                             <td className="px-4 py-3">
                                                 <div className="flex items-center gap-3">
-                                                    <Avatar className="h-8 w-8">
-                                                        <AvatarImage
-                                                            src={
-                                                                dev.avatar ||
-                                                                undefined
-                                                            }
-                                                        />
-                                                        <AvatarFallback className="text-xs">
-                                                            {dev.name
-                                                                .charAt(0)
-                                                                .toUpperCase()}
-                                                        </AvatarFallback>
-                                                    </Avatar>
+                                                    <CustomAvatar
+                                                        src={
+                                                            dev?.avatar ??
+                                                            undefined
+                                                        }
+                                                        title={dev.name
+                                                            .charAt(0)
+                                                            .toUpperCase()}
+                                                        className="h-8 w-8"
+                                                    />
                                                     <div>
                                                         <p className="text-sm font-medium">
                                                             {dev.name}
@@ -157,27 +155,19 @@ export default function DeveloperTab({ metrics }: DeveloperTabProps) {
             <SectionTitle title="📋 Tasks by Developer" className="mt-6" />
             <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
                 {tasks_by_developer.length === 0 ? (
-                    <Card className="col-span-full border-0 shadow-md">
-                        <CardContent className="py-8 text-center text-gray-400">
-                            No tasks assigned
-                        </CardContent>
-                    </Card>
+                    <NoItemAssignedCard text="No tasks assigned" />
                 ) : (
                     tasks_by_developer.map((dev) => (
                         <Card key={dev.id} className="border-0 shadow-md">
                             <CardHeader className="pb-2">
                                 <CardTitle className="flex items-center justify-between text-base font-semibold text-gray-700">
                                     <div className="flex items-center gap-2">
-                                        <Avatar className="h-7 w-7">
-                                            <AvatarImage
-                                                src={dev.avatar || undefined}
-                                            />
-                                            <AvatarFallback className="text-xs">
-                                                {dev.name
-                                                    .charAt(0)
-                                                    .toUpperCase()}
-                                            </AvatarFallback>
-                                        </Avatar>
+                                        <CustomAvatar
+                                            src={dev.avatar ?? undefined}
+                                            title={dev.name
+                                                .charAt(0)
+                                                .toUpperCase()}
+                                        />
                                         <span>{dev.name}</span>
                                     </div>
                                     <Badge variant="secondary">
@@ -235,27 +225,19 @@ export default function DeveloperTab({ metrics }: DeveloperTabProps) {
             <SectionTitle title="📁 Projects by Developer" className="mt-6" />
             <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
                 {projects_by_developer.length === 0 ? (
-                    <Card className="col-span-full border-0 shadow-md">
-                        <CardContent className="py-8 text-center text-gray-400">
-                            No projects assigned
-                        </CardContent>
-                    </Card>
+                    <NoItemAssignedCard text="No projects assigned" />
                 ) : (
                     projects_by_developer.map((dev) => (
                         <Card key={dev.id} className="border-0 shadow-md">
                             <CardHeader className="pb-2">
                                 <CardTitle className="flex items-center justify-between text-base font-semibold text-gray-700">
                                     <div className="flex items-center gap-2">
-                                        <Avatar className="h-7 w-7">
-                                            <AvatarImage
-                                                src={dev.avatar || undefined}
-                                            />
-                                            <AvatarFallback className="text-xs">
-                                                {dev.name
-                                                    .charAt(0)
-                                                    .toUpperCase()}
-                                            </AvatarFallback>
-                                        </Avatar>
+                                        <CustomAvatar
+                                            src={dev?.avatar ?? undefined}
+                                            title={dev.name
+                                                .charAt(0)
+                                                .toUpperCase()}
+                                        />
                                         <span>{dev.name}</span>
                                     </div>
                                     <Badge variant="secondary">

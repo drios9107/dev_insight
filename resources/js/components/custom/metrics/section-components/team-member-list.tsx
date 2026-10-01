@@ -1,7 +1,7 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import CardSectionWrapper from './card-section-wrapper';
+import CustomAvatar from '../../custom-avatar';
 
 interface TeamMember {
     name: string;
@@ -36,16 +36,13 @@ export function TeamMembersList({ members }: TeamMembersListProps) {
                                 className="flex w-full items-center justify-between gap-4 rounded-lg p-2 hover:bg-gray-50"
                             >
                                 <div className="flex items-center gap-3">
-                                    <Avatar className="h-9 w-9">
-                                        <AvatarImage
-                                            src={member.avatar || undefined}
-                                        />
-                                        <AvatarFallback>
-                                            {member.name
-                                                .charAt(0)
-                                                .toUpperCase()}
-                                        </AvatarFallback>
-                                    </Avatar>
+                                    <CustomAvatar
+                                        src={member.avatar ?? undefined}
+                                        title={member.name
+                                            .charAt(0)
+                                            .toUpperCase()}
+                                        className="h-9 w-9"
+                                    />
                                     <div className="flex max-w-[160px] min-w-0 items-center gap-2">
                                         <p className="font-medium text-gray-900">
                                             {member.name}

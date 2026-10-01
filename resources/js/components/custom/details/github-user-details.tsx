@@ -3,7 +3,6 @@ import { IGithubUserShow } from '@/types/models/github-user';
 import { useFetch } from '@/hooks/use-fetch';
 import githubUser from '@/routes/github-user';
 import ShadDrawer from '../shad-drawer';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Loader } from '../loader';
 import {
@@ -19,6 +18,7 @@ import {
 } from 'lucide-react';
 import InfoRow from '../info-row';
 import StatCard from '../stat-card';
+import CustomAvatar from '../custom-avatar';
 
 interface GithuUserDetailsProps {
     itemId: number;
@@ -51,14 +51,14 @@ export function GithubUserDetails({ itemId, onClose }: GithuUserDetailsProps) {
                 <div className="space-y-6">
                     {/* HEADER */}
                     <div className="flex items-center gap-4">
-                        <Avatar className="h-16 w-16">
-                            <AvatarImage src={itemToView.avatar || undefined} />
-                            <AvatarFallback className="text-xl">
-                                {itemToView.display_name
-                                    .charAt(0)
-                                    .toUpperCase()}
-                            </AvatarFallback>
-                        </Avatar>
+                        <CustomAvatar
+                            src={itemToView.avatar ?? undefined}
+                            title={itemToView.display_name
+                                .charAt(0)
+                                .toUpperCase()}
+                            className="h-16 w-16"
+                            fallbackClassName="text-xl"
+                        />
                         <div>
                             <h2 className="text-xl font-bold text-gray-900">
                                 {itemToView.display_name}

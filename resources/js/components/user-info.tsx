@@ -1,6 +1,6 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useInitials } from '@/hooks/use-initials';
 import type { User } from '@/types';
+import CustomAvatar from './custom/custom-avatar';
 
 export function UserInfo({
     user,
@@ -13,12 +13,13 @@ export function UserInfo({
 
     return (
         <>
-            <Avatar className="h-8 w-8 overflow-hidden rounded-full">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
-                    {getInitials(user.name)}
-                </AvatarFallback>
-            </Avatar>
+            <CustomAvatar
+                src={user?.avatar}
+                title={getInitials(user.name)}
+                alt={user?.name}
+                className="h-8 w-8 overflow-hidden rounded-full"
+                fallbackClassName="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white"
+            />
             <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{user.name}</span>
                 {showEmail && (

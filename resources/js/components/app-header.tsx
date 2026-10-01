@@ -3,7 +3,6 @@ import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import AppLogoIcon from '@/components/app-logo-icon';
 import { Breadcrumbs } from '@/components/breadcrumbs';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -34,6 +33,7 @@ import { useInitials } from '@/hooks/use-initials';
 import { cn, toUrl } from '@/lib/utils';
 import metric from '@/routes/metric';
 import type { BreadcrumbItem, NavItem } from '@/types';
+import CustomAvatar from './custom/custom-avatar';
 
 type Props = {
     breadcrumbs?: BreadcrumbItem[];
@@ -216,15 +216,15 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                                     variant="ghost"
                                     className="size-10 rounded-full p-1"
                                 >
-                                    <Avatar className="size-8 overflow-hidden rounded-full">
-                                        <AvatarImage
-                                            src={auth.user?.avatar}
-                                            alt={auth.user?.name}
-                                        />
-                                        <AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
-                                            {getInitials(auth.user?.name ?? '')}
-                                        </AvatarFallback>
-                                    </Avatar>
+                                    <CustomAvatar
+                                        src={auth?.user?.avatar ?? undefined}
+                                        alt={auth?.user?.name}
+                                        title={getInitials(
+                                            auth?.user?.name ?? '',
+                                        )}
+                                        className="size-8 overflow-hidden rounded-full"
+                                        fallbackClassName="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white"
+                                    />
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-56" align="end">
