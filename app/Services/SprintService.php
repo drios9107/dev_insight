@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Sprint;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Collection;
 
 class SprintService
 {
@@ -13,7 +14,7 @@ class SprintService
             ->with(['project']);
 
         if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
                     ->orWhere('goal', 'ilike', $search)
@@ -66,5 +67,13 @@ class SprintService
     public function destroy($id)
     {
         return Sprint::destroy($id) !== null;
+    }
+
+    public function byProject(int $projectId): Collection
+    {
+        return Sprint::where('project_id', $projectId)
+            ->select('id', 'name', 'project_id')
+            ->orderBy('name')
+            ->get();
     }
 }

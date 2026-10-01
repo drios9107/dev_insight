@@ -52,18 +52,15 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
         setUsersLoading(true);
         setGithubUsersLoading(true);
         setProjectsLoading(true);
-        setSprintsLoading(true);
 
         await Promise.all([
             get(user.all().url, setUsers),
             get(githubUser.all().url, setGithubUsers, 'username'),
             get(project.all().url, setProjects),
-            get(sprint.all().url, setSprints),
         ]).finally(() => {
             setUsersLoading(false);
             setGithubUsersLoading(false);
             setProjectsLoading(false);
-            setSprintsLoading(false);
         });
     }, [get]);
 
@@ -72,7 +69,27 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
     }, [fetchSelectorsData]);
 
     useEffect(() => {
+        if (!data.project_id) {
+            setSprints([]);
+            return;
+        }
+
+        setSprintsLoading(true);
+
+        get(sprint.byProject(data.project_id).url, setSprints).finally(() =>
+            setSprintsLoading(false),
+        );
+    }, [data.project_id, get]);
+
+    useEffect(() => {
         if (item) {
+            if (item?.project_id) {
+                setSprintsLoading(true);
+                get(
+                    sprint.byProject(item?.project?.id).url,
+                    setSprints,
+                ).finally(() => setSprintsLoading(false));
+            }
             setData({
                 title: item?.title,
                 description: item?.description,
@@ -109,6 +126,17 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
     const parseNumber = useCallback((v: string) => {
         return v ? parseInt(v) : 0;
     }, []);
+
+    const handleProjectChange = useCallback(
+        (value: string) => {
+            setData((data) => ({
+                ...data,
+                project_id: value,
+                sprint_id: '',
+            }));
+        },
+        [setData],
+    );
 
     const onSubmit = useCallback(() => {
         const url = item ? `/task/${item.id}` : '/task';
@@ -181,10 +209,11 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
                     label="Project"
                     name="project_id"
                     value={data.project_id}
-                    onChange={(e: string) => setData('project_id', e)}
+                    onChange={handleProjectChange}
                     list={projects}
                     errors={errors}
                 />
+
                 <ShadSelect
                     required
                     label="Sprint"
@@ -193,6 +222,7 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
                     onChange={(e: string) => setData('sprint_id', e)}
                     list={sprints}
                     errors={errors}
+                    disabled={!data.project_id || sprintsLoading}
                 />
 
                 <div className="flex justify-between gap-3">

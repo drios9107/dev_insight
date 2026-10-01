@@ -82,4 +82,11 @@ class SprintController extends Controller
 
         return redirect()->back()->with('success', 'Sprint deleted successfully!');
     }
+
+    public function byProject(int $projectId)
+    {
+        $sprints = $this->service->byProject($projectId);
+
+        return response()->json(['data' => $sprints]);
+    }
 }
