@@ -301,7 +301,7 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
                         label="Due Date"
                         name="due_date"
                         value={data.due_date}
-                        onChange={(e) => setData('due_date', e.target.value)}
+                        onChange={(value) => setData('due_date', value)}
                         errors={errors}
                     />
                     <div className="w-full"></div>

@@ -163,7 +163,7 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
                         label="Start Date"
                         name="start_date"
                         value={data.start_date}
-                        onChange={(e) => setData('start_date', e.target.value)}
+                        onChange={(value) => setData('start_date', value)}
                         errors={errors}
                     />
                     <ShadDate
@@ -171,7 +171,7 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
                         label="End Date"
                         name="end_date"
                         value={data.end_date}
-                        onChange={(e) => setData('end_date', e.target.value)}
+                        onChange={(value) => setData('end_date', value)}
                         errors={errors}
                     />
                 </div>
