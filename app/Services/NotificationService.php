@@ -3,17 +3,22 @@
 namespace App\Services;
 
 use App\Models\Notification;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 
 class NotificationService
 {
-    public function index(?Request $request = null)
+    /**
+     * Returns a paginated list
+     * @return LengthAwarePaginator<int, Notification>
+     */
+    public function index(?Request $request = null): LengthAwarePaginator
     {
         $query = Notification::query()
             ->with('user');
 
-        if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+        if ($request->filled('search')) {
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('message', 'ilike', $search)
@@ -23,7 +28,7 @@ class NotificationService
             });
         }
 
-        if ($request && $request->filled('type') && $request->type !== 'all') {
+        if ($request->filled('type') && $request->type !== 'all') {
             $query->where('type', $request->type);
         }
 
@@ -35,11 +40,13 @@ class NotificationService
     }
 
     /**
-     * Store a newly created item in storage.
+     * Store a newly created item.
+     * @param  array<string, mixed>  $data
+     * @return Notification
      */
-    public function store(array $data): bool
+    public function store(array $data): Notification
     {
-        return Notification::create($data) !== null;
+        return Notification::create($data);
     }
 
     /**
@@ -57,10 +64,12 @@ class NotificationService
 
     /**
      * Update the specified item in storage.
+     * @param int $id
+     * @param  array<string, mixed>  $data
      */
     public function update(int $id, array $data): bool
     {
-        return Notification::whereId($id)->update($data) !== null;
+        return Notification::whereId($id)->update($data) > 0;
     }
 
     /**
@@ -71,6 +80,6 @@ class NotificationService
      */
     public function destroy($id)
     {
-        return Notification::destroy($id) !== null;
+        return Notification::destroy($id) > 0;
     }
 }

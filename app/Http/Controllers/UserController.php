@@ -6,8 +6,11 @@ use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Role;
 use App\Services\UserService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class UserController extends Controller
 {
@@ -21,7 +24,7 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function all()
+    public function all(): AnonymousResourceCollection
     {
         return UserResource::collection($this->service->index());
     }
@@ -29,7 +32,7 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $data = UserResource::collection($this->service->index($request));
 
@@ -48,7 +51,7 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UserRequest $request)
+    public function store(UserRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -61,7 +64,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserRequest $request, int $id)
+    public function update(UserRequest $request, int $id): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -74,7 +77,7 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id)
+    public function destroy(int $id): RedirectResponse
     {
         $this->service->destroy($id);
 

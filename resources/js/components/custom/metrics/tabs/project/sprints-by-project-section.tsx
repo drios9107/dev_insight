@@ -1,10 +1,9 @@
 import { SectionTitle } from '@/components/custom/metrics';
+import type { ISimpleTableColumn } from '@/components/custom/simple-table';
+import SimpleTable from '@/components/custom/simple-table';
 import { Badge } from '@/components/ui/badge';
-import SimpleTable, {
-    ISimpleTableColumn,
-} from '@/components/custom/simple-table';
-import type { SprintsByProject } from '@/types/metric';
 import { Card, CardContent } from '@/components/ui/card';
+import type { SprintsByProject } from '@/types/metric';
 
 interface SprintsByProjectSectionProps {
     sprints_by_project: SprintsByProject[];

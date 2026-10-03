@@ -4,11 +4,16 @@ namespace App\Services;
 
 use App\Enums\TaskStatusEnum;
 use App\Models\Task;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 
 class TaskService
 {
-    public function index(?Request $request = null)
+    /**
+     * Returns a paginated list
+     * @return LengthAwarePaginator<int, Task>
+     */
+    public function index(?Request $request = null): LengthAwarePaginator
     {
         $query = Task::query()
             ->with([
@@ -18,8 +23,8 @@ class TaskService
                 'reporter',
             ]);
 
-        if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+        if ($request->filled('search')) {
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('description', 'ilike', $search)
@@ -39,24 +44,24 @@ class TaskService
             });
         }
 
-        if ($request && $request->boolean('overdue')) {
+        if ($request->boolean('overdue')) {
             $query->where('due_date', '<', now())
                 ->whereNotIn('status', ['done', 'cancelled']);
         }
 
-        if ($request && $request->filled('status') && $request->status !== 'all') {
+        if ($request->filled('status') && $request->status !== 'all') {
             $query->where('status', $request->status);
         }
 
-        if ($request && $request->filled('priority') && $request->priority !== 'all') {
+        if ($request->filled('priority') && $request->priority !== 'all') {
             $query->where('priority', $request->priority);
         }
 
-        if ($request && $request->filled('project_id')) {
+        if ($request->filled('project_id')) {
             $query->where('project_id', $request->project_id);
         }
 
-        if ($request && $request->filled('assignee_id')) {
+        if ($request->filled('assignee_id')) {
             $query->where('assignee_id', $request->assignee_id);
         }
 
@@ -64,11 +69,13 @@ class TaskService
     }
 
     /**
-     * Store a newly created item in storage.
+     * Store a newly created item.
+     * @param  array<string, mixed>  $data
+     * @return Task
      */
-    public function store(array $data): bool
+    public function store(array $data): Task
     {
-        return Task::create($this->updateStatus($data)) !== null;
+        return Task::create($data);
     }
 
     /**
@@ -87,12 +94,14 @@ class TaskService
 
     /**
      * Update the specified item in storage.
+     * @param int $id
+     * @param  array<string, mixed>  $data
      */
     public function update(int $id, array $data): bool
     {
         $updated = $this->updateStatus($data);
 
-        return Task::whereId($id)->update($updated) !== null;
+        return Task::whereId($id)->update($updated) > 0;;
     }
 
     /**
@@ -103,15 +112,17 @@ class TaskService
      */
     public function destroy($id)
     {
-        return Task::destroy($id) !== null;
+        return Task::destroy($id) > 0;
     }
 
     /**
-     * When the status is done the 'completed_at' field takes the current date and time, with any other value completed value is cleared
+     * When the status is done the 'completed_at' field takes the current date and time,
+     * with any other value completed value is cleared.
      *
-     * @return $data
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
      */
-    private function updateStatus(array $data)
+    private function updateStatus(array $data): array
     {
         if ($data['status'] === TaskStatusEnum::Done->value) {
             $data['completed_at'] = now();

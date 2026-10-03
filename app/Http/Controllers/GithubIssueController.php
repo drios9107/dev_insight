@@ -6,8 +6,11 @@ use App\Http\Requests\GithubIssueRequest;
 use App\Http\Resources\GithubIssueResource;
 use App\Models\GithubRepository;
 use App\Services\GithubIssueService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class GithubIssueController extends Controller
 {
@@ -21,7 +24,7 @@ class GithubIssueController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function all()
+    public function all(): AnonymousResourceCollection
     {
         return GithubIssueResource::collection($this->service->index());
     }
@@ -29,7 +32,7 @@ class GithubIssueController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $data = GithubIssueResource::collection($this->service->index($request));
 
@@ -48,7 +51,7 @@ class GithubIssueController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(GithubIssueRequest $request)
+    public function store(GithubIssueRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -61,7 +64,7 @@ class GithubIssueController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(GithubIssueRequest $request, int $id)
+    public function update(GithubIssueRequest $request, int $id): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -74,7 +77,7 @@ class GithubIssueController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id)
+    public function destroy(int $id): RedirectResponse
     {
         $this->service->destroy($id);
 

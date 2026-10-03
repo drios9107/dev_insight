@@ -3,16 +3,21 @@
 namespace App\Services;
 
 use App\Models\Team;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 
 class TeamService
 {
-    public function index(?Request $request = null)
+    /**
+     * Returns a paginated list
+     * @return LengthAwarePaginator<int, Team>
+     */
+    public function index(?Request $request = null): LengthAwarePaginator
     {
         $query = Team::query()->with(['owner', 'githubUsers']);
 
-        if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+        if ($request->filled('search')) {
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
                     ->orWhere('description', 'ilike', $search)
@@ -30,7 +35,9 @@ class TeamService
     }
 
     /**
-     * Store a newly created item in storage.
+     * Store a newly created item.
+     * @param  array<string, mixed>  $data
+     * @return Team
      */
     public function store(array $data): Team
     {
@@ -59,6 +66,8 @@ class TeamService
 
     /**
      * Update the specified item in storage.
+     * @param int $id
+     * @param  array<string, mixed>  $data
      */
     public function update(int $id, array $data): Team
     {
@@ -82,6 +91,6 @@ class TeamService
      */
     public function destroy($id)
     {
-        return Team::destroy($id) !== null;
+        return Team::destroy($id) > 0;
     }
 }

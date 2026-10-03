@@ -19,6 +19,10 @@ class MetricService
     // =============================================
     // TAB: BY REPOSITORY
     // =============================================
+    /**
+     * @param  int|null  $repositoryId
+     * @return array<string, mixed>
+     */
     public function getRepositoryTabMetrics(?int $repositoryId): array
     {
         $projectMetrics = $this->getProjectMetrics();
@@ -92,6 +96,10 @@ class MetricService
     // =============================================
     // TAB: BY PROJECT
     // =============================================
+    /**
+     * @param  int|null  $projectId
+     * @return array<string, mixed>
+     */
     public function getProjectTabMetrics(?int $projectId = null): array
     {
         return [
@@ -106,6 +114,11 @@ class MetricService
     // =============================================
     // TAB: BY DEVELOPER
     // =============================================
+    /**
+     * @param  int|null  $developerId
+     * @param  int|null  $projectId
+     * @return array<string, mixed>
+     */
     public function getDeveloperTabMetrics(?int $developerId = null, ?int $projectId = null): array
     {
         return [
@@ -119,7 +132,10 @@ class MetricService
     // =============================================
     // CARDS
     // =============================================
-
+    /**
+     * @param  int|null  $repositoryId
+     * @return array<int, array<string, mixed>>
+     */
     private function getCards(?int $repositoryId): array
     {
         $query = Commit::query();
@@ -130,25 +146,25 @@ class MetricService
         $totalCommits = $query->count();
 
         $totalPrs = PullRequest::query()
-            ->when($repositoryId, fn ($q) => $q->where('github_repository_id', $repositoryId))
+            ->when($repositoryId, fn($q) => $q->where('github_repository_id', $repositoryId))
             ->count();
 
         $openPrs = PullRequest::query()
             ->where('state', 'open')
-            ->when($repositoryId, fn ($q) => $q->where('github_repository_id', $repositoryId))
+            ->when($repositoryId, fn($q) => $q->where('github_repository_id', $repositoryId))
             ->count();
 
         $totalIssues = GithubIssue::query()
-            ->when($repositoryId, fn ($q) => $q->where('github_repository_id', $repositoryId))
+            ->when($repositoryId, fn($q) => $q->where('github_repository_id', $repositoryId))
             ->count();
 
         $openIssues = GithubIssue::query()
             ->where('state', 'open')
-            ->when($repositoryId, fn ($q) => $q->where('github_repository_id', $repositoryId))
+            ->when($repositoryId, fn($q) => $q->where('github_repository_id', $repositoryId))
             ->count();
 
         $totalReviews = PullRequestReview::query()
-            ->when($repositoryId, fn ($q) => $q->whereHas('pullRequest', fn ($p) => $p->where('github_repository_id', $repositoryId)))
+            ->when($repositoryId, fn($q) => $q->whereHas('pullRequest', fn($p) => $p->where('github_repository_id', $repositoryId)))
             ->count();
 
         $avgReviewTime = $this->getAvgPrMergeTime($repositoryId);
@@ -187,7 +203,11 @@ class MetricService
     // =============================================
     // CHARTS
     // =============================================
-
+    /**
+     * @param  int|null  $repositoryId
+     * @param  int  $limit
+     * @return array<int, array<string, mixed>>
+     */
     private function getDaysWithoutCommit(?int $repositoryId, int $limit = 10): array
     {
         $thirtyDaysAgo = now()->subDays(30);
@@ -197,7 +217,7 @@ class MetricService
         $data = $users->map(function ($user) use ($repositoryId, $thirtyDaysAgo) {
             $lastCommit = Commit::where('author_id', $user->id)
                 ->where('date', '>=', $thirtyDaysAgo)
-                ->when($repositoryId, fn ($q) => $q->where('github_repository_id', $repositoryId))
+                ->when($repositoryId, fn($q) => $q->where('github_repository_id', $repositoryId))
                 ->latest('date')
                 ->first();
 
@@ -221,6 +241,11 @@ class MetricService
         return $data;
     }
 
+    /**
+     * @param  int|null  $repositoryId
+     * @param  int  $days
+     * @return array<int, array<string, mixed>>
+     */
     private function getCommitsByDay(?int $repositoryId, int $days): array
     {
         $query = Commit::select(
@@ -237,8 +262,8 @@ class MetricService
 
         $results = $query->get();
 
-        return $results->filter(fn ($item) => $item->count > 0)
-            ->map(fn ($item) => [
+        return $results->filter(fn($item) => $item->count > 0)
+            ->map(fn($item) => [
                 'date' => $item->date,
                 'count' => $item->count,
             ])
@@ -246,6 +271,11 @@ class MetricService
             ->toArray();
     }
 
+    /**
+     * @param  int|null  $repositoryId
+     * @param  int  $weeks
+     * @return array<int, array<string, mixed>>
+     */
     private function getCommitsByWeek(?int $repositoryId, int $weeks): array
     {
         $query = Commit::select(
@@ -261,13 +291,17 @@ class MetricService
         }
 
         return $query->get()
-            ->map(fn ($item) => [
+            ->map(fn($item) => [
                 'week' => Carbon::parse($item->week)->format('Y-m-d'),
                 'count' => $item->count,
             ])
             ->toArray();
     }
 
+    /**
+     * @param  int|null  $repositoryId
+     * @return array<string, int>
+     */
     private function getPrsByState(?int $repositoryId): array
     {
         $query = PullRequest::select(
@@ -283,6 +317,10 @@ class MetricService
         return $query->pluck('count', 'state')->toArray();
     }
 
+    /**
+     * @param  int|null  $repositoryId
+     * @return array<string, int>
+     */
     private function getIssuesByState(?int $repositoryId): array
     {
         $query = GithubIssue::select(
@@ -298,6 +336,10 @@ class MetricService
         return $query->pluck('count', 'state')->toArray();
     }
 
+    /**
+     * @param  int|null  $repositoryId
+     * @return array<string, int>
+     */
     private function getReviewsByState(?int $repositoryId): array
     {
         $query = PullRequestReview::select(
@@ -307,7 +349,7 @@ class MetricService
             ->groupBy('state');
 
         if ($repositoryId) {
-            $query->whereHas('pullRequest', fn ($p) => $p->where('github_repository_id', $repositoryId));
+            $query->whereHas('pullRequest', fn($p) => $p->where('github_repository_id', $repositoryId));
         }
 
         return $query->pluck('count', 'state')->toArray();
@@ -316,7 +358,11 @@ class MetricService
     // =============================================
     // TABLES
     // =============================================
-
+    /**
+     * @param  int|null  $repositoryId
+     * @param  int  $limit
+     * @return array<int, array<string, mixed>>
+     */
     private function getTopDevelopers(?int $repositoryId, int $limit): array
     {
         $query = Commit::select(
@@ -334,10 +380,10 @@ class MetricService
         }
 
         return $query->get()
-            ->map(fn ($item) => [
-                'name' => $item->author?->displayName ?? 'Unknown',
-                'username' => $item->author?->username ?? 'unknown',
-                'avatar' => $item->author?->avatar ?? null,
+            ->map(fn($item) => [
+                'name' => $item->author->displayName ?? 'Unknown',
+                'username' => $item->author->username ?? 'unknown',
+                'avatar' => $item->author->avatar ?? null,
                 'commits' => $item->total_commits,
                 'active_days' => $item->active_days,
                 'prs' => PullRequest::where('author_id', $item->author_id)->count(),
@@ -345,6 +391,11 @@ class MetricService
             ->toArray();
     }
 
+    /**
+     * @param  int|null  $repositoryId
+     * @param  int  $limit
+     * @return array<int, array<string, mixed>>
+     */
     private function getTopReviewers(?int $repositoryId, int $limit): array
     {
         $query = PullRequestReview::select(
@@ -359,14 +410,14 @@ class MetricService
             ->limit($limit);
 
         if ($repositoryId) {
-            $query->whereHas('pullRequest', fn ($p) => $p->where('github_repository_id', $repositoryId));
+            $query->whereHas('pullRequest', fn($p) => $p->where('github_repository_id', $repositoryId));
         }
 
         return $query->get()
-            ->map(fn ($item) => [
-                'name' => $item->reviewer?->displayName ?? 'Unknown',
-                'username' => $item->reviewer?->username ?? 'unknown',
-                'avatar' => $item->reviewer?->avatar ?? null,
+            ->map(fn($item) => [
+                'name' => $item->reviewer->displayName ?? 'Unknown',
+                'username' => $item->reviewer->username ?? 'unknown',
+                'avatar' => $item->reviewer->avatar ?? null,
                 'total_reviews' => $item->total_reviews,
                 'approved' => $item->approved,
                 'changes_requested' => $item->changes_requested,
@@ -377,41 +428,46 @@ class MetricService
             ->toArray();
     }
 
+    /**
+     * @param  int|null  $repositoryId
+     * @param  int  $limit
+     * @return array<int, array<string, mixed>>
+     */
     private function getRecentActivity(?int $repositoryId, int $limit): array
     {
         $activities = [];
 
         $commits = Commit::with(['author', 'githubRepository'])
-            ->when($repositoryId, fn ($q) => $q->where('github_repository_id', $repositoryId))
+            ->when($repositoryId, fn($q) => $q->where('github_repository_id', $repositoryId))
             ->latest('date')
             ->limit($limit / 2)
             ->get()
-            ->map(fn ($item) => [
+            ->map(fn($item) => [
                 'type' => 'commit',
                 'message' => $item->message,
-                'author' => $item->author?->displayName ?? 'Unknown',
-                'repository' => $item->githubRepository?->full_name ?? '',
+                'author' => $item->author->displayName ?? 'Unknown',
+                'repository' => $item->githubRepository->full_name ?? '',
                 'date' => $item->date ? Carbon::parse($item->date)->diffForHumans() : 'Never',
                 'url' => $item->url,
             ]);
 
         $prs = PullRequest::with(['author', 'githubRepository'])
-            ->when($repositoryId, fn ($q) => $q->where('github_repository_id', $repositoryId))
+            ->when($repositoryId, fn($q) => $q->where('github_repository_id', $repositoryId))
             ->latest('created_at')
             ->limit($limit / 2)
             ->get()
-            ->map(fn ($item) => [
+            ->map(fn($item) => [
                 'type' => 'pull_request',
                 'message' => $item->title,
-                'author' => $item->author?->displayName ?? 'Unknown',
-                'repository' => $item->githubRepository?->full_name ?? '',
+                'author' => $item->author->displayName ?? 'Unknown',
+                'repository' => $item->githubRepository->full_name ?? '',
                 'date' => $item->created_at?->diffForHumans() ?? '',
                 'url' => $item->html_url ?? '',
             ]);
 
         $activities = array_merge($commits->toArray(), $prs->toArray());
 
-        usort($activities, fn ($a, $b) => strtotime($b['date']) <=> strtotime($a['date']));
+        usort($activities, fn($a, $b) => strtotime($b['date']) <=> strtotime($a['date']));
 
         return array_slice($activities, 0, $limit);
     }
@@ -419,7 +475,10 @@ class MetricService
     // =============================================
     // ADVANCED STATS
     // =============================================
-
+    /**
+     * @param  int|null  $repositoryId
+     * @return float
+     */
     private function getAvgCommitsPerDay(?int $repositoryId): float
     {
         $query = Commit::query()
@@ -434,6 +493,10 @@ class MetricService
         return $total > 0 ? round($total / 30, 1) : 0;
     }
 
+    /**
+     * @param  int|null  $repositoryId
+     * @return float
+     */
     private function getAvgPrMergeTime(?int $repositoryId): float
     {
         $query = PullRequest::whereNotNull('merged_at')
@@ -450,6 +513,10 @@ class MetricService
         return $avg ? round($avg, 1) : 0;
     }
 
+    /**
+     * @param  int|null  $repositoryId
+     * @return float
+     */
     private function getAvgIssueCloseTime(?int $repositoryId): float
     {
         $query = GithubIssue::whereNotNull('closed_at')
@@ -466,6 +533,11 @@ class MetricService
         return $avg ? round($avg, 1) : 0;
     }
 
+    /**
+     * @param  int|null  $repositoryId
+     * @param  int  $days
+     * @return int
+     */
     private function getActiveDevelopers(?int $repositoryId, int $days): int
     {
         $query = Commit::where('date', '>=', now()->subDays($days))
@@ -489,7 +561,10 @@ class MetricService
     // =============================================
     // DEVELOPER STATS
     // =============================================
-
+    /**
+     * @param  int|null  $repositoryId
+     * @return Collection<int, array<string, mixed>>
+     */
     private function getDeveloperStats(?int $repositoryId): Collection
     {
         $query = Commit::query()
@@ -516,29 +591,38 @@ class MetricService
             ->groupBy('reviewer_id')
             ->pluck('review_count', 'reviewer_id');
 
-        return $developers->map(function ($dev) use ($prCounts, $reviewCounts) {
-            $commits = $dev->total_commits;
-            $prs = $prCounts[$dev->author_id] ?? 0;
-            $reviews = $reviewCounts[$dev->author_id] ?? 0;
+        return $developers->map(function (Commit $dev) use ($prCounts, $reviewCounts): array {
+            $author = $dev->author;
 
-            return [
-                'name' => $dev->author?->displayName ?? 'Unknown',
-                'username' => $dev->author?->username ?? 'unknown',
-                'avatar' => $dev->author?->avatar ?? null,
+            $commits = (int) $dev->total_commits;
+            $prs = (int) ($prCounts[$dev->author_id] ?? 0);
+            $reviews = (int) ($reviewCounts[$dev->author_id] ?? 0);
+            $activeDays = (int) $dev->active_days;
+
+            /** @var array<string, mixed> $row */
+            $row = [
+                'name' => $author->display_name ?? 'Unknown',
+                'username' => $author->username ?? 'unknown',
+                'avatar' => $author->avatar_url ?? null,
                 'commits' => $commits,
                 'prs' => $prs,
                 'reviews' => $reviews,
-                'active_days' => $dev->active_days,
-                // Custom score: 40% commits, 35% PRs, 25% reviews (adjustable)
+                'active_days' => $activeDays,
                 'productivity_score' => round(
                     ($commits * 0.4) + ($prs * 0.35) + ($reviews * 0.25),
                     1
                 ),
-                'avg_commit_size' => round($dev->avg_commit_size ?? 0, 1),
+                'avg_commit_size' => 0.0,
             ];
+
+            return $row;
         });
     }
 
+    /**
+     * @param  int|null  $repositoryId
+     * @return array<string, mixed>
+     */
     private function getDeveloperRanking(?int $repositoryId): array
     {
         $stats = $this->getDeveloperStats($repositoryId);
@@ -551,6 +635,11 @@ class MetricService
         ];
     }
 
+    /**
+     * @param  int|null  $repositoryId
+     * @param  int  $days
+     * @return array<int, array<string, mixed>>
+     */
     private function getDeveloperActivityHeatmap(?int $repositoryId, int $days): array
     {
         $query = Commit::select(
@@ -584,20 +673,24 @@ class MetricService
 
                 return [
                     'date' => $date,
-                    'count' => $item?->count ?? 0,
+                    'count' => $item->count ?? 0,
                 ];
             });
 
             return [
-                'name' => $developer?->displayName ?? 'Unknown',
-                'username' => $developer?->username ?? 'unknown',
-                'avatar' => $developer?->avatar ?? null,
+                'name' => $developer->displayName ?? 'Unknown',
+                'username' => $developer->username ?? 'unknown',
+                'avatar' => $developer->avatar ?? null,
                 'activity' => $activity->toArray(),
                 'total' => $items->sum('count'),
             ];
         })->sortByDesc('total')->values()->toArray();
     }
 
+    /**
+     * @param  int|null  $repositoryId
+     * @return array<string, float>
+     */
     private function getCodeQualityMetrics(?int $repositoryId): array
     {
         $prQuery = PullRequest::query();
@@ -607,7 +700,7 @@ class MetricService
 
         $reviewQuery = PullRequestReview::query();
         if ($repositoryId) {
-            $reviewQuery->whereHas('pullRequest', fn ($p) => $p->where('github_repository_id', $repositoryId));
+            $reviewQuery->whereHas('pullRequest', fn($p) => $p->where('github_repository_id', $repositoryId));
         }
 
         $totalReviews = $reviewQuery->count();
@@ -625,6 +718,10 @@ class MetricService
         ];
     }
 
+    /**
+     * @param  int|null  $repositoryId
+     * @return array<string, float>
+     */
     private function getPrCycleTime(?int $repositoryId): array
     {
         $query = PullRequest::whereNotNull('merged_at')
@@ -642,53 +739,66 @@ class MetricService
             return ['avg' => 0, 'min' => 0, 'max' => 0, 'median' => 0, 'p25' => 0, 'p75' => 0];
         }
 
-        $times = $prs->pluck('minutes')->sort()->values();
+        /** @var Collection<int, float> $times */
+        $times = $prs->pluck('minutes')
+            ->map(fn($v) => (float) $v)
+            ->sort()
+            ->values();
 
         return [
-            'avg' => round($times->average(), 2),
-            'min' => round($times->first(), 2),
-            'max' => round($times->last(), 2),
+            'avg' => round((float) $times->average(), 2),
+            'min' => round((float) $times->first(), 2),
+            'max' => round((float) $times->last(), 2),
             'median' => round($this->calculatePercentile($times, 50), 2),
             'p25' => round($this->calculatePercentile($times, 25), 2),
             'p75' => round($this->calculatePercentile($times, 75), 2),
         ];
     }
 
-    private function calculatePercentile($collection, float $percentile): float
+    /**
+     * @param  Collection<int, float>  $collection
+     * @param  float  $percentile
+     * @return float
+     */
+    private function calculatePercentile(Collection $collection, float $percentile): float
     {
         $index = ($percentile / 100) * ($collection->count() - 1);
-        $lower = floor($index);
-        $upper = ceil($index);
+        $lower = (int) floor($index);
+        $upper = (int) ceil($index);
 
         if ($lower === $upper) {
-            return (float) $collection[$lower];
+            return (float) $collection->get($lower);
         }
 
         $weight = $index - $lower;
 
-        return (float) ($collection[$lower] * (1 - $weight) + $collection[$upper] * $weight);
+        return (float) ($collection->get($lower) * (1 - $weight) + $collection->get($upper) * $weight);
     }
 
     // 👥 TEAM MEMBERS
+    /**
+     * @param  int|null  $repositoryId
+     * @return array<int, array<string, mixed>>
+     */
     private function getTeamMembers(?int $repositoryId): array
     {
         // Active developers
         $query = GithubUser::query()
             ->withCount([
-                'commits' => fn ($q) => $q->when($repositoryId, fn ($q2) => $q2->where('github_repository_id', $repositoryId)),
-                'authoredPullRequests' => fn ($q) => $q->when($repositoryId, fn ($q2) => $q2->where('github_repository_id', $repositoryId)),
-                'pullRequestReviews' => fn ($q) => $q->when($repositoryId, fn ($q2) => $q2->whereHas('pullRequest', fn ($p) => $p->where('github_repository_id', $repositoryId))),
+                'commits' => fn($q) => $q->when($repositoryId, fn($q2) => $q2->where('github_repository_id', $repositoryId)),
+                'authoredPullRequests' => fn($q) => $q->when($repositoryId, fn($q2) => $q2->where('github_repository_id', $repositoryId)),
+                'pullRequestReviews' => fn($q) => $q->when($repositoryId, fn($q2) => $q2->whereHas('pullRequest', fn($p) => $p->where('github_repository_id', $repositoryId))),
             ]);
 
         if ($repositoryId) {
-            $query->whereHas('commits', fn ($q) => $q->where('github_repository_id', $repositoryId));
+            $query->whereHas('commits', fn($q) => $q->where('github_repository_id', $repositoryId));
         }
 
         $users = $query->get();
 
         return $users->map(function ($user) {
             $lastCommit = Commit::where('author_id', $user->id)
-                ->when(request()->get('repository_id'), fn ($q) => $q->where('github_repository_id', request()->get('repository_id')))
+                ->when(request()->get('repository_id'), fn($q) => $q->where('github_repository_id', request()->get('repository_id')))
                 ->latest('date')
                 ->first();
 
@@ -715,6 +825,10 @@ class MetricService
     }
 
     // ⚡ STALE PRS
+    /**
+     * @param  int|null  $repositoryId
+     * @return int
+     */
     private function getStalePrs(?int $repositoryId): int
     {
         $query = PullRequest::where('state', 'open')
@@ -728,6 +842,10 @@ class MetricService
     }
 
     // PRS NEEDING REVIEW
+    /**
+     * @param  int|null  $repositoryId
+     * @return int
+     */
     private function getPrsNeedingReview(?int $repositoryId): int
     {
         $query = PullRequest::where('state', 'open')
@@ -741,6 +859,11 @@ class MetricService
     }
 
     // INACTIVE DEVELOPERS
+    /**
+     * @param  int|null  $repositoryId
+     * @param  int  $days
+     * @return int
+     */
     private function getInactiveDevelopers(?int $repositoryId, int $days): int
     {
         $query = GithubUser::whereDoesntHave('commits', function ($q) use ($repositoryId, $days) {
@@ -751,13 +874,17 @@ class MetricService
         });
 
         if ($repositoryId) {
-            $query->whereHas('commits', fn ($q) => $q->where('github_repository_id', $repositoryId));
+            $query->whereHas('commits', fn($q) => $q->where('github_repository_id', $repositoryId));
         }
 
         return $query->count();
     }
 
     // PR MERGE RATE
+    /**
+     * @param  int|null  $repositoryId
+     * @return float
+     */
     private function getPrMergeRate(?int $repositoryId): float
     {
         $total = $this->getPrsTotal($repositoryId);
@@ -766,6 +893,10 @@ class MetricService
         return $total > 0 ? round(($merged / $total) * 100, 1) : 0;
     }
 
+    /**
+     * @param  int|null  $repositoryId
+     * @return int
+     */
     private function getPrsMerged(?int $repositoryId): int
     {
         $query = PullRequest::where('state', 'merged');
@@ -777,6 +908,10 @@ class MetricService
         return $query->count();
     }
 
+    /**
+     * @param  int|null  $repositoryId
+     * @return int
+     */
     private function getPrsTotal(?int $repositoryId): int
     {
         $query = PullRequest::query();
@@ -789,6 +924,11 @@ class MetricService
     }
 
     // 🏆 TOP CONTRIBUTORS
+    /**
+     * @param  int|null  $repositoryId
+     * @param  int  $limit
+     * @return array<int, array<string, mixed>>
+     */
     private function getTopContributors(?int $repositoryId, int $limit): array
     {
         $stats = $this->getDeveloperStats($repositoryId);
@@ -813,6 +953,11 @@ class MetricService
     }
 
     // TOP COMMITTERS
+    /**
+     * @param  int|null  $repositoryId
+     * @param  int  $limit
+     * @return array<int, array<string, mixed>>
+     */
     private function getTopCommitters(?int $repositoryId, int $limit): array
     {
         $query = Commit::select(
@@ -829,10 +974,10 @@ class MetricService
         }
 
         return $query->get()
-            ->map(fn ($item) => [
-                'name' => $item->author?->displayName ?? 'Unknown',
-                'username' => $item->author?->username ?? 'unknown',
-                'avatar' => $item->author?->avatar ?? null,
+            ->map(fn($item) => [
+                'name' => $item->author->displayName ?? 'Unknown',
+                'username' => $item->author->username ?? 'unknown',
+                'avatar' => $item->author->avatar ?? null,
                 'commits' => $item->total_commits,
             ])
             ->toArray();
@@ -841,7 +986,9 @@ class MetricService
     // =============================================
     // PROJECTS
     // =============================================
-
+    /**
+     * @return array<string, int>
+     */
     private function getProjectMetrics(): array
     {
         return [
@@ -853,7 +1000,9 @@ class MetricService
     // =============================================
     // SPRINTS
     // =============================================
-
+    /**
+     * @return array<string, int|float>
+     */
     private function getSprintMetrics(): array
     {
         return [
@@ -863,6 +1012,9 @@ class MetricService
         ];
     }
 
+    /**
+     * @return float
+     */
     private function getSprintCompletionRate(): float
     {
         $total = Sprint::count();
@@ -878,7 +1030,9 @@ class MetricService
     // =============================================
     // ISSUES
     // =============================================
-
+    /**
+     * @return array<string, int|float>
+     */
     private function getIssueMetrics(): array
     {
         return [
@@ -888,6 +1042,9 @@ class MetricService
         ];
     }
 
+    /**
+     * @return float
+     */
     private function getAvgIssueResolutionTime(): float
     {
         $avg = GithubIssue::whereNotNull('closed_at')
@@ -901,7 +1058,9 @@ class MetricService
     // =============================================
     // TASKS
     // =============================================
-
+    /**
+     * @return array<string, int|float>
+     */
     private function getTaskMetrics(): array
     {
         return [
@@ -913,6 +1072,9 @@ class MetricService
         ];
     }
 
+    /**
+     * @return float
+     */
     private function getTaskCompletionRate(): float
     {
         $total = Task::count();
@@ -925,6 +1087,9 @@ class MetricService
         return round(($completed / $total) * 100, 1);
     }
 
+    /**
+     * @return int
+     */
     private function getOverdueTasks(): int
     {
         return Task::where('due_date', '<', now())
@@ -935,11 +1100,14 @@ class MetricService
     // =============================================
     // PROJECT TAB METHODS
     // =============================================
-
+    /**
+     * @param  int|null  $projectId
+     * @return array<string, int|float>
+     */
     private function getProjectSummary(?int $projectId = null): array
     {
-        $projectQuery = Project::query()->when($projectId, fn ($q) => $q->where('id', $projectId));
-        $taskQuery = Task::query()->when($projectId, fn ($q) => $q->where('project_id', $projectId));
+        $projectQuery = Project::query()->when($projectId, fn($q) => $q->where('id', $projectId));
+        $taskQuery = Task::query()->when($projectId, fn($q) => $q->where('project_id', $projectId));
 
         return [
             'active_projects' => (clone $projectQuery)->where('status', 'active')->count(),
@@ -953,11 +1121,15 @@ class MetricService
         ];
     }
 
+    /**
+     * @param  int|null  $projectId
+     * @return array<int, array<string, mixed>>
+     */
     private function getProjectsWithStats(?int $projectId = null): array
     {
         return Project::with(['team', 'tasks', 'sprints'])
             ->withCount(['tasks', 'sprints'])
-            ->when($projectId, fn ($q) => $q->where('id', $projectId))
+            ->when($projectId, fn($q) => $q->where('id', $projectId))
             ->get()
             ->map(function ($project) {
                 $developersCount = Task::where('project_id', $project->id)
@@ -992,13 +1164,17 @@ class MetricService
             ->toArray();
     }
 
+    /**
+     * @param  int|null  $projectId
+     * @return array<int, array<string, mixed>>
+     */
     private function getDevelopersByProject(?int $projectId = null): array
     {
         return Project::with(['team.githubUsers'])
-            ->when($projectId, fn ($q) => $q->where('id', $projectId))
+            ->when($projectId, fn($q) => $q->where('id', $projectId))
             ->get()
             ->map(function ($project) {
-                $users = $project->team?->githubUsers ?? collect();
+                $users = $project->team->githubUsers ?? collect();
 
                 $developers = $users->map(function ($user) use ($project) {
                     $tasksTotal = Task::where('assignee_id', $user->id)
@@ -1040,14 +1216,18 @@ class MetricService
             ->toArray();
     }
 
+    /**
+     * @param  int|null  $projectId
+     * @return array<int, array<string, mixed>>
+     */
     private function getTasksDistribution(?int $projectId = null): array
     {
         return Project::withCount('tasks')
             ->whereHas('tasks')
-            ->when($projectId, fn ($q) => $q->where('id', $projectId))
+            ->when($projectId, fn($q) => $q->where('id', $projectId))
             ->orderByDesc('tasks_count')
             ->get()
-            ->map(fn ($project) => [
+            ->map(fn($project) => [
                 'project_id' => $project->id,
                 'project_name' => $project->name,
                 'tasks_count' => $project->tasks_count,
@@ -1055,17 +1235,21 @@ class MetricService
             ->toArray();
     }
 
+    /**
+     * @param  int|null  $projectId
+     * @return array<int, array<string, mixed>>
+     */
     private function getSprintsByProject(?int $projectId = null): array
     {
         return Project::withCount([
             'sprints',
-            'sprints as active_sprints_count' => fn ($q) => $q->where('status', 'active'),
-            'sprints as completed_sprints_count' => fn ($q) => $q->where('status', 'completed'),
+            'sprints as active_sprints_count' => fn($q) => $q->where('status', 'active'),
+            'sprints as completed_sprints_count' => fn($q) => $q->where('status', 'completed'),
         ])
             ->whereHas('sprints') // ✅ Solo proyectos con sprints
-            ->when($projectId, fn ($q) => $q->where('id', $projectId))
+            ->when($projectId, fn($q) => $q->where('id', $projectId))
             ->get()
-            ->map(fn ($project) => [
+            ->map(fn($project) => [
                 'project_id' => $project->id,
                 'project_name' => $project->name,
                 'total_sprints' => $project->sprints_count,
@@ -1078,7 +1262,10 @@ class MetricService
     // =============================================
     // DEVELOPER TAB METHODS
     // =============================================
-
+    /**
+     * @param  int|null  $developerId
+     * @return array<string, int|float>
+     */
     private function getDeveloperSummary(?int $developerId = null): array
     {
         $query = GithubUser::query();
@@ -1107,6 +1294,10 @@ class MetricService
         ];
     }
 
+    /**
+     * @param  int|null  $developerId
+     * @return array<int, array<string, mixed>>
+     */
     private function getDeveloperRankingTable(?int $developerId = null): array
     {
         return GithubUser::with(['teams.projects'])
@@ -1116,7 +1307,7 @@ class MetricService
                 'pullRequestReviews',
                 'githubIssues',
             ])
-            ->when($developerId, fn ($q) => $q->where('id', $developerId))
+            ->when($developerId, fn($q) => $q->where('id', $developerId))
             ->get()
             ->map(function ($user) {
                 $tasksTotal = Task::where('assignee_id', $user->id)->count();
@@ -1157,11 +1348,15 @@ class MetricService
             ->toArray();
     }
 
+    /**
+     * @param  int|null  $developerId
+     * @return array<int, array<string, mixed>>
+     */
     private function getTasksByDeveloper(?int $developerId = null): array
     {
         return GithubUser::query()
             ->whereHas('assignedTasks')
-            ->when($developerId, fn ($q) => $q->where('id', $developerId))
+            ->when($developerId, fn($q) => $q->where('id', $developerId))
             ->get()
             ->map(function ($user) {
                 $tasks = Task::where('assignee_id', $user->id)->get();
@@ -1185,10 +1380,14 @@ class MetricService
             ->toArray();
     }
 
+    /**
+     * @param  int|null  $developerId
+     * @return array<int, array<string, mixed>>
+     */
     private function getProjectsByDeveloper(?int $developerId = null): array
     {
         return GithubUser::with(['teams.projects'])
-            ->when($developerId, fn ($q) => $q->where('id', $developerId))
+            ->when($developerId, fn($q) => $q->where('id', $developerId))
             ->get()
             ->map(function ($user) {
                 // projects from teams
@@ -1214,7 +1413,7 @@ class MetricService
                     'name' => $user->displayName,
                     'username' => $user->username,
                     'avatar' => $user->avatar,
-                    'projects' => $projects->map(fn ($p) => [
+                    'projects' => $projects->map(fn($p) => [
                         'id' => $p->id,
                         'name' => $p->name,
                     ])->toArray(),

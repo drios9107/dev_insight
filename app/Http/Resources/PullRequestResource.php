@@ -2,9 +2,34 @@
 
 namespace App\Http\Resources;
 
+use App\Models\GithubRepository;
+use App\Models\GithubUser;
+use App\Models\PullRequest;
+use App\Models\Task;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property-read int $id
+ * @property-read int $github_id
+ * @property-read int $number
+ * @property-read string $title
+ * @property-read string|null $body
+ * @property-read string $state
+ * @property-read string $base_branch
+ * @property-read string $head_branch
+ * @property-read string|null $merge_commit_sha
+ * @property-read Carbon|null $closed_at
+ * @property-read Carbon|null $merged_at
+ * @property-read Carbon|null $created_at
+ * @property-read Carbon|null $updated_at
+ * @property-read GithubRepository|null $githubRepository
+ * @property-read GithubUser|null $author
+ * @property-read Collection<int, GithubUser>|null $assignees
+ * @property-read Task|null $task
+ */
 class PullRequestResource extends JsonResource
 {
     /**
@@ -21,18 +46,20 @@ class PullRequestResource extends JsonResource
             'title' => $this->title,
             'body' => $this->body,
             'state' => $this->state,
-            'github_repository' => $this->whenLoaded('githubRepository', fn () => [
+            'github_repository' => $this->whenLoaded('githubRepository', fn() => [
                 'id' => $this->githubRepository->id,
                 'name' => $this->githubRepository->name,
                 'full_name' => $this->githubRepository->full_name,
             ]),
             'author' => $this->author,
-            'assignees' => $this->whenLoaded('assignees', fn () => $this->assignees->map(fn ($user) => [
-                'id' => $user->id,
-                'name' => $user->displayName,
-            ])
+            'assignees' => $this->whenLoaded(
+                'assignees',
+                fn() => $this->assignees->map(fn($user) => [
+                    'id' => $user->id,
+                    'name' => $user->displayName,
+                ])
             ),
-            'task' => $this->whenLoaded('task', fn () => [
+            'task' => $this->whenLoaded('task', fn() => [
                 'id' => $this->task->id,
                 'title' => $this->task->title,
             ]),

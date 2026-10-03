@@ -6,8 +6,12 @@ use App\Http\Requests\SprintRequest;
 use App\Http\Resources\SprintResource;
 use App\Models\Sprint;
 use App\Services\SprintService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class SprintController extends Controller
 {
@@ -21,7 +25,7 @@ class SprintController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function all()
+    public function all(): AnonymousResourceCollection
     {
         return SprintResource::collection($this->service->index());
     }
@@ -29,7 +33,7 @@ class SprintController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $data = SprintResource::collection($this->service->index($request));
 
@@ -45,7 +49,7 @@ class SprintController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(SprintRequest $request)
+    public function store(SprintRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -55,7 +59,7 @@ class SprintController extends Controller
             ->with('success', 'Sprint created successfully!');
     }
 
-    public function show(Sprint $sprint)
+    public function show(Sprint $sprint): SprintResource
     {
         return new SprintResource($this->service->show($sprint->id));
     }
@@ -63,7 +67,7 @@ class SprintController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(SprintRequest $request, int $id)
+    public function update(SprintRequest $request, int $id): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -76,14 +80,14 @@ class SprintController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id)
+    public function destroy(int $id): RedirectResponse
     {
         $this->service->destroy($id);
 
         return redirect()->back()->with('success', 'Sprint deleted successfully!');
     }
 
-    public function byProject(int $projectId)
+    public function byProject(int $projectId): JsonResponse
     {
         $sprints = $this->service->byProject($projectId);
 

@@ -7,8 +7,11 @@ use App\Http\Resources\ActivityLogResource;
 use App\Models\ActivityLog;
 use App\Models\User;
 use App\Services\ActivityLogService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ActivityLogController extends Controller
 {
@@ -22,7 +25,7 @@ class ActivityLogController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function all()
+    public function all(): AnonymousResourceCollection
     {
         return ActivityLogResource::collection($this->service->index());
     }
@@ -30,7 +33,7 @@ class ActivityLogController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $data = ActivityLogResource::collection($this->service->index($request));
 
@@ -51,7 +54,7 @@ class ActivityLogController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ActivityLogRequest $request)
+    public function store(ActivityLogRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -64,7 +67,7 @@ class ActivityLogController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id)
+    public function destroy(int $id): RedirectResponse
     {
         $this->service->destroy($id);
 

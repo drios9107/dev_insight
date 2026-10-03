@@ -1,10 +1,9 @@
-import SimpleTable, {
-    ISimpleTableColumn,
-} from '@/components/custom/simple-table';
-import { SectionTitle } from '@/components/custom/metrics';
 import CustomAvatar from '@/components/custom/custom-avatar';
-import type { DeveloperRankingRow } from '@/types/metric';
+import { SectionTitle } from '@/components/custom/metrics';
+import type { ISimpleTableColumn } from '@/components/custom/simple-table';
+import SimpleTable from '@/components/custom/simple-table';
 import { Card, CardContent } from '@/components/ui/card';
+import type { DeveloperRankingRow } from '@/types/metric';
 
 interface DeveloperRankingSectionProps {
     ranking: DeveloperRankingRow[];

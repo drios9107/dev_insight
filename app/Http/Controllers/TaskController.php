@@ -9,8 +9,11 @@ use App\Models\GithubUser;
 use App\Models\Project;
 use App\Models\Task;
 use App\Services\TaskService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class TaskController extends Controller
 {
@@ -26,7 +29,7 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function all()
+    public function all(): AnonymousResourceCollection
     {
         return TaskResource::collection($this->service->index());
     }
@@ -34,7 +37,7 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $data = TaskResource::collection($this->service->index($request));
 
@@ -55,7 +58,7 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(TaskRequest $request)
+    public function store(TaskRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -65,7 +68,7 @@ class TaskController extends Controller
             ->with('success', 'Task created successfully!');
     }
 
-    public function show(Task $task)
+    public function show(Task $task): TaskResource
     {
         return new TaskResource($this->service->show($task->id));
     }
@@ -73,7 +76,7 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(TaskRequest $request, int $id)
+    public function update(TaskRequest $request, int $id): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -86,7 +89,7 @@ class TaskController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id)
+    public function destroy(int $id): RedirectResponse
     {
         $this->service->destroy($id);
 

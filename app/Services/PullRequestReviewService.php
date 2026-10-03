@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\GithubRepository;
 use App\Models\PullRequest;
 use App\Models\PullRequestReview;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -17,7 +19,7 @@ class PullRequestReviewService
         $this->githubUserService = $githubUserService;
     }
 
-    public function fetchData(GithubService $service, string $ownerKey, string $repoName)
+    public function fetchData(GithubService $service, string $ownerKey, string $repoName): JsonResponse
     {
         $repo = $service->getRepository($ownerKey, $repoName);
         $repoId = GithubRepository::whereGithubId($repo['id'])->value('id');
@@ -71,17 +73,21 @@ class PullRequestReviewService
 
         return response()->json([
             'success' => true,
-            'message' => count($allReviews).' revisiones sincronizadas',
+            'message' => count($allReviews) . ' revisiones sincronizadas',
             'count' => count($allReviews),
         ]);
     }
 
-    public function index(?Request $request = null)
+    /**
+     * Returns a paginated list
+     * @return LengthAwarePaginator<int, PullRequestReview>
+     */
+    public function index(?Request $request = null): LengthAwarePaginator
     {
         $query = PullRequestReview::query()->with(['pullRequest', 'reviewer']);
 
-        if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+        if ($request->filled('search')) {
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('body', 'ilike', $search)
                     ->orWhereHas('reviewer', function ($r) use ($search) {
@@ -93,11 +99,11 @@ class PullRequestReviewService
             });
         }
 
-        if ($request && $request->filled('state') && $request->state !== 'all') {
+        if ($request->filled('state') && $request->state !== 'all') {
             $query->where('state', $request->state);
         }
 
-        if ($request && $request->filled('reviewer_id') && $request->reviewer_id !== 'all') {
+        if ($request->filled('reviewer_id') && $request->reviewer_id !== 'all') {
             $query->where('reviewer_id', $request->reviewer_id);
         }
 
@@ -105,11 +111,13 @@ class PullRequestReviewService
     }
 
     /**
-     * Store a newly created item in storage.
+     * Store a newly created item.
+     * @param  array<string, mixed>  $data
+     * @return PullRequestReview
      */
-    public function store(array $data): bool
+    public function store(array $data): PullRequestReview
     {
-        return PullRequestReview::create($data) !== null;
+        return PullRequestReview::create($data);
     }
 
     /**
@@ -127,10 +135,12 @@ class PullRequestReviewService
 
     /**
      * Update the specified item in storage.
+     * @param int $id
+     * @param  array<string, mixed>  $data
      */
     public function update(int $id, array $data): bool
     {
-        return PullRequestReview::whereId($id)->update($data) !== null;
+        return PullRequestReview::whereId($id)->update($data) > 0;
     }
 
     /**
@@ -141,6 +151,6 @@ class PullRequestReviewService
      */
     public function destroy($id)
     {
-        return PullRequestReview::destroy($id) !== null;
+        return PullRequestReview::destroy($id) > 0;
     }
 }

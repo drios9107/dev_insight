@@ -10,21 +10,29 @@ use Illuminate\Support\Facades\Log;
 
 class GithubService
 {
-    private string $token;
+    private string $apiBase;
 
-    private string $apiBase = 'https://api.github.com';
+    private string $token;
 
     public function __construct()
     {
-        $this->token = config('services.github.token');
+        $this->apiBase = config('services.github.api_url', 'https://api.github.com');
+        $this->token = config('services.github.token', '');
     }
 
+    /**
+     * @param  string  $endpoint
+     * @param  array<string, mixed>  $params
+     * @return array<int|string, mixed>
+     *
+     * @throws Exception
+     */
     private function get(string $endpoint, array $params = []): array
     {
-        $url = $this->apiBase.$endpoint;
+        $url = $this->apiBase . $endpoint;
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.$this->token,
+            'Authorization' => 'Bearer ' . $this->token,
             'Accept' => 'application/vnd.github.v3+json',
         ])->get($url, $params);
 
@@ -35,12 +43,16 @@ class GithubService
                 'body' => $response->body(),
             ]);
 
-            throw new Exception('GitHub API error: '.$response->status());
+            throw new Exception('GitHub API error: ' . $response->status());
         }
 
         return $response->json();
     }
 
+    /**
+     * @param  string  $username
+     * @return array<string, mixed>|null
+     */
     public function getUser(string $username): ?array
     {
         try {
@@ -50,8 +62,15 @@ class GithubService
         }
     }
 
+    /**
+     * @param  string  $owner
+     * @param  string  $repo
+     * @param  int  $perPage
+     * @return array<int, array<string, mixed>>
+     */
     public function getCommits(string $owner, string $repo, int $perPage = 100): array
     {
+        /** @var array<int, array<string, mixed>> $response */
         $response = $this->get("/repos/{$owner}/{$repo}/commits", [
             'per_page' => $perPage,
         ]);
@@ -59,8 +78,16 @@ class GithubService
         return $response;
     }
 
+    /**
+     * @param  string  $owner
+     * @param  string  $repo
+     * @param  string  $state
+     * @param  int  $perPage
+     * @return array<int, array<string, mixed>>
+     */
     public function getPullRequests(string $owner, string $repo, string $state = 'all', int $perPage = 100): array
     {
+        /** @var array<int, array<string, mixed>> $response */
         $response = $this->get("/repos/{$owner}/{$repo}/pulls", [
             'state' => $state,
             'per_page' => $perPage,
@@ -70,23 +97,33 @@ class GithubService
     }
 
     /**
-     * Obtener issues de un repositorio
+     * Obtener issues de un repositorio.
+     *
+     * @param  string  $owner
+     * @param  string  $repo
+     * @param  string  $state
+     * @param  int  $perPage
+     * @return array<int, array<string, mixed>>
      */
     public function getIssues(string $owner, string $repo, string $state = 'all', int $perPage = 100): array
     {
+        /** @var array<int, array<string, mixed>> $response */
         $response = $this->get("/repos/{$owner}/{$repo}/issues", [
             'state' => $state,
             'per_page' => $perPage,
         ]);
 
-        // Filter PRs
         return array_values(array_filter($response, function ($item) {
             return ! isset($item['pull_request']);
         }));
     }
 
     /**
-     * Obtener detalles de un repositorio
+     * Obtener detalles de un repositorio.
+     *
+     * @param  string  $owner
+     * @param  string  $repo
+     * @return array<string, mixed>
      */
     public function getRepository(string $owner, string $repo): array
     {
@@ -94,13 +131,22 @@ class GithubService
     }
 
     /**
-     * Obtener un solo commit por SHA
+     * Obtener un solo commit por SHA.
+     *
+     * @param  string  $owner
+     * @param  string  $repo
+     * @param  string  $sha
+     * @return array<string, mixed>
      */
     public function getCommit(string $owner, string $repo, string $sha): array
     {
         return $this->get("/repos/{$owner}/{$repo}/commits/{$sha}");
     }
 
+    /**
+     * @param  array<string, mixed>  $commitData
+     * @return int|null
+     */
     public function getAuthorIdFromCommit(array $commitData): ?int
     {
         $email = $commitData['commit']['author']['email'] ?? null;
@@ -134,15 +180,29 @@ class GithubService
     }
 
     /**
-     * Obtener todas las revisiones de un pull request
+     * Obtener todas las revisiones de un pull request.
+     *
+     * @param  string  $owner
+     * @param  string  $repo
+     * @param  int  $pullNumber
+     * @return array<int, array<string, mixed>>
      */
     public function getPullRequestReviews(string $owner, string $repo, int $pullNumber): array
     {
-        return $this->get("/repos/{$owner}/{$repo}/pulls/{$pullNumber}/reviews");
+        /** @var array<int, array<string, mixed>> $response */
+        $response = $this->get("/repos/{$owner}/{$repo}/pulls/{$pullNumber}/reviews");
+
+        return $response;
     }
 
     /**
-     * Obtener una revisión específica
+     * Obtener una revisión específica.
+     *
+     * @param  string  $owner
+     * @param  string  $repo
+     * @param  int  $pullNumber
+     * @param  int  $reviewId
+     * @return array<string, mixed>
      */
     public function getPullRequestReview(string $owner, string $repo, int $pullNumber, int $reviewId): array
     {
@@ -150,7 +210,12 @@ class GithubService
     }
 
     /**
-     * Sincronizar un repositorio completo (commits, PRs, issues, reviews)
+     * Sincronizar un repositorio completo (commits, PRs, issues, reviews).
+     *
+     * @param  GithubRepository  $repository
+     * @return array<string, bool>
+     *
+     * @throws Exception
      */
     public function syncRepository(GithubRepository $repository): array
     {
@@ -182,14 +247,17 @@ class GithubService
 
             return $results;
         } catch (Exception $e) {
-            Log::error("Sync failed for {$repository->full_name}: ".$e->getMessage());
+            Log::error("Sync failed for {$repository->full_name}: " . $e->getMessage());
 
             throw $e;
         }
     }
 
     /**
-     * Obtener todos los repositorios de una cuenta de GitHub
+     * Obtener todos los repositorios de una cuenta de GitHub.
+     *
+     * @param  string  $username
+     * @return array<int, array<string, mixed>>
      */
     public function getUserRepositories(string $username): array
     {
@@ -198,6 +266,7 @@ class GithubService
         $perPage = 100;
 
         do {
+            /** @var array<int, array<string, mixed>> $response */
             $response = $this->get("/users/{$username}/repos", [
                 'per_page' => $perPage,
                 'page' => $page,
@@ -216,8 +285,17 @@ class GithubService
         return $repos;
     }
 
+    /**
+     * @param  string  $owner
+     * @param  string  $repo
+     * @param  int  $prNumber
+     * @return array<int, array<string, mixed>>
+     */
     public function getPullRequestCommits(string $owner, string $repo, int $prNumber): array
     {
-        return $this->get("/repos/{$owner}/{$repo}/pulls/{$prNumber}/commits");
+        /** @var array<int, array<string, mixed>> $response */
+        $response = $this->get("/repos/{$owner}/{$repo}/pulls/{$prNumber}/commits");
+
+        return $response;
     }
 }

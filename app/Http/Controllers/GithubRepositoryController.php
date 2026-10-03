@@ -6,9 +6,12 @@ use App\Http\Requests\GithubRepositoryRequest;
 use App\Http\Resources\GithubRepositoryResource;
 use App\Services\GithubRepositoryService;
 use App\Services\GithubService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class GithubRepositoryController extends Controller
 {
@@ -22,7 +25,7 @@ class GithubRepositoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function all()
+    public function all(): AnonymousResourceCollection
     {
         return GithubRepositoryResource::collection($this->service->index());
     }
@@ -30,7 +33,7 @@ class GithubRepositoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $data = GithubRepositoryResource::collection($this->service->index($request));
 
@@ -46,7 +49,7 @@ class GithubRepositoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(GithubRepositoryRequest $request)
+    public function store(GithubRepositoryRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -59,7 +62,7 @@ class GithubRepositoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(GithubRepositoryRequest $request, int $id)
+    public function update(GithubRepositoryRequest $request, int $id): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -72,14 +75,14 @@ class GithubRepositoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id)
+    public function destroy(int $id): RedirectResponse
     {
         $this->service->destroy($id);
 
         return redirect()->back()->with('success', 'Github Repository deleted successfully!');
     }
 
-    public function syncAll(GithubService $githubService, Request $request)
+    public function syncAll(GithubService $githubService, Request $request): RedirectResponse
     {
         try {
             $username = $request->input('ownerKey');

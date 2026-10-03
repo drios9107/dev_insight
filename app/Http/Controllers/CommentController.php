@@ -6,9 +6,12 @@ use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\Task;
 use App\Services\CommentService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class CommentController extends Controller
 {
@@ -19,7 +22,7 @@ class CommentController extends Controller
         $this->service = $service;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $data = CommentResource::collection($this->service->index($request));
 
@@ -29,19 +32,19 @@ class CommentController extends Controller
         ]);
     }
 
-    public function all()
+    public function all(): AnonymousResourceCollection
     {
-        return CommentResource::collection($this->service->all());
+        return CommentResource::collection($this->service->index());
     }
 
-    public function indexForTask(Task $task)
+    public function indexForTask(Task $task): AnonymousResourceCollection
     {
         $comments = $this->service->indexForTask($task);
 
         return CommentResource::collection($comments);
     }
 
-    public function storeForTask(Request $request, Task $task)
+    public function storeForTask(Request $request, Task $task): RedirectResponse
     {
         try {
             $validated = $request->validate([
@@ -57,12 +60,12 @@ class CommentController extends Controller
             throw $e;
         } catch (\Exception $e) {
             throw ValidationException::withMessages([
-                'content' => 'Failed to add comment: '.$e->getMessage(),
+                'content' => 'Failed to add comment: ' . $e->getMessage(),
             ]);
         }
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         try {
             $validated = $request->validate([
@@ -80,17 +83,17 @@ class CommentController extends Controller
             throw $e;
         } catch (\Exception $e) {
             throw ValidationException::withMessages([
-                'content' => 'Failed to add comment: '.$e->getMessage(),
+                'content' => 'Failed to add comment: ' . $e->getMessage(),
             ]);
         }
     }
 
-    public function show(Comment $comment)
+    public function show(Comment $comment): CommentResource
     {
         return new CommentResource($this->service->show($comment->id));
     }
 
-    public function update(Request $request, Comment $comment)
+    public function update(Request $request, Comment $comment): RedirectResponse
     {
         try {
             $validated = $request->validate([
@@ -104,12 +107,12 @@ class CommentController extends Controller
             throw $e;
         } catch (\Exception $e) {
             throw ValidationException::withMessages([
-                'content' => 'Failed to update comment: '.$e->getMessage(),
+                'content' => 'Failed to update comment: ' . $e->getMessage(),
             ]);
         }
     }
 
-    public function destroy(Comment $comment)
+    public function destroy(Comment $comment): RedirectResponse
     {
         try {
             $this->service->destroy($comment);
@@ -117,7 +120,7 @@ class CommentController extends Controller
             return redirect()->back();
         } catch (\Exception $e) {
             throw ValidationException::withMessages([
-                'content' => 'Failed to delete comment: '.$e->getMessage(),
+                'content' => 'Failed to delete comment: ' . $e->getMessage(),
             ]);
         }
     }

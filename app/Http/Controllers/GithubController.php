@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\GithubRepository;
 use App\Services\GithubService;
+use Illuminate\Http\JsonResponse;
 
 class GithubController extends Controller
 {
@@ -14,7 +15,7 @@ class GithubController extends Controller
         $this->service = $service;
     }
 
-    public function sync(int $repositoryId)
+    public function sync(int $repositoryId): JsonResponse
     {
         try {
             $repository = GithubRepository::findOrFail($repositoryId);
@@ -26,7 +27,7 @@ class GithubController extends Controller
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Sync failed: '.$e->getMessage(),
+                'message' => 'Sync failed: ' . $e->getMessage(),
             ], 422);
         }
     }

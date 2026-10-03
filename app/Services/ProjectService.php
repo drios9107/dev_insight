@@ -3,23 +3,28 @@
 namespace App\Services;
 
 use App\Models\Project;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 
 class ProjectService
 {
-    public function index(?Request $request = null)
+    /**
+     * Returns a paginated list
+     * @return LengthAwarePaginator<int, Project>
+     */
+    public function index(?Request $request = null): LengthAwarePaginator
     {
         $query = Project::query()
             ->with(['team', 'owner', 'githubRepository', 'tasks']);
         if ($request && $request->search) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
                     ->orWhere('description', 'ilike', $search)
                     ->orWhere('color', 'ilike', $search)
-                    ->orWhereHas('team', fn ($sub) => $sub->where('name', 'ilike', $search))
-                    ->orWhereHas('owner', fn ($sub) => $sub->where('name', 'ilike', $search))
-                    ->orWhereHas('githubRepository', fn ($sub) => $sub->where('name', 'ilike', $search)
+                    ->orWhereHas('team', fn($sub) => $sub->where('name', 'ilike', $search))
+                    ->orWhereHas('owner', fn($sub) => $sub->where('name', 'ilike', $search))
+                    ->orWhereHas('githubRepository', fn($sub) => $sub->where('name', 'ilike', $search)
                         ->orWhere('full_name', 'ilike', $search));
             });
         }
@@ -32,11 +37,13 @@ class ProjectService
     }
 
     /**
-     * Store a newly created item in storage.
+     * Store a newly created item.
+     * @param  array<string, mixed>  $data
+     * @return Project
      */
-    public function store(array $data): bool
+    public function store(array $data): Project
     {
-        return Project::create($data) !== null;
+        return Project::create($data);
     }
 
     /**
@@ -56,10 +63,12 @@ class ProjectService
 
     /**
      * Update the specified item in storage.
+     * @param int $id
+     * @param  array<string, mixed>  $data
      */
     public function update(int $id, array $data): bool
     {
-        return Project::whereId($id)->update($data) !== null;
+        return Project::whereId($id)->update($data) > 0;
     }
 
     /**
@@ -70,6 +79,6 @@ class ProjectService
      */
     public function destroy($id)
     {
-        return Project::destroy($id) !== null;
+        return Project::destroy($id) > 0;
     }
 }

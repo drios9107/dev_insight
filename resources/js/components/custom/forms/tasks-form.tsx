@@ -71,6 +71,7 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
     useEffect(() => {
         if (!data.project_id) {
             setSprints([]);
+
             return;
         }
 
@@ -90,6 +91,7 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
                     setSprints,
                 ).finally(() => setSprintsLoading(false));
             }
+
             setData({
                 title: item?.title,
                 description: item?.description,
@@ -107,7 +109,7 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
                 order: item?.order,
             });
         }
-    }, [item, setData]);
+    }, [item, setData, get]);
 
     const statuses = useMemo(() => {
         return Object.keys(TaskStatusEnum).map((i: string) => ({

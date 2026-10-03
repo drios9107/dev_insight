@@ -8,6 +8,7 @@ use App\Models\Project;
 use App\Services\MetricService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class MetricController extends Controller
 {
@@ -18,7 +19,7 @@ class MetricController extends Controller
         $this->metricService = $metricService;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $repositoryId = $request->get('repository_id');
         $projectId = $request->get('project_id');
@@ -34,7 +35,7 @@ class MetricController extends Controller
         $developers = GithubUser::select('id', 'username', 'name')
             ->orderBy('username')
             ->get()
-            ->map(fn ($u) => [
+            ->map(fn($u) => [
                 'id' => $u->id,
                 'name' => $u->displayName,
             ]);

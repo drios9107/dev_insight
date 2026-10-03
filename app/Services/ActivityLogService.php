@@ -3,16 +3,21 @@
 namespace App\Services;
 
 use App\Models\ActivityLog;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 
 class ActivityLogService
 {
-    public function index(?Request $request = null)
+    /**
+     * Returns a paginated list
+     * @return LengthAwarePaginator<int, ActivityLog>
+     */
+    public function index(?Request $request = null): LengthAwarePaginator
     {
         $query = ActivityLog::query()->with(['user', 'team', 'project', 'task']);
 
-        if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+        if ($request->filled('search')) {
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('type', 'ilike', $search)
                     ->orWhere('description', 'ilike', $search)
@@ -22,11 +27,11 @@ class ActivityLogService
             });
         }
 
-        if ($request && $request->filled('type') && $request->type !== 'all') {
+        if ($request->filled('type') && $request->type !== 'all') {
             $query->where('type', $request->type);
         }
 
-        if ($request && $request->filled('user_id') && $request->user_id !== 'all') {
+        if ($request->filled('user_id') && $request->user_id !== 'all') {
             $query->where('user_id', $request->user_id);
         }
 
@@ -34,11 +39,13 @@ class ActivityLogService
     }
 
     /**
-     * Store a newly created item in storage.
+     * Store a newly created item.
+     * @param  array<string, mixed>  $data
+     * @return ActivityLog
      */
-    public function store(array $data): bool
+    public function store(array $data): ActivityLog
     {
-        return ActivityLog::create($data) !== null;
+        return ActivityLog::create($data);
     }
 
     /**
@@ -62,6 +69,6 @@ class ActivityLogService
      */
     public function destroy($id)
     {
-        return ActivityLog::destroy($id) !== null;
+        return ActivityLog::destroy($id) > 0;
     }
 }

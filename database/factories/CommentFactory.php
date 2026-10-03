@@ -17,8 +17,8 @@ class CommentFactory extends Factory
     public function definition(): array
     {
         return [
-            'task_id' => Task::inRandomOrder(0)->first()?->id ?? Task::factory(),
-            'user_id' => User::inRandomOrder(0)->first()?->id ?? User::factory(),
+            'task_id' => Task::inRandomOrder()->first()->id ?? Task::factory(),
+            'user_id' => User::inRandomOrder()->first()->id ?? User::factory(),
             'parent_id' => null,
             'content' => $this->faker->paragraph(2),
             'is_internal' => $this->faker->boolean(20),
@@ -46,7 +46,7 @@ class CommentFactory extends Factory
      */
     public function internal(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'is_internal' => true,
         ]);
     }

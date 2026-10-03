@@ -1,7 +1,6 @@
 import { SectionTitle } from '@/components/custom/metrics';
-import SimpleTable, {
-    ISimpleTableColumn,
-} from '@/components/custom/simple-table';
+import type { ISimpleTableColumn } from '@/components/custom/simple-table';
+import SimpleTable from '@/components/custom/simple-table';
 import { Card, CardContent } from '@/components/ui/card';
 import type { ProjectWithStats } from '@/types/metric';
 

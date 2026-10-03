@@ -20,11 +20,14 @@ class UserRequest extends FormRequest
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function rules(): array
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,'.$this->route('user')?->id,
+            'email' => 'required|email|unique:users,email,' . $this->route('user')?->id,
             'password' => 'required|string|min:8',
         ];
     }

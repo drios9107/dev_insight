@@ -22,7 +22,7 @@ class NotificationFactory extends Factory
         $types = array_column(NotificationTypeEnum::cases(), 'value');
 
         return [
-            'user_id' => User::inRandomOrder(0)->first()->id,
+            'user_id' => User::inRandomOrder()->first()->id,
             'type' => $this->faker->randomElement($types),
             'title' => $this->faker->sentence(),
             'message' => $this->faker->sentence(),

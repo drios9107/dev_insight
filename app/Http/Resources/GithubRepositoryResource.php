@@ -2,9 +2,24 @@
 
 namespace App\Http\Resources;
 
+use App\Models\GithubRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property-read int $id
+ * @property-read int $github_id
+ * @property-read string $name
+ * @property-read string $full_name
+ * @property-read string|null $url
+ * @property-read string|null $description
+ * @property-read bool $is_private
+ * @property-read string|null $default_branch
+ * @property-read Carbon|null $last_synced_at
+ * @property-read Carbon|null $created_at
+ * @property-read Carbon|null $updated_at
+ */
 class GithubRepositoryResource extends JsonResource
 {
     /**

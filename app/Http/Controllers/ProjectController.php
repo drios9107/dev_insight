@@ -7,8 +7,11 @@ use App\Http\Requests\Project\ProjectUpdateRequest;
 use App\Http\Resources\ProjectResource;
 use App\Models\Project;
 use App\Services\ProjectService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ProjectController extends Controller
 {
@@ -22,7 +25,7 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function all()
+    public function all(): AnonymousResourceCollection
     {
         return ProjectResource::collection($this->service->index());
     }
@@ -30,7 +33,7 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $data = ProjectResource::collection($this->service->index($request));
 
@@ -46,7 +49,7 @@ class ProjectController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProjectStoreRequest $request)
+    public function store(ProjectStoreRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -56,7 +59,7 @@ class ProjectController extends Controller
             ->with('success', 'Project created successfully!');
     }
 
-    public function show(Project $project)
+    public function show(Project $project): ProjectResource
     {
         return new ProjectResource($this->service->show($project->id));
     }
@@ -64,7 +67,7 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProjectUpdateRequest $request, int $id)
+    public function update(ProjectUpdateRequest $request, int $id): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -77,7 +80,7 @@ class ProjectController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id)
+    public function destroy(int $id): RedirectResponse
     {
         $this->service->destroy($id);
 

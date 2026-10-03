@@ -23,6 +23,9 @@ class TaskRequest extends FormRequest
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function rules(): array
     {
         $taskId = $this->input('id') ?? $this->route('task');
@@ -51,7 +54,7 @@ class TaskRequest extends FormRequest
         ];
 
         if ($taskId) {
-            $rules['title'] = 'required|string|unique:tasks,title,'.$taskId;
+            $rules['title'] = 'required|string|unique:tasks,title,' . $taskId;
         }
 
         return $rules;

@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\NotificationRequest;
 use App\Http\Resources\NotificationResource;
 use App\Services\NotificationService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class NotificationController extends Controller
 {
@@ -20,7 +23,7 @@ class NotificationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function all()
+    public function all(): AnonymousResourceCollection
     {
         return NotificationResource::collection($this->service->index());
     }
@@ -28,7 +31,7 @@ class NotificationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $data = NotificationResource::collection($this->service->index($request));
 
@@ -44,7 +47,7 @@ class NotificationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(NotificationRequest $request)
+    public function store(NotificationRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -57,7 +60,7 @@ class NotificationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(NotificationRequest $request, int $id)
+    public function update(NotificationRequest $request, int $id): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -70,7 +73,7 @@ class NotificationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id)
+    public function destroy(int $id): RedirectResponse
     {
         $this->service->destroy($id);
 

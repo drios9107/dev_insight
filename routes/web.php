@@ -50,7 +50,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/github-user/import', [GithubUserController::class, 'import'])
         ->name('github-user.import');
 
-    //sprint by project
+    // sprint by project
     Route::get('/sprint/by-project/{projectId}', [SprintController::class, 'byProject'])
         ->name('sprint.by-project');
 
@@ -90,4 +90,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('metric', [MetricController::class, 'index'])->name('metric.index');
 });
 
-require __DIR__ . '/settings.php';
+require __DIR__.'/settings.php';

@@ -2,9 +2,24 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Notification;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property-read int $id
+ * @property-read string $type
+ * @property-read string $title
+ * @property-read string $message
+ * @property-read string|null $link
+ * @property-read bool $is_read
+ * @property-read Carbon|null $read_at
+ * @property-read Carbon|null $created_at
+ * @property-read Carbon|null $updated_at
+ * @property-read User|null $user
+ */
 class NotificationResource extends JsonResource
 {
     /**
@@ -16,7 +31,7 @@ class NotificationResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user' => $this->whenLoaded('user', fn () => [
+            'user' => $this->whenLoaded('user', fn() => [
                 'id' => $this->user->id,
                 'name' => $this->user->name,
             ]),

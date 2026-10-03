@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        $useExpense = false;
+        // $useExpense = false;
         $allSeeders = [
             RoleSeeder::class,
             UserSeeder::class,
@@ -34,11 +34,11 @@ class DatabaseSeeder extends Seeder
             ActivityLogSeeder::class,
         ];
 
-        $useExpense ?
-            $this->call($allSeeders) :
-            $this->call($allSeeders, false, [
-                'ownerKey' => config('services.github.default_username'),
-                'repoName' => config('services.github.default_repo'),
-            ]);
+        // $useExpense ?
+        // $this->call($allSeeders) :
+        $this->call($allSeeders, false, [
+            'ownerKey' => config('services.github.default_username'),
+            'repoName' => config('services.github.default_repo'),
+        ]);
     }
 }

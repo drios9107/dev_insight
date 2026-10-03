@@ -3,17 +3,22 @@
 namespace App\Services;
 
 use App\Models\Sprint;
-use Illuminate\Http\Request;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
 
 class SprintService
 {
-    public function index(?Request $request = null)
+    /**
+     * Returns a paginated list
+     * @return LengthAwarePaginator<int, Sprint>
+     */
+    public function index(?Request $request = null): LengthAwarePaginator
     {
         $query = Sprint::query()
             ->with(['project']);
 
-        if ($request && $request->filled('search')) {
+        if ($request->filled('search')) {
             $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
@@ -24,7 +29,7 @@ class SprintService
             });
         }
 
-        if ($request && $request->filled('status') && $request->status !== 'all') {
+        if ($request->filled('status') && $request->status !== 'all') {
             $query->where('status', $request->status);
         }
 
@@ -32,11 +37,13 @@ class SprintService
     }
 
     /**
-     * Store a newly created item in storage.
+     * Store a newly created item.
+     * @param  array<string, mixed>  $data
+     * @return Sprint
      */
-    public function store(array $data): bool
+    public function store(array $data): Sprint
     {
-        return Sprint::create($data) !== null;
+        return Sprint::create($data);
     }
 
     /**
@@ -52,10 +59,12 @@ class SprintService
 
     /**
      * Update the specified item in storage.
+     * @param int $id
+     * @param  array<string, mixed>  $data
      */
     public function update(int $id, array $data): bool
     {
-        return Sprint::whereId($id)->update($data) !== null;
+        return Sprint::whereId($id)->update($data) > 0;
     }
 
     /**
@@ -66,9 +75,13 @@ class SprintService
      */
     public function destroy($id)
     {
-        return Sprint::destroy($id) !== null;
+        return Sprint::destroy($id) > 0;
     }
 
+    /**
+     * @param  int  $projectId
+     * @return Collection<int, Sprint>
+     */
     public function byProject(int $projectId): Collection
     {
         return Sprint::where('project_id', $projectId)

@@ -3,12 +3,14 @@
 namespace App\Services;
 
 use App\Models\GithubRepository;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class GithubRepositoryService
 {
-    public function fetchData(GithubService $service, string $ownerKey, string $repoName)
+    public function fetchData(GithubService $service, string $ownerKey, string $repoName): JsonResponse
     {
         $repo = $service->getRepository($ownerKey, $repoName);
 
@@ -45,7 +47,13 @@ class GithubRepositoryService
     }
 
     /**
-     * Sync every public repository in a github account
+     * Sync every public repository in a github account.
+     *
+     * @param  GithubService  $githubService
+     * @param  string  $username
+     * @return array<string, int>
+     *
+     * @throws \Exception
      */
     public function syncAllFromGithub(GithubService $githubService, string $username): array
     {
@@ -92,12 +100,16 @@ class GithubRepositoryService
         return $results;
     }
 
-    public function index(?Request $request = null)
+    /**
+     * Returns a paginated list
+     * @return LengthAwarePaginator<int, GithubRepository>
+     */
+    public function index(?Request $request = null): LengthAwarePaginator
     {
         $query = GithubRepository::query();
 
-        if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+        if ($request->filled('search')) {
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('full_name', 'ilike', $search)
                     ->orWhere('name', 'ilike', $search)
@@ -113,11 +125,13 @@ class GithubRepositoryService
     }
 
     /**
-     * Store a newly created item in storage.
+     * Store a newly created item.
+     * @param  array<string, mixed>  $data
+     * @return GithubRepository
      */
-    public function store(array $data): bool
+    public function store(array $data): GithubRepository
     {
-        return GithubRepository::create($data) !== null;
+        return GithubRepository::create($data);
     }
 
     /**
@@ -135,10 +149,12 @@ class GithubRepositoryService
 
     /**
      * Update the specified item in storage.
+     * @param int $id
+     * @param  array<string, mixed>  $data
      */
     public function update(int $id, array $data): bool
     {
-        return GithubRepository::whereId($id)->update($data) !== null;
+        return GithubRepository::whereId($id)->update($data) > 0;
     }
 
     /**
@@ -149,6 +165,6 @@ class GithubRepositoryService
      */
     public function destroy($id)
     {
-        return GithubRepository::destroy($id) !== null;
+        return GithubRepository::destroy($id) > 0;
     }
 }

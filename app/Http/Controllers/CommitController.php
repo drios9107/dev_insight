@@ -7,8 +7,11 @@ use App\Http\Resources\CommitResource;
 use App\Models\GithubRepository;
 use App\Models\PullRequest;
 use App\Services\CommitService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class CommitController extends Controller
 {
@@ -22,7 +25,7 @@ class CommitController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function all()
+    public function all(): AnonymousResourceCollection
     {
         return CommitResource::collection($this->service->index());
     }
@@ -30,7 +33,7 @@ class CommitController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $data = CommitResource::collection($this->service->index($request));
 
@@ -54,7 +57,7 @@ class CommitController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CommitRequest $request)
+    public function store(CommitRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -67,7 +70,7 @@ class CommitController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(CommitRequest $request, int $id)
+    public function update(CommitRequest $request, int $id): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -80,7 +83,7 @@ class CommitController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id)
+    public function destroy(int $id): RedirectResponse
     {
         $this->service->destroy($id);
 

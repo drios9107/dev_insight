@@ -6,8 +6,11 @@ use App\Http\Requests\PullRequestRequest;
 use App\Http\Resources\PullRequestResource;
 use App\Models\GithubRepository;
 use App\Services\PullRequestService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class PullRequestController extends Controller
 {
@@ -21,7 +24,7 @@ class PullRequestController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function all()
+    public function all(): AnonymousResourceCollection
     {
         return PullRequestResource::collection($this->service->index());
     }
@@ -29,7 +32,7 @@ class PullRequestController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $data = PullRequestResource::collection($this->service->index($request));
 
@@ -48,7 +51,7 @@ class PullRequestController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(PullRequestRequest $request)
+    public function store(PullRequestRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -61,7 +64,7 @@ class PullRequestController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(PullRequestRequest $request, int $id)
+    public function update(PullRequestRequest $request, int $id): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -74,7 +77,7 @@ class PullRequestController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id)
+    public function destroy(int $id): RedirectResponse
     {
         $this->service->destroy($id);
 

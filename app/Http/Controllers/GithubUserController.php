@@ -6,9 +6,12 @@ use App\Http\Resources\GithubUserResource;
 use App\Models\GithubUser;
 use App\Services\GithubService;
 use App\Services\GithubUserService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class GithubUserController extends Controller
 {
@@ -19,12 +22,12 @@ class GithubUserController extends Controller
         $this->service = $service;
     }
 
-    public function all()
+    public function all(): AnonymousResourceCollection
     {
         return GithubUserResource::collection($this->service->index());
     }
 
-    public function sync(GithubService $githubService, int $id)
+    public function sync(GithubService $githubService, int $id): RedirectResponse
     {
         try {
             $user = GithubUser::findOrFail($id);
@@ -35,12 +38,12 @@ class GithubUserController extends Controller
             throw $e;
         } catch (\Exception $e) {
             throw ValidationException::withMessages([
-                'sync' => 'Sync failed: '.$e->getMessage(),
+                'sync' => 'Sync failed: ' . $e->getMessage(),
             ]);
         }
     }
 
-    public function import(GithubService $githubService, Request $request)
+    public function import(GithubService $githubService, Request $request): RedirectResponse
     {
         try {
             $validated = $request->validate([
@@ -54,12 +57,12 @@ class GithubUserController extends Controller
             throw $e;
         } catch (\Exception $e) {
             throw ValidationException::withMessages([
-                'username' => 'Import failed: '.$e->getMessage(),
+                'username' => 'Import failed: ' . $e->getMessage(),
             ]);
         }
     }
 
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $data = GithubUserResource::collection($this->service->index($request));
 
@@ -72,12 +75,12 @@ class GithubUserController extends Controller
         ]);
     }
 
-    public function show(GithubUser $githubUser)
+    public function show(GithubUser $githubUser): GithubUserResource
     {
         return new GithubUserResource($this->service->show($githubUser->id));
     }
 
-    public function destroy(int $id)
+    public function destroy(int $id): RedirectResponse
     {
         $this->service->destroy($id);
 

@@ -6,8 +6,11 @@ use App\Http\Requests\TeamRequest;
 use App\Http\Resources\TeamResource;
 use App\Models\Team;
 use App\Services\TeamService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class TeamController extends Controller
 {
@@ -21,7 +24,7 @@ class TeamController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function all()
+    public function all(): AnonymousResourceCollection
     {
         return TeamResource::collection($this->service->index());
     }
@@ -29,7 +32,7 @@ class TeamController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $data = TeamResource::collection($this->service->index($request));
 
@@ -45,7 +48,7 @@ class TeamController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(TeamRequest $request)
+    public function store(TeamRequest $request): RedirectResponse
     {
         $this->service->store($request->validated());
 
@@ -53,7 +56,7 @@ class TeamController extends Controller
             ->with('success', 'Team created successfully!');
     }
 
-    public function show(Team $team)
+    public function show(Team $team): TeamResource
     {
         return new TeamResource($this->service->show($team->id));
     }
@@ -61,7 +64,7 @@ class TeamController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(TeamRequest $request, int $id)
+    public function update(TeamRequest $request, int $id): RedirectResponse
     {
         $this->service->update($id, $request->validated());
 
@@ -72,7 +75,7 @@ class TeamController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id)
+    public function destroy(int $id): RedirectResponse
     {
         $this->service->destroy($id);
 

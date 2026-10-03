@@ -27,9 +27,9 @@ class ProjectFactory extends Factory
         return [
             'description' => $this->faker->optional()->sentence(),
             'name' => ucfirst($name),
-            'team_id' => Team::inRandomOrder(0)->first()->id,
-            'owner_id' => User::inRandomOrder(0)->first()->id,
-            'github_repository_id' => $this->faker->passthrough(GithubRepository::inRandomOrder(0)->first()->id),
+            'team_id' => Team::inRandomOrder()->first()->id,
+            'owner_id' => User::inRandomOrder()->first()->id,
+            'github_repository_id' => $this->faker->passthrough(GithubRepository::inRandomOrder()->first()->id),
             'status' => $this->faker->randomElement($statuses),
             'start_date' => $this->faker->dateTimeBetween('-60 days', 'now'),
             'end_date' => $this->faker->dateTimeBetween('now', '+60 days'),

@@ -2,11 +2,31 @@
 
 namespace App\Http\Resources;
 
+use App\Models\GithubUser;
+use App\Models\Team;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property-read int $id
+ * @property-read int $github_id
+ * @property-read string $username
+ * @property-read string|null $displayName
+ * @property-read string|null $name
+ * @property-read string|null $email
+ * @property-read string|null $avatar
+ * @property-read Carbon|null $last_synced_at
+ * @property-read Carbon|null $created_at
+ * @property-read Carbon|null $updated_at
+ * @property-read Collection<int, Team>|null $teams
+ */
 class GithubUserResource extends JsonResource
 {
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(Request $request): array
     {
         return [
@@ -25,7 +45,7 @@ class GithubUserResource extends JsonResource
 
             'teams' => $this->whenLoaded(
                 'teams',
-                fn () => $this->teams->map(fn ($team) => [
+                fn() => $this->teams->map(fn($team) => [
                     'id' => $team->id,
                     'name' => $team->name,
                 ])

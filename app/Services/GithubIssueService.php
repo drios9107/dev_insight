@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\GithubIssue;
 use App\Models\GithubRepository;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class GithubIssueService
@@ -16,7 +18,7 @@ class GithubIssueService
         $this->githubUserService = $githubUserService;
     }
 
-    public function fetchData(GithubService $service, string $ownerKey, string $repoName)
+    public function fetchData(GithubService $service, string $ownerKey, string $repoName): JsonResponse
     {
         $issues = $service->getIssues($ownerKey, $repoName);
 
@@ -63,13 +65,17 @@ class GithubIssueService
         ]);
     }
 
-    public function index(?Request $request = null)
+    /**
+     * Returns a paginated list
+     * @return LengthAwarePaginator<int, GithubIssue>
+     */
+    public function index(?Request $request = null): LengthAwarePaginator
     {
         $query = GithubIssue::query()
             ->with('author', 'githubRepository', 'task');
 
-        if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+        if ($request->filled('search')) {
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('body', 'ilike', $search)
@@ -82,11 +88,11 @@ class GithubIssueService
             });
         }
 
-        if ($request && $request->filled('state') && $request->state !== 'all') {
+        if ($request->filled('state') && $request->state !== 'all') {
             $query->where('state', $request->state);
         }
 
-        if ($request && $request->filled('repository_id') && $request->repository_id !== 'all') {
+        if ($request->filled('repository_id') && $request->repository_id !== 'all') {
             $query->where('github_repository_id', $request->repository_id);
         }
 
@@ -94,11 +100,13 @@ class GithubIssueService
     }
 
     /**
-     * Store a newly created item in storage.
+     * Store a newly created item.
+     * @param  array<string, mixed>  $data
+     * @return GithubIssue
      */
-    public function store(array $data): bool
+    public function store(array $data): GithubIssue
     {
-        return GithubIssue::create($data) !== null;
+        return GithubIssue::create($data);
     }
 
     /**
@@ -116,10 +124,12 @@ class GithubIssueService
 
     /**
      * Update the specified item in storage.
+     * @param int $id
+     * @param  array<string, mixed>  $data
      */
     public function update(int $id, array $data): bool
     {
-        return GithubIssue::whereId($id)->update($data) !== null;
+        return GithubIssue::whereId($id)->update($data) > 0;
     }
 
     /**
@@ -130,6 +140,6 @@ class GithubIssueService
      */
     public function destroy($id)
     {
-        return GithubIssue::destroy($id) !== null;
+        return GithubIssue::destroy($id) > 0;
     }
 }

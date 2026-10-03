@@ -3,20 +3,25 @@
 namespace App\Services;
 
 use App\Models\Comment;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use App\Models\Task;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class CommentService
 {
     /**
      * Paginated listing (for the general comments page)
+     * 
+     * @return LengthAwarePaginator<int, Comment>
      */
-    public function index(?Request $request = null)
+    public function index(?Request $request = null): LengthAwarePaginator
     {
         $query = Comment::query()->with(['user', 'task', 'parent']);
 
-        if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+        if ($request->filled('search')) {
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('content', 'ilike', $search)
                     ->orWhereHas('user', function ($u) use ($search) {
@@ -28,7 +33,7 @@ class CommentService
             });
         }
 
-        if ($request && $request->filled('task_id') && $request->task_id !== 'all') {
+        if ($request->filled('task_id') && $request->task_id !== 'all') {
             $query->where('task_id', $request->task_id);
         }
 
@@ -36,17 +41,10 @@ class CommentService
     }
 
     /**
-     * All comments (API)
-     */
-    public function all()
-    {
-        return Comment::with(['user', 'task', 'parent'])->latest()->get();
-    }
-
-    /**
      * Comments for a specific task (root comments + replies)
+     * @return Collection<int, Comment>
      */
-    public function indexForTask(Task $task)
+    public function indexForTask(Task $task): Collection
     {
         return Comment::where('task_id', $task->id)
             ->whereNull('parent_id')
@@ -56,7 +54,9 @@ class CommentService
     }
 
     /**
-     * Create a comment on a task
+     * Create a comment in a task
+     * @param  array<string, mixed>  $data
+     * @return Comment
      */
     public function store(Task $task, array $data): Comment
     {
@@ -78,7 +78,9 @@ class CommentService
     }
 
     /**
-     * Update a comment
+     * @param  Comment  $comment
+     * @param  array<string, mixed>  $data
+     * @return Comment
      */
     public function update(Comment $comment, array $data): Comment
     {

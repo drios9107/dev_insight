@@ -20,6 +20,9 @@ class RoleRequest extends FormRequest
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
+    /**
+     * @return array<string, mixed>
+     */
     public function rules(): array
     {
         $roleId = $this->route('role')?->id;
@@ -28,7 +31,7 @@ class RoleRequest extends FormRequest
             'description' => 'nullable|string|max:255',
         ];
         if ($roleId) {
-            $rules['name'] = 'required|string|max:255|unique:roles,name,'.$roleId;
+            $rules['name'] = 'required|string|max:255|unique:roles,name,' . $roleId;
         }
 
         return $rules;

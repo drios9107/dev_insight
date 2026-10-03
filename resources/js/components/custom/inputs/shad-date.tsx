@@ -1,20 +1,19 @@
 'use client';
 
-import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { CalendarIcon } from 'lucide-react';
 import { useCallback, useState } from 'react';
 
-import { Label } from '@/components/ui/label';
-
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import Calendar from '@/components/ui/calendar';
+import { Label } from '@/components/ui/label';
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
 } from '@/components/ui/popover';
-import Calendar from '@/components/ui/calendar';
+import { cn } from '@/lib/utils';
 
 interface ShadDateProps {
     label?: string;
@@ -45,6 +44,7 @@ export function ShadDate({
         (date: Date | undefined) => {
             if (!date) {
                 onChange('');
+
                 return;
             }
 

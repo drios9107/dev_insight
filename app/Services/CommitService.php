@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Models\Commit;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use App\Models\GithubRepository;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -16,7 +18,7 @@ class CommitService
         $this->githubUserService = $githubUserService;
     }
 
-    public function fetchData(GithubService $service, string $ownerKey, string $repoName)
+    public function fetchData(GithubService $service, string $ownerKey, string $repoName): JsonResponse
     {
         $commits = $service->getCommits($ownerKey, $repoName);
 
@@ -64,13 +66,17 @@ class CommitService
         ]);
     }
 
-    public function index(?Request $request = null)
+    /**
+     * Returns a paginated list
+     * @return LengthAwarePaginator<int, Commit>
+     */
+    public function index(?Request $request = null): LengthAwarePaginator
     {
         $query = Commit::query()
             ->with(['author', 'githubRepository', 'pullRequest']);
 
-        if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+        if ($request->filled('search')) {
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('message', 'ilike', $search)
                     ->orWhere('sha', 'ilike', $search)
@@ -86,11 +92,11 @@ class CommitService
             });
         }
 
-        if ($request && $request->filled('repository_id') && $request->repository_id !== 'all') {
+        if ($request->filled('repository_id') && $request->repository_id !== 'all') {
             $query->where('github_repository_id', $request->repository_id);
         }
 
-        if ($request && $request->filled('pull_request_id') && $request->pull_request_id !== 'all') {
+        if ($request->filled('pull_request_id') && $request->pull_request_id !== 'all') {
             $query->where('pull_request_id', $request->pull_request_id);
         }
 
@@ -99,10 +105,13 @@ class CommitService
 
     /**
      * Store a newly created item in storage.
+     * Store a newly created item.
+     * @param  array<string, mixed>  $data
+     * @return Commit
      */
-    public function store(array $data): bool
+    public function store(array $data): Commit
     {
-        return Commit::create($data) !== null;
+        return Commit::create($data);
     }
 
     /**
@@ -120,10 +129,12 @@ class CommitService
 
     /**
      * Update the specified item in storage.
+     * @param int $id
+     * @param  array<string, mixed>  $data
      */
     public function update(int $id, array $data): bool
     {
-        return Commit::whereId($id)->update($data) !== null;
+        return Commit::whereId($id)->update($data) > 0;
     }
 
     /**
@@ -134,6 +145,6 @@ class CommitService
      */
     public function destroy($id)
     {
-        return Commit::destroy($id) !== null;
+        return Commit::destroy($id) > 0;
     }
 }

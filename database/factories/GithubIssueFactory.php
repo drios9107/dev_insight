@@ -24,12 +24,12 @@ class GithubIssueFactory extends Factory
 
         return [
             'github_id' => $this->faker->unique()->randomNumber(8),
-            'github_repository_id' => GithubRepository::inRandomOrder(0)->first()->id,
+            'github_repository_id' => GithubRepository::inRandomOrder()->first()->id,
             'number' => $this->faker->unique()->numberBetween(1, 1000),
             'title' => $this->faker->sentence(5),
             'body' => $this->faker->optional()->paragraph(),
             'state' => $state,
-            'author_id' => GithubUser::inRandomOrder(0)->first()->id,
+            'author_id' => GithubUser::inRandomOrder()->first()->id,
             'closed_at' => $state === 'closed' ? $this->faker->dateTimeBetween('-30 days', 'now') : null,
             'created_at' => $this->faker->dateTimeBetween('-60 days', 'now'),
             'updated_at' => $this->faker->dateTimeBetween('-60 days', 'now'),

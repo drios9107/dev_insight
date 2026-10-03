@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\RoleRequest;
 use App\Http\Resources\RoleResource;
 use App\Services\RoleService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class RoleController extends Controller
 {
@@ -20,7 +23,7 @@ class RoleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function all()
+    public function all(): AnonymousResourceCollection
     {
         return RoleResource::collection($this->service->index());
     }
@@ -28,7 +31,7 @@ class RoleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $data = RoleResource::collection($this->service->index($request));
 
@@ -44,7 +47,7 @@ class RoleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(RoleRequest $request)
+    public function store(RoleRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -57,7 +60,7 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(RoleRequest $request, int $id)
+    public function update(RoleRequest $request, int $id): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -70,7 +73,7 @@ class RoleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id)
+    public function destroy(int $id): RedirectResponse
     {
         $this->service->destroy($id);
 

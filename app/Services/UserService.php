@@ -3,16 +3,21 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 
 class UserService
 {
-    public function index(?Request $request = null)
+    /**
+     * Returns a paginated list
+     * @return LengthAwarePaginator<int, User>
+     */
+    public function index(?Request $request = null): LengthAwarePaginator
     {
         $query = User::query()->with('role');
 
-        if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+        if ($request->filled('search')) {
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
                     ->orWhere('email', 'ilike', $search)
@@ -22,7 +27,7 @@ class UserService
             });
         }
 
-        if ($request && $request->filled('role_id') && $request->role_id !== 'all') {
+        if ($request->filled('role_id') && $request->role_id !== 'all') {
             $query->where('role_id', $request->role_id);
         }
 
@@ -30,11 +35,13 @@ class UserService
     }
 
     /**
-     * Store a newly created item in storage.
+     * Store a newly created item.
+     * @param  array<string, mixed>  $data
+     * @return User
      */
-    public function store(array $data): bool
+    public function store(array $data): User
     {
-        return User::create($data) !== null;
+        return User::create($data);
     }
 
     /**
@@ -52,10 +59,12 @@ class UserService
 
     /**
      * Update the specified item in storage.
+     * @param int $id
+     * @param  array<string, mixed>  $data
      */
     public function update(int $id, array $data): bool
     {
-        return User::whereId($id)->update($data) !== null;
+        return User::whereId($id)->update($data) > 0;
     }
 
     /**
@@ -66,6 +75,6 @@ class UserService
      */
     public function destroy($id)
     {
-        return User::destroy($id) !== null;
+        return User::destroy($id) > 0;
     }
 }

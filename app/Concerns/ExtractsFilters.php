@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 
 trait ExtractsFilters
 {
+
+    /**
+     * @param  array<int, string>  $extraKeys
+     * @return array<string, mixed>
+     */
     protected function extractFilters(Request $request, array $extraKeys = []): array
     {
         $commonKeys = ['search', 'sort', 'direction', 'per_page'];

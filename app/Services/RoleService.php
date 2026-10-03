@@ -3,16 +3,21 @@
 namespace App\Services;
 
 use App\Models\Role;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 
 class RoleService
 {
-    public function index(?Request $request = null)
+    /**
+     * Returns a paginated list
+     * @return LengthAwarePaginator<int, Role>
+     */
+    public function index(?Request $request = null): LengthAwarePaginator
     {
         $query = Role::query()->withCount('users');
 
-        if ($request && $request->filled('search')) {
-            $search = '%'.$request->search.'%';
+        if ($request->filled('search')) {
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
                     ->orWhere('description', 'ilike', $search);
@@ -23,11 +28,13 @@ class RoleService
     }
 
     /**
-     * Store a newly created item in storage.
+     * Store a newly created item.
+     * @param  array<string, mixed>  $data
+     * @return Role
      */
-    public function store(array $data): bool
+    public function store(array $data): Role
     {
-        return Role::create($data) !== null;
+        return Role::create($data);
     }
 
     /**
@@ -45,10 +52,12 @@ class RoleService
 
     /**
      * Update the specified item in storage.
+     * @param int $id
+     * @param  array<string, mixed>  $data
      */
     public function update(int $id, array $data): bool
     {
-        return Role::whereId($id)->update($data) !== null;
+        return Role::whereId($id)->update($data) > 0;
     }
 
     /**
@@ -59,6 +68,6 @@ class RoleService
      */
     public function destroy($id)
     {
-        return Role::destroy($id) !== null;
+        return Role::destroy($id) > 0;
     }
 }
