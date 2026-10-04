@@ -10,6 +10,7 @@ class ProjectService
 {
     /**
      * Returns a paginated list
+     *
      * @return LengthAwarePaginator<int, Project>
      */
     public function index(?Request $request = null): LengthAwarePaginator
@@ -17,14 +18,14 @@ class ProjectService
         $query = Project::query()
             ->with(['team', 'owner', 'githubRepository', 'tasks']);
         if ($request && $request->search) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
                     ->orWhere('description', 'ilike', $search)
                     ->orWhere('color', 'ilike', $search)
-                    ->orWhereHas('team', fn($sub) => $sub->where('name', 'ilike', $search))
-                    ->orWhereHas('owner', fn($sub) => $sub->where('name', 'ilike', $search))
-                    ->orWhereHas('githubRepository', fn($sub) => $sub->where('name', 'ilike', $search)
+                    ->orWhereHas('team', fn ($sub) => $sub->where('name', 'ilike', $search))
+                    ->orWhereHas('owner', fn ($sub) => $sub->where('name', 'ilike', $search))
+                    ->orWhereHas('githubRepository', fn ($sub) => $sub->where('name', 'ilike', $search)
                         ->orWhere('full_name', 'ilike', $search));
             });
         }
@@ -38,8 +39,8 @@ class ProjectService
 
     /**
      * Store a newly created item.
+     *
      * @param  array<string, mixed>  $data
-     * @return Project
      */
     public function store(array $data): Project
     {
@@ -63,7 +64,7 @@ class ProjectService
 
     /**
      * Update the specified item in storage.
-     * @param int $id
+     *
      * @param  array<string, mixed>  $data
      */
     public function update(int $id, array $data): bool

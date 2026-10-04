@@ -21,7 +21,6 @@ class GithubService
     }
 
     /**
-     * @param  string  $endpoint
      * @param  array<string, mixed>  $params
      * @return array<int|string, mixed>
      *
@@ -29,10 +28,10 @@ class GithubService
      */
     private function get(string $endpoint, array $params = []): array
     {
-        $url = $this->apiBase . $endpoint;
+        $url = $this->apiBase.$endpoint;
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->token,
+            'Authorization' => 'Bearer '.$this->token,
             'Accept' => 'application/vnd.github.v3+json',
         ])->get($url, $params);
 
@@ -43,14 +42,13 @@ class GithubService
                 'body' => $response->body(),
             ]);
 
-            throw new Exception('GitHub API error: ' . $response->status());
+            throw new Exception('GitHub API error: '.$response->status());
         }
 
         return $response->json();
     }
 
     /**
-     * @param  string  $username
      * @return array<string, mixed>|null
      */
     public function getUser(string $username): ?array
@@ -63,9 +61,6 @@ class GithubService
     }
 
     /**
-     * @param  string  $owner
-     * @param  string  $repo
-     * @param  int  $perPage
      * @return array<int, array<string, mixed>>
      */
     public function getCommits(string $owner, string $repo, int $perPage = 100): array
@@ -79,10 +74,6 @@ class GithubService
     }
 
     /**
-     * @param  string  $owner
-     * @param  string  $repo
-     * @param  string  $state
-     * @param  int  $perPage
      * @return array<int, array<string, mixed>>
      */
     public function getPullRequests(string $owner, string $repo, string $state = 'all', int $perPage = 100): array
@@ -99,10 +90,6 @@ class GithubService
     /**
      * Obtener issues de un repositorio.
      *
-     * @param  string  $owner
-     * @param  string  $repo
-     * @param  string  $state
-     * @param  int  $perPage
      * @return array<int, array<string, mixed>>
      */
     public function getIssues(string $owner, string $repo, string $state = 'all', int $perPage = 100): array
@@ -121,8 +108,6 @@ class GithubService
     /**
      * Obtener detalles de un repositorio.
      *
-     * @param  string  $owner
-     * @param  string  $repo
      * @return array<string, mixed>
      */
     public function getRepository(string $owner, string $repo): array
@@ -133,9 +118,6 @@ class GithubService
     /**
      * Obtener un solo commit por SHA.
      *
-     * @param  string  $owner
-     * @param  string  $repo
-     * @param  string  $sha
      * @return array<string, mixed>
      */
     public function getCommit(string $owner, string $repo, string $sha): array
@@ -145,7 +127,6 @@ class GithubService
 
     /**
      * @param  array<string, mixed>  $commitData
-     * @return int|null
      */
     public function getAuthorIdFromCommit(array $commitData): ?int
     {
@@ -182,9 +163,6 @@ class GithubService
     /**
      * Obtener todas las revisiones de un pull request.
      *
-     * @param  string  $owner
-     * @param  string  $repo
-     * @param  int  $pullNumber
      * @return array<int, array<string, mixed>>
      */
     public function getPullRequestReviews(string $owner, string $repo, int $pullNumber): array
@@ -198,10 +176,6 @@ class GithubService
     /**
      * Obtener una revisión específica.
      *
-     * @param  string  $owner
-     * @param  string  $repo
-     * @param  int  $pullNumber
-     * @param  int  $reviewId
      * @return array<string, mixed>
      */
     public function getPullRequestReview(string $owner, string $repo, int $pullNumber, int $reviewId): array
@@ -212,7 +186,6 @@ class GithubService
     /**
      * Sincronizar un repositorio completo (commits, PRs, issues, reviews).
      *
-     * @param  GithubRepository  $repository
      * @return array<string, bool>
      *
      * @throws Exception
@@ -247,7 +220,7 @@ class GithubService
 
             return $results;
         } catch (Exception $e) {
-            Log::error("Sync failed for {$repository->full_name}: " . $e->getMessage());
+            Log::error("Sync failed for {$repository->full_name}: ".$e->getMessage());
 
             throw $e;
         }
@@ -256,7 +229,6 @@ class GithubService
     /**
      * Obtener todos los repositorios de una cuenta de GitHub.
      *
-     * @param  string  $username
      * @return array<int, array<string, mixed>>
      */
     public function getUserRepositories(string $username): array
@@ -286,9 +258,6 @@ class GithubService
     }
 
     /**
-     * @param  string  $owner
-     * @param  string  $repo
-     * @param  int  $prNumber
      * @return array<int, array<string, mixed>>
      */
     public function getPullRequestCommits(string $owner, string $repo, int $prNumber): array

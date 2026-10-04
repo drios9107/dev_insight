@@ -23,7 +23,6 @@ use Illuminate\Support\Carbon;
  * @property-read GithubRepository $githubRepository
  * @property-read GithubUser|null $author
  * @property-read PullRequest|null $pullRequest
- *
  * @property-read int $count
  * @property-read string $week
  * @property-read int $total_commits

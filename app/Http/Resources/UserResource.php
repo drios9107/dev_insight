@@ -3,7 +3,6 @@
 namespace App\Http\Resources;
 
 use App\Models\Role;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Carbon;
@@ -28,7 +27,7 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'role' => $this->whenLoaded('role', fn() => [
+            'role' => $this->whenLoaded('role', fn () => [
                 'id' => $this->role->id,
                 'name' => $this->role->name,
             ]),

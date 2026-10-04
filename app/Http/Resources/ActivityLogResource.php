@@ -2,8 +2,6 @@
 
 namespace App\Http\Resources;
 
-
-use App\Models\ActivityLog;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\Team;
@@ -37,19 +35,19 @@ class ActivityLogResource extends JsonResource
             'id' => $this->id,
             'type' => $this->type,
             'description' => $this->description,
-            'user' => $this->whenLoaded('user', fn() => [
+            'user' => $this->whenLoaded('user', fn () => [
                 'id' => $this->user->id,
                 'name' => $this->user->name,
             ]),
-            'team' => $this->whenLoaded('team', fn() => [
+            'team' => $this->whenLoaded('team', fn () => [
                 'id' => $this->team->id,
                 'name' => $this->team->name,
             ]),
-            'project' => $this->whenLoaded('project', fn() => [
+            'project' => $this->whenLoaded('project', fn () => [
                 'id' => $this->project->id,
                 'name' => $this->project->name,
             ]),
-            'task' => $this->whenLoaded('task', fn() => [
+            'task' => $this->whenLoaded('task', fn () => [
                 'id' => $this->task->id,
                 'title' => $this->task->title,
             ]),

@@ -4,9 +4,9 @@ namespace App\Services;
 
 use App\Models\GithubIssue;
 use App\Models\GithubRepository;
-use Illuminate\Http\Request;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class GithubIssueService
@@ -67,6 +67,7 @@ class GithubIssueService
 
     /**
      * Returns a paginated list
+     *
      * @return LengthAwarePaginator<int, GithubIssue>
      */
     public function index(?Request $request = null): LengthAwarePaginator
@@ -75,7 +76,7 @@ class GithubIssueService
             ->with('author', 'githubRepository', 'task');
 
         if ($request->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('body', 'ilike', $search)
@@ -101,8 +102,8 @@ class GithubIssueService
 
     /**
      * Store a newly created item.
+     *
      * @param  array<string, mixed>  $data
-     * @return GithubIssue
      */
     public function store(array $data): GithubIssue
     {
@@ -124,7 +125,7 @@ class GithubIssueService
 
     /**
      * Update the specified item in storage.
-     * @param int $id
+     *
      * @param  array<string, mixed>  $data
      */
     public function update(int $id, array $data): bool

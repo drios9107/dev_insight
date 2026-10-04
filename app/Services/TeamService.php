@@ -10,6 +10,7 @@ class TeamService
 {
     /**
      * Returns a paginated list
+     *
      * @return LengthAwarePaginator<int, Team>
      */
     public function index(?Request $request = null): LengthAwarePaginator
@@ -17,7 +18,7 @@ class TeamService
         $query = Team::query()->with(['owner', 'githubUsers']);
 
         if ($request->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
                     ->orWhere('description', 'ilike', $search)
@@ -36,8 +37,8 @@ class TeamService
 
     /**
      * Store a newly created item.
+     *
      * @param  array<string, mixed>  $data
-     * @return Team
      */
     public function store(array $data): Team
     {
@@ -66,7 +67,7 @@ class TeamService
 
     /**
      * Update the specified item in storage.
-     * @param int $id
+     *
      * @param  array<string, mixed>  $data
      */
     public function update(int $id, array $data): Team

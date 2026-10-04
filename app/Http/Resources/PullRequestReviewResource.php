@@ -4,7 +4,6 @@ namespace App\Http\Resources;
 
 use App\Models\GithubUser;
 use App\Models\PullRequest;
-use App\Models\PullRequestReview;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -32,11 +31,11 @@ class PullRequestReviewResource extends JsonResource
         return [
             'id' => $this->id,
             'github_id' => $this->github_id,
-            'pull_request' => $this->whenLoaded('pullRequest', fn() => [
+            'pull_request' => $this->whenLoaded('pullRequest', fn () => [
                 'id' => $this->pullRequest->id,
                 'title' => $this->pullRequest->title,
             ]),
-            'reviewer' => $this->whenLoaded('reviewer', fn() => [
+            'reviewer' => $this->whenLoaded('reviewer', fn () => [
                 'id' => $this->reviewer->id,
                 'name' => $this->reviewer->name,
             ]),

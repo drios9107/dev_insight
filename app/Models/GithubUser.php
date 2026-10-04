@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Database\Factories\GithubUserFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -21,13 +22,13 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read string $display_name
  * @property-read string $avatar
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Team> $teams
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Commit> $commits
- * @property-read \Illuminate\Database\Eloquent\Collection<int, PullRequest> $authoredPullRequests
- * @property-read \Illuminate\Database\Eloquent\Collection<int, PullRequest> $assignedPullRequests
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Task> $assignedTasks
- * @property-read \Illuminate\Database\Eloquent\Collection<int, GithubIssue> $githubIssues
- * @property-read \Illuminate\Database\Eloquent\Collection<int, PullRequestReview> $pullRequestReviews
+ * @property-read Collection<int, Team> $teams
+ * @property-read Collection<int, Commit> $commits
+ * @property-read Collection<int, PullRequest> $authoredPullRequests
+ * @property-read Collection<int, PullRequest> $assignedPullRequests
+ * @property-read Collection<int, Task> $assignedTasks
+ * @property-read Collection<int, GithubIssue> $githubIssues
+ * @property-read Collection<int, PullRequestReview> $pullRequestReviews
  */
 class GithubUser extends Model
 {
@@ -117,7 +118,7 @@ class GithubUser extends Model
 
     public function getAvatar(): string
     {
-        return $this->avatar_url ?? 'https://ui-avatars.com/api/?name=' . urlencode($this->username);
+        return $this->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($this->username);
     }
 
     public function getDisplayNameAttribute(): string

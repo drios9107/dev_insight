@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\GithubUser;
 use App\Models\Team;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -45,7 +44,7 @@ class GithubUserResource extends JsonResource
 
             'teams' => $this->whenLoaded(
                 'teams',
-                fn() => $this->teams->map(fn($team) => [
+                fn () => $this->teams->map(fn ($team) => [
                     'id' => $team->id,
                     'name' => $team->name,
                 ])

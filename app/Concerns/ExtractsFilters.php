@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 
 trait ExtractsFilters
 {
-
     /**
      * @param  array<int, string>  $extraKeys
      * @return array<string, mixed>

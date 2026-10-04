@@ -19,7 +19,7 @@ class TeamFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->unique()->company() . ' Team',
+            'name' => fake()->unique()->company().' Team',
             'description' => fake()->text(),
             'owner_id' => User::inRandomOrder()->first()->id,
             'is_active' => fake()->boolean(),

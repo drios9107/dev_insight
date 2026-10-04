@@ -5,6 +5,7 @@ namespace App\Models;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -25,11 +26,11 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Role|null $role
- * @property-read \Illuminate\Database\Eloquent\Collection<int, ActivityLog> $activityLogs
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Notification> $notifications
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Project> $projects
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Task> $tasks
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Task> $reportedTasks
+ * @property-read Collection<int, ActivityLog> $activityLogs
+ * @property-read Collection<int, Notification> $notifications
+ * @property-read Collection<int, Project> $projects
+ * @property-read Collection<int, Task> $tasks
+ * @property-read Collection<int, Task> $reportedTasks
  */
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]

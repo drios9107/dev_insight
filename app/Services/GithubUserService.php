@@ -9,10 +9,6 @@ use Illuminate\Http\Request;
 class GithubUserService
 {
     /**
-     * @param  GithubService  $githubService
-     * @param  string  $username
-     * @return GithubUser
-     *
      * @throws \Exception
      */
     public function syncFromGithub(GithubService $githubService, string $username): GithubUser
@@ -51,7 +47,7 @@ class GithubUserService
             ]);
 
         if ($request->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('username', 'ilike', $search)
                     ->orWhere('name', 'ilike', $search)
@@ -70,7 +66,6 @@ class GithubUserService
 
     /**
      * @param  array<string, mixed>  $githubData
-     * @return GithubUser
      */
     public function findOrCreate(array $githubData): GithubUser
     {
@@ -114,9 +109,6 @@ class GithubUserService
 
     /**
      * Display the specified item.
-     *
-     * @param  int  $id
-     * @return GithubUser
      */
     public function show(int $id): GithubUser
     {
@@ -132,19 +124,12 @@ class GithubUserService
 
     /**
      * Remove the specified item from storage.
-     *
-     * @param  int  $id
-     * @return bool
      */
     public function destroy(int $id): bool
     {
         return GithubUser::destroy($id) > 0;
     }
 
-    /**
-     * @param  int  $githubId
-     * @return GithubUser|null
-     */
     public function getByGithubId(int $githubId): ?GithubUser
     {
         return GithubUser::where('github_id', $githubId)->first();

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Database\Factories\TeamFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -22,9 +23,9 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read User|null $owner
- * @property-read \Illuminate\Database\Eloquent\Collection<int, GithubUser> $githubUsers
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Project> $projects
- * @property-read \Illuminate\Database\Eloquent\Collection<int, ActivityLog> $activityLogs
+ * @property-read Collection<int, GithubUser> $githubUsers
+ * @property-read Collection<int, Project> $projects
+ * @property-read Collection<int, ActivityLog> $activityLogs
  */
 #[Fillable(['name', 'description', 'owner_id', 'is_active'])]
 class Team extends Model

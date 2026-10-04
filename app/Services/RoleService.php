@@ -10,6 +10,7 @@ class RoleService
 {
     /**
      * Returns a paginated list
+     *
      * @return LengthAwarePaginator<int, Role>
      */
     public function index(?Request $request = null): LengthAwarePaginator
@@ -17,7 +18,7 @@ class RoleService
         $query = Role::query()->withCount('users');
 
         if ($request->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
                     ->orWhere('description', 'ilike', $search);
@@ -29,8 +30,8 @@ class RoleService
 
     /**
      * Store a newly created item.
+     *
      * @param  array<string, mixed>  $data
-     * @return Role
      */
     public function store(array $data): Role
     {
@@ -52,7 +53,7 @@ class RoleService
 
     /**
      * Update the specified item in storage.
-     * @param int $id
+     *
      * @param  array<string, mixed>  $data
      */
     public function update(int $id, array $data): bool

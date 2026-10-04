@@ -73,13 +73,14 @@ class PullRequestReviewService
 
         return response()->json([
             'success' => true,
-            'message' => count($allReviews) . ' revisiones sincronizadas',
+            'message' => count($allReviews).' revisiones sincronizadas',
             'count' => count($allReviews),
         ]);
     }
 
     /**
      * Returns a paginated list
+     *
      * @return LengthAwarePaginator<int, PullRequestReview>
      */
     public function index(?Request $request = null): LengthAwarePaginator
@@ -87,7 +88,7 @@ class PullRequestReviewService
         $query = PullRequestReview::query()->with(['pullRequest', 'reviewer']);
 
         if ($request->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('body', 'ilike', $search)
                     ->orWhereHas('reviewer', function ($r) use ($search) {
@@ -112,8 +113,8 @@ class PullRequestReviewService
 
     /**
      * Store a newly created item.
+     *
      * @param  array<string, mixed>  $data
-     * @return PullRequestReview
      */
     public function store(array $data): PullRequestReview
     {
@@ -135,7 +136,7 @@ class PullRequestReviewService
 
     /**
      * Update the specified item in storage.
-     * @param int $id
+     *
      * @param  array<string, mixed>  $data
      */
     public function update(int $id, array $data): bool

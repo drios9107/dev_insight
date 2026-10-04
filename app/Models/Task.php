@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Database\Factories\TaskFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,9 +37,9 @@ use Illuminate\Support\Carbon;
  * @property-read GithubUser|null $assignee
  * @property-read User|null $reporter
  * @property-read GithubIssue|null $githubIssue
- * @property-read \Illuminate\Database\Eloquent\Collection<int, PullRequest> $pullRequests
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Comment> $comments
- * @property-read \Illuminate\Database\Eloquent\Collection<int, ActivityLog> $activityLogs
+ * @property-read Collection<int, PullRequest> $pullRequests
+ * @property-read Collection<int, Comment> $comments
+ * @property-read Collection<int, ActivityLog> $activityLogs
  */
 #[Fillable(['title', 'description', 'project_id', 'sprint_id', 'assignee_id', 'reporter_id', 'status', 'priority', 'story_points', 'github_issue_id', 'due_date', 'completed_at', 'hours_estimate', 'hours_spent', 'order'])]
 class Task extends Model

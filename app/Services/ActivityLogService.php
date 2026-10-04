@@ -10,6 +10,7 @@ class ActivityLogService
 {
     /**
      * Returns a paginated list
+     *
      * @return LengthAwarePaginator<int, ActivityLog>
      */
     public function index(?Request $request = null): LengthAwarePaginator
@@ -17,7 +18,7 @@ class ActivityLogService
         $query = ActivityLog::query()->with(['user', 'team', 'project', 'task']);
 
         if ($request->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('type', 'ilike', $search)
                     ->orWhere('description', 'ilike', $search)
@@ -40,8 +41,8 @@ class ActivityLogService
 
     /**
      * Store a newly created item.
+     *
      * @param  array<string, mixed>  $data
-     * @return ActivityLog
      */
     public function store(array $data): ActivityLog
     {

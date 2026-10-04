@@ -49,8 +49,6 @@ class GithubRepositoryService
     /**
      * Sync every public repository in a github account.
      *
-     * @param  GithubService  $githubService
-     * @param  string  $username
      * @return array<string, int>
      *
      * @throws \Exception
@@ -102,6 +100,7 @@ class GithubRepositoryService
 
     /**
      * Returns a paginated list
+     *
      * @return LengthAwarePaginator<int, GithubRepository>
      */
     public function index(?Request $request = null): LengthAwarePaginator
@@ -109,7 +108,7 @@ class GithubRepositoryService
         $query = GithubRepository::query();
 
         if ($request->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('full_name', 'ilike', $search)
                     ->orWhere('name', 'ilike', $search)
@@ -126,8 +125,8 @@ class GithubRepositoryService
 
     /**
      * Store a newly created item.
+     *
      * @param  array<string, mixed>  $data
-     * @return GithubRepository
      */
     public function store(array $data): GithubRepository
     {
@@ -149,7 +148,7 @@ class GithubRepositoryService
 
     /**
      * Update the specified item in storage.
-     * @param int $id
+     *
      * @param  array<string, mixed>  $data
      */
     public function update(int $id, array $data): bool

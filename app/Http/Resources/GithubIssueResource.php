@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\GithubIssue;
 use App\Models\GithubRepository;
 use App\Models\GithubUser;
 use App\Models\Task;
@@ -37,7 +36,7 @@ class GithubIssueResource extends JsonResource
             'id' => $this->id,
             'github_id' => $this->github_id,
             'github_repository' => $this->githubRepository,
-            'author' => $this->whenLoaded('author', fn() => [
+            'author' => $this->whenLoaded('author', fn () => [
                 'id' => $this->author->id,
                 'name' => $this->author->displayName,
             ]),

@@ -27,7 +27,7 @@ class GithubController extends Controller
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Sync failed: ' . $e->getMessage(),
+                'message' => 'Sync failed: '.$e->getMessage(),
             ], 422);
         }
     }

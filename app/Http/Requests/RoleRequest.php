@@ -31,7 +31,7 @@ class RoleRequest extends FormRequest
             'description' => 'nullable|string|max:255',
         ];
         if ($roleId) {
-            $rules['name'] = 'required|string|max:255|unique:roles,name,' . $roleId;
+            $rules['name'] = 'required|string|max:255|unique:roles,name,'.$roleId;
         }
 
         return $rules;

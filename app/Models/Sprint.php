@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Database\Factories\SprintFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -25,7 +26,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read Project|null $project
  * @property-read User|null $createdBy
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Task> $tasks
+ * @property-read Collection<int, Task> $tasks
  */
 #[Fillable(['name', 'goal', 'project_id', 'start_date', 'end_date', 'status', 'velocity', 'actual_velocity', 'created_by'])]
 class Sprint extends Model

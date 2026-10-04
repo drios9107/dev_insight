@@ -60,7 +60,7 @@ class CommentController extends Controller
             throw $e;
         } catch (\Exception $e) {
             throw ValidationException::withMessages([
-                'content' => 'Failed to add comment: ' . $e->getMessage(),
+                'content' => 'Failed to add comment: '.$e->getMessage(),
             ]);
         }
     }
@@ -83,7 +83,7 @@ class CommentController extends Controller
             throw $e;
         } catch (\Exception $e) {
             throw ValidationException::withMessages([
-                'content' => 'Failed to add comment: ' . $e->getMessage(),
+                'content' => 'Failed to add comment: '.$e->getMessage(),
             ]);
         }
     }
@@ -107,7 +107,7 @@ class CommentController extends Controller
             throw $e;
         } catch (\Exception $e) {
             throw ValidationException::withMessages([
-                'content' => 'Failed to update comment: ' . $e->getMessage(),
+                'content' => 'Failed to update comment: '.$e->getMessage(),
             ]);
         }
     }
@@ -120,7 +120,7 @@ class CommentController extends Controller
             return redirect()->back();
         } catch (\Exception $e) {
             throw ValidationException::withMessages([
-                'content' => 'Failed to delete comment: ' . $e->getMessage(),
+                'content' => 'Failed to delete comment: '.$e->getMessage(),
             ]);
         }
     }

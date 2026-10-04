@@ -114,7 +114,7 @@ class PullRequestService
 
             return response()->json([
                 'success' => true,
-                'message' => count($data) . ' pull requests sincronizados',
+                'message' => count($data).' pull requests sincronizados',
                 'count' => count($data),
             ]);
         } catch (\Exception $e) {
@@ -122,7 +122,7 @@ class PullRequestService
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error al sincronizar: ' . $e->getMessage(),
+                'message' => 'Error al sincronizar: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -138,19 +138,20 @@ class PullRequestService
                     ->update(['pull_request_id' => $prId]);
             }
         } catch (\Exception $e) {
-            Log::warning("Failed to sync commits for PR #{$prNumber}: " . $e->getMessage());
+            Log::warning("Failed to sync commits for PR #{$prNumber}: ".$e->getMessage());
         }
     }
 
     /**
      * Returns a paginated list
+     *
      * @return LengthAwarePaginator<int, PullRequest>
      */
     public function index(?Request $request = null): LengthAwarePaginator
     {
         $query = PullRequest::query()->with(['author', 'assignees', 'githubRepository', 'task']);
         if ($request->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('body', 'ilike', $search)
@@ -184,8 +185,8 @@ class PullRequestService
 
     /**
      * Store a newly created item.
+     *
      * @param  array<string, mixed>  $data
-     * @return PullRequest
      */
     public function store(array $data): PullRequest
     {
@@ -207,7 +208,7 @@ class PullRequestService
 
     /**
      * Update the specified item in storage.
-     * @param int $id
+     *
      * @param  array<string, mixed>  $data
      */
     public function update(int $id, array $data): bool

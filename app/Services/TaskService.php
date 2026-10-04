@@ -11,6 +11,7 @@ class TaskService
 {
     /**
      * Returns a paginated list
+     *
      * @return LengthAwarePaginator<int, Task>
      */
     public function index(?Request $request = null): LengthAwarePaginator
@@ -24,7 +25,7 @@ class TaskService
             ]);
 
         if ($request->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('description', 'ilike', $search)
@@ -70,8 +71,8 @@ class TaskService
 
     /**
      * Store a newly created item.
+     *
      * @param  array<string, mixed>  $data
-     * @return Task
      */
     public function store(array $data): Task
     {
@@ -94,14 +95,14 @@ class TaskService
 
     /**
      * Update the specified item in storage.
-     * @param int $id
+     *
      * @param  array<string, mixed>  $data
      */
     public function update(int $id, array $data): bool
     {
         $updated = $this->updateStatus($data);
 
-        return Task::whereId($id)->update($updated) > 0;;
+        return Task::whereId($id)->update($updated) > 0;
     }
 
     /**

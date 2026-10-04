@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Models\Commit;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use App\Models\GithubRepository;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -68,6 +68,7 @@ class CommitService
 
     /**
      * Returns a paginated list
+     *
      * @return LengthAwarePaginator<int, Commit>
      */
     public function index(?Request $request = null): LengthAwarePaginator
@@ -76,7 +77,7 @@ class CommitService
             ->with(['author', 'githubRepository', 'pullRequest']);
 
         if ($request->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('message', 'ilike', $search)
                     ->orWhere('sha', 'ilike', $search)
@@ -106,8 +107,8 @@ class CommitService
     /**
      * Store a newly created item in storage.
      * Store a newly created item.
+     *
      * @param  array<string, mixed>  $data
-     * @return Commit
      */
     public function store(array $data): Commit
     {
@@ -129,7 +130,7 @@ class CommitService
 
     /**
      * Update the specified item in storage.
-     * @param int $id
+     *
      * @param  array<string, mixed>  $data
      */
     public function update(int $id, array $data): bool

@@ -5,6 +5,7 @@ namespace App\Models;
 use Database\Factories\GithubRepositoryFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -29,9 +30,9 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Project|null $project
- * @property-read \Illuminate\Database\Eloquent\Collection<int, GithubIssue> $githubIssues
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Commit> $commits
- * @property-read \Illuminate\Database\Eloquent\Collection<int, PullRequest> $pullRequests
+ * @property-read Collection<int, GithubIssue> $githubIssues
+ * @property-read Collection<int, Commit> $commits
+ * @property-read Collection<int, PullRequest> $pullRequests
  */
 #[Fillable(['github_id', 'name', 'full_name', 'url', 'description', 'is_private', 'default_branch', 'last_synced_at', 'webhook_secret'])]
 #[Hidden(['webhook_secret'])]

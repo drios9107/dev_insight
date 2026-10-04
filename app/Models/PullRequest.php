@@ -5,6 +5,7 @@ namespace App\Models;
 use Database\Factories\PullRequestFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -33,10 +34,10 @@ use Illuminate\Support\Carbon;
  * @property-read GithubRepository|null $githubRepository
  * @property-read GithubUser|null $author
  * @property-read Task|null $task
- * @property-read \Illuminate\Database\Eloquent\Collection<int, GithubUser> $assignees
- * @property-read \Illuminate\Database\Eloquent\Collection<int, PullRequestReview> $reviews
- * @property-read \Illuminate\Database\Eloquent\Collection<int, GithubUser> $reviewers
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Commit> $commits
+ * @property-read Collection<int, GithubUser> $assignees
+ * @property-read Collection<int, PullRequestReview> $reviews
+ * @property-read Collection<int, GithubUser> $reviewers
+ * @property-read Collection<int, Commit> $commits
  */
 #[Fillable(['github_id', 'github_repository_id', 'number', 'title', 'body', 'state', 'author_id', 'base_branch', 'head_branch', 'task_id', 'closed_at', 'merged_at', 'merge_commit_sha'])]
 #[Hidden(['merge_commit_sha'])]

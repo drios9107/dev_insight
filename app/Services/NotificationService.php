@@ -10,6 +10,7 @@ class NotificationService
 {
     /**
      * Returns a paginated list
+     *
      * @return LengthAwarePaginator<int, Notification>
      */
     public function index(?Request $request = null): LengthAwarePaginator
@@ -18,7 +19,7 @@ class NotificationService
             ->with('user');
 
         if ($request->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('message', 'ilike', $search)
@@ -41,8 +42,8 @@ class NotificationService
 
     /**
      * Store a newly created item.
+     *
      * @param  array<string, mixed>  $data
-     * @return Notification
      */
     public function store(array $data): Notification
     {
@@ -64,7 +65,7 @@ class NotificationService
 
     /**
      * Update the specified item in storage.
-     * @param int $id
+     *
      * @param  array<string, mixed>  $data
      */
     public function update(int $id, array $data): bool

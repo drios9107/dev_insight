@@ -43,7 +43,7 @@ class SprintRequest extends FormRequest
             'created_by' => 'required|integer|exists:users,id',
         ];
         if ($sprintId) {
-            $rules['name'] = 'nullable|string|unique:sprints,name,' . $sprintId;
+            $rules['name'] = 'nullable|string|unique:sprints,name,'.$sprintId;
             if ($this->input('project_id')) {
                 $rules['project_id'] = 'nullable|integer|exists:projects,id';
             }

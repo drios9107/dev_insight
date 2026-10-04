@@ -22,13 +22,13 @@ class SprintFactory extends Factory
     {
         $startDate = $this->faker->dateTimeBetween('-30 days', '+30 days');
         $endDate = clone $startDate;
-        $endDate->modify('+' . rand(10, 14) . ' days');
+        $endDate->modify('+'.rand(10, 14).' days');
 
         $statuses = array_column(SprintStatusEnum::cases(), 'value');
         $status = $this->faker->randomElement($statuses);
 
         return [
-            'name' => 'Sprint ' . $this->faker->numberBetween(1, 50),
+            'name' => 'Sprint '.$this->faker->numberBetween(1, 50),
             'goal' => $this->faker->optional()->sentence(6),
             'project_id' => Project::inRandomOrder()->first()->id,
             'start_date' => $startDate,

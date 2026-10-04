@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Database\Factories\ProjectFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -28,9 +29,9 @@ use Illuminate\Support\Carbon;
  * @property-read Team|null $team
  * @property-read User|null $owner
  * @property-read GithubRepository|null $githubRepository
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Task> $tasks
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Sprint> $sprints
- * @property-read \Illuminate\Database\Eloquent\Collection<int, ActivityLog> $activityLogs
+ * @property-read Collection<int, Task> $tasks
+ * @property-read Collection<int, Sprint> $sprints
+ * @property-read Collection<int, ActivityLog> $activityLogs
  * @property-read int $tasks_count
  * @property-read int $sprints_count
  * @property-read int $active_sprints_count

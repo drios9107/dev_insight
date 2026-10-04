@@ -11,6 +11,7 @@ class SprintService
 {
     /**
      * Returns a paginated list
+     *
      * @return LengthAwarePaginator<int, Sprint>
      */
     public function index(?Request $request = null): LengthAwarePaginator
@@ -19,7 +20,7 @@ class SprintService
             ->with(['project']);
 
         if ($request->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
                     ->orWhere('goal', 'ilike', $search)
@@ -38,8 +39,8 @@ class SprintService
 
     /**
      * Store a newly created item.
+     *
      * @param  array<string, mixed>  $data
-     * @return Sprint
      */
     public function store(array $data): Sprint
     {
@@ -59,7 +60,7 @@ class SprintService
 
     /**
      * Update the specified item in storage.
-     * @param int $id
+     *
      * @param  array<string, mixed>  $data
      */
     public function update(int $id, array $data): bool
@@ -79,7 +80,6 @@ class SprintService
     }
 
     /**
-     * @param  int  $projectId
      * @return Collection<int, Sprint>
      */
     public function byProject(int $projectId): Collection
