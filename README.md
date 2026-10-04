@@ -166,7 +166,7 @@ Las contribuciones son bienvenidas. Por favor:
 **David Rios**
 
 - GitHub: [@drios9107](https://github.com/drios9107)
-- Portfolio: [driosportfolio.netlify.app](https://https://driosportfolio.netlify.app/)
+- Portfolio: [driosportfolio.netlify.app](https://driosportfolio.netlify.app/)
 
 ---
 
