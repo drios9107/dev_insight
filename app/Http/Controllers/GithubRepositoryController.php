@@ -98,7 +98,7 @@ class GithubRepositoryController extends Controller
             app(ActivityLoggerService::class)->log(
                 ActivityTypeEnum::Synced,
                 'Global repository sync completed',
-                data: $results,
+                changes: $results,
             );
 
             return back()->with('success', sprintf(

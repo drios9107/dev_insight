@@ -21,14 +21,14 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read User|null $user
  */
-#[Fillable(['user_id', 'type', 'description', 'data', 'ip_address', 'user_agent'])]
+#[Fillable(['user_id', 'type', 'description', 'changes', 'ip_address', 'user_agent'])]
 class ActivityLog extends Model
 {
     /** @use HasFactory<ActivityLogFactory> */
     use HasFactory;
 
     protected $casts = [
-        'data' => 'array',
+        'changes' => 'array',
     ];
 
     /**

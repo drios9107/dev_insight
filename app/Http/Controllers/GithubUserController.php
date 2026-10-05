@@ -63,7 +63,7 @@ class GithubUserController extends Controller
             app(ActivityLoggerService::class)->log(
                 ActivityTypeEnum::Imported,
                 'GitHub user imported: ' . $username,
-                data: ['username' => $username],
+                changes: ['username' => $username],
             );
 
             return redirect()->back();

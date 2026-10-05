@@ -65,6 +65,14 @@ class ActivityLogController extends Controller
     }
 
     /**
+     * Display the specified activity log.
+     */
+    public function show(ActivityLog $activityLog): ActivityLogResource
+    {
+        return new ActivityLogResource($this->service->show($activityLog->id));
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(int $id): RedirectResponse

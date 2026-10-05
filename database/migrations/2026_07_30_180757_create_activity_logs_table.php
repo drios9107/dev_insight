@@ -19,7 +19,7 @@ return new class extends Migration
 
             $table->string('type', 50);
             $table->text('description');
-            $table->json('data')->nullable();
+            $table->json('changes')->nullable();
             $table->string('ip_address', 45)->nullable();
             $table->string('user_agent', 255)->nullable();
 

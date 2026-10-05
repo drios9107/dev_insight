@@ -13,19 +13,19 @@ use Illuminate\Support\Str;
 class ActivityLoggerService
 {
     /**
-     * @param  array<string, mixed>  $data
+     * @param  array<string, mixed>  $changes
      */
     public function log(
         ActivityTypeEnum $type,
         string $description,
-        array $data = [],
+        array $changes = [],
         ?int $userId = null,
     ): ActivityLog {
         return ActivityLog::create([
             'user_id'     => $userId ?? Auth::id(),
             'type'        => $type->value,
             'description' => $description,
-            'data'        => $data === [] ? null : $data,
+            'changes'        => $changes === [] ? null : $changes,
             'ip_address'  => Request::ip(),
             'user_agent'  => Str::limit((string) Request::userAgent(), 255, ''),
         ]);

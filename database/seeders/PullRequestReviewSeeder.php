@@ -26,7 +26,7 @@ class PullRequestReviewSeeder extends Seeder
         app(ActivityLoggerService::class)->log(
             ActivityTypeEnum::Imported,
             'Pull request reviews imported from seeder',
-            data: ['owner_key' => $ownerKey, 'repo_name' => $repoName],
+            changes: ['owner_key' => $ownerKey, 'repo_name' => $repoName],
             userId: $adminId,
         );
     }

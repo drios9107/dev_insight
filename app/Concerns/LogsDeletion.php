@@ -18,14 +18,13 @@ trait LogsDeletion
             app(ActivityLoggerService::class)->log(
                 ActivityTypeEnum::Deleted,
                 "{$model->activityLabel()} was deleted",
-                subject: $model,
-                data: ['attributes' => $model->getOriginal()],
+                changes: ['attributes' => $model->getOriginal()],
             );
         });
     }
 
     public function activityLabel(): string
     {
-        return class_basename($this).' #'.$this->getKey();
+        return class_basename($this) . ' #' . $this->getKey();
     }
 }

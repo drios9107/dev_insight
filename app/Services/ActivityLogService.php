@@ -55,11 +55,9 @@ class ActivityLogService
      * @param  int  $id
      * @return ActivityLog
      */
-    public function show($id)
+    public function show(int $id): ActivityLog
     {
-        $item = ActivityLog::findOrFail($id);
-
-        return $item;
+        return ActivityLog::with('user')->findOrFail($id);
     }
 
     /**
