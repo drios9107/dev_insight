@@ -31,11 +31,11 @@ class PullRequestReviewResource extends JsonResource
         return [
             'id' => $this->id,
             'github_id' => $this->github_id,
-            'pull_request' => $this->whenLoaded('pullRequest', fn() => [
+            'pull_request' => $this->whenLoaded('pullRequest', fn () => [
                 'id' => $this->pullRequest->id,
                 'title' => $this->pullRequest->title,
             ]),
-            'reviewer' => $this->whenLoaded('reviewer', fn() => [
+            'reviewer' => $this->whenLoaded('reviewer', fn () => [
                 'id' => $this->reviewer->id,
                 'name' => $this->reviewer->name,
             ]),

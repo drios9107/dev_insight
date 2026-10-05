@@ -76,7 +76,7 @@ class GithubIssueService
             ->with('author', 'githubRepository', 'task');
 
         if ($request?->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('body', 'ilike', $search)

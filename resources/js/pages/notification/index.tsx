@@ -10,10 +10,7 @@ import { DataTable } from '@/components/custom/table/data-table';
 import { Badge } from '@/components/ui/badge';
 import { NotificationTypeEnum } from '@/enums/notification';
 import notification from '@/routes/notification';
-import type {
-    INotification,
-    TNotificationType,
-} from '@/types/models/notification';
+import type { TNotificationType } from '@/types/models/notification';
 
 const Notifications = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<number | null>(null);

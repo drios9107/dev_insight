@@ -12,10 +12,7 @@ import { CustomTooltip } from '@/components/custom/tooltip';
 import { Badge } from '@/components/ui/badge';
 import { PullRequestStateEnum } from '@/enums/pull-requests';
 import pullRequest from '@/routes/pull-request';
-import type {
-    IPullRequest,
-    TPullRequestState,
-} from '@/types/models/pull-request';
+import type { TPullRequestState } from '@/types/models/pull-request';
 
 const PullRequests = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<number | null>(null);

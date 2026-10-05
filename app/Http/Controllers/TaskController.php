@@ -72,7 +72,7 @@ class TaskController extends Controller
             throw $e;
         } catch (\Exception $e) {
             throw ValidationException::withMessages([
-                'content' => 'Failed to create the item: ' . $e->getMessage(),
+                'content' => 'Failed to create the item: '.$e->getMessage(),
             ]);
         }
     }

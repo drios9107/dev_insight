@@ -77,7 +77,7 @@ class CommitService
             ->with(['author', 'githubRepository', 'pullRequest']);
 
         if ($request?->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('message', 'ilike', $search)
                     ->orWhere('sha', 'ilike', $search)

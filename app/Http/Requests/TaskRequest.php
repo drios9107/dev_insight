@@ -4,10 +4,7 @@ namespace App\Http\Requests;
 
 use App\Enums\TaskPriorityEnum;
 use App\Enums\TaskStatusEnum;
-use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
 class TaskRequest extends FormRequest
@@ -54,7 +51,7 @@ class TaskRequest extends FormRequest
         ];
 
         if ($taskId) {
-            $rules['title'] = 'required|string|unique:tasks,title,' . $taskId;
+            $rules['title'] = 'required|string|unique:tasks,title,'.$taskId;
         }
 
         return $rules;

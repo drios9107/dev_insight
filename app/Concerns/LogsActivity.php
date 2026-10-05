@@ -71,9 +71,9 @@ trait LogsActivity
         $value ??= (string) $this->getKey();
 
         if (strlen($value) > 60) {
-            $value = substr($value, 0, 57) . '...';
+            $value = substr($value, 0, 57).'...';
         }
 
-        return class_basename($this) . ' «' . $value . '»';
+        return class_basename($this).' «'.$value.'»';
     }
 }

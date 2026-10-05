@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use App\Enums\SprintStatusEnum;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -27,7 +26,7 @@ class SprintRequest extends FormRequest
         $sprintId = $this->input('id') ?? $this->route('sprint');
 
         $nameRule = $sprintId
-            ? 'sometimes|required|string|unique:sprints,name,' . $sprintId
+            ? 'sometimes|required|string|unique:sprints,name,'.$sprintId
             : 'required|string|unique:sprints,name';
 
         $rules = [

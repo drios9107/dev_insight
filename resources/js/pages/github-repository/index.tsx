@@ -12,7 +12,6 @@ import type { IColumn } from '@/components/custom/table/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import githubRepository from '@/routes/github-repository';
-import type { IGithubRepository } from '@/types/models/github-repository';
 
 const GithubRepositories = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<number | null>(null);

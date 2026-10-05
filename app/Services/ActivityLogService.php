@@ -18,7 +18,7 @@ class ActivityLogService
         $query = ActivityLog::query()->with(['user', 'team', 'project', 'task']);
 
         if ($request?->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('type', 'ilike', $search)
                     ->orWhere('description', 'ilike', $search)

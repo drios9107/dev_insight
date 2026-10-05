@@ -45,7 +45,7 @@ class PullRequestResource extends JsonResource
             'title' => $this->title,
             'body' => $this->body,
             'state' => $this->state,
-            'github_repository' => $this->whenLoaded('githubRepository', fn() => [
+            'github_repository' => $this->whenLoaded('githubRepository', fn () => [
                 'id' => $this->githubRepository->id,
                 'name' => $this->githubRepository->name,
                 'full_name' => $this->githubRepository->full_name,
@@ -53,12 +53,12 @@ class PullRequestResource extends JsonResource
             'author' => $this->author,
             'assignees' => $this->whenLoaded(
                 'assignees',
-                fn() => $this->assignees->map(fn($user) => [
+                fn () => $this->assignees->map(fn ($user) => [
                     'id' => $user->id,
                     'name' => $user->displayName,
                 ])
             ),
-            'task' => $this->whenLoaded('task', fn() => [
+            'task' => $this->whenLoaded('task', fn () => [
                 'id' => $this->task->id,
                 'title' => $this->task->title,
             ]),

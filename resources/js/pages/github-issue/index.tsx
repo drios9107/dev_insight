@@ -9,10 +9,7 @@ import type { IColumn } from '@/components/custom/table/data-table';
 import { Badge } from '@/components/ui/badge';
 import { GithubIssueStateEnum } from '@/enums/githubs-issue';
 import githubIssue from '@/routes/github-issue';
-import type {
-    IGithubsIssue,
-    TGithubsIssueState,
-} from '@/types/models/github-issue';
+import type { TGithubsIssueState } from '@/types/models/github-issue';
 
 const GithubsIssues = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<number | null>(null);

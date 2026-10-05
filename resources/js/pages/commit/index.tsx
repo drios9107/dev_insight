@@ -7,7 +7,6 @@ import Header from '@/components/custom/header';
 import { DataTable } from '@/components/custom/table/data-table';
 import type { IColumn } from '@/components/custom/table/data-table';
 import commit from '@/routes/commit';
-import type { ICommit } from '@/types/models/commit';
 
 const Commits = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<number | null>(null);

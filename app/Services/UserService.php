@@ -18,7 +18,7 @@ class UserService
         $query = User::query()->with('role');
 
         if ($request?->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
                     ->orWhere('email', 'ilike', $search)

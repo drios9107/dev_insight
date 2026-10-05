@@ -9,10 +9,7 @@ import type { IColumn } from '@/components/custom/table/data-table';
 import { Badge } from '@/components/ui/badge';
 import { PullRequestReviewStateEnum } from '@/enums/pull-requests-review';
 import pullRequestReview from '@/routes/pull-request-review';
-import type {
-    IPullRequestReview,
-    TPullRequestReviewState,
-} from '@/types/models/pull-request-review';
+import type { TPullRequestReviewState } from '@/types/models/pull-request-review';
 
 const PullRequestReviews = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<number | null>(null);
