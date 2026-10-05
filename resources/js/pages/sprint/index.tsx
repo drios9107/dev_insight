@@ -20,7 +20,7 @@ import type {
 const Sprints = (props: any) => {
     const [isOpen, setIsOpen] = useState(false);
     const [itemToViewId, setItemToViewId] = useState<number | null>(null);
-    const [itemToDelete, setItemToDelete] = useState<ISprint | null>(null);
+    const [itemToDelete, setItemToDelete] = useState<number | null>(null);
     const [itemToEdit, setItemToEdit] = useState<ISprint | null>(null);
 
     const columns: IColumn<ISprintList>[] = [
@@ -104,7 +104,7 @@ const Sprints = (props: any) => {
 
     const onDelete = useCallback(() => {
         if (itemToDelete) {
-            router.delete(sprint.destroy(itemToDelete!.id).url, {
+            router.delete(sprint.destroy(itemToDelete).url, {
                 onSuccess: () => toast.success('Sprint deleted successfully'),
                 onError: (error) =>
                     toast.error(`Sprint deletion failed: ${error?.message}`),

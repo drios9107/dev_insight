@@ -16,9 +16,7 @@ import type {
 } from '@/types/models/notification';
 
 const Notifications = (props: any) => {
-    const [itemToDelete, setItemToDelete] = useState<INotification | null>(
-        null,
-    );
+    const [itemToDelete, setItemToDelete] = useState<number | null>(null);
 
     const columns: IColumn[] = [
         {
@@ -123,7 +121,7 @@ const Notifications = (props: any) => {
 
     const onDelete = useCallback(() => {
         if (itemToDelete) {
-            router.delete(notification.destroy(itemToDelete!.id).url, {
+            router.delete(notification.destroy(itemToDelete).url, {
                 onSuccess: () =>
                     toast.success('Notification deleted successfully'),
                 onError: (error) =>

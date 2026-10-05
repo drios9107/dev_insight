@@ -15,9 +15,7 @@ import type {
 } from '@/types/models/pull-request-review';
 
 const PullRequestReviews = (props: any) => {
-    const [itemToDelete, setItemToDelete] = useState<IPullRequestReview | null>(
-        null,
-    );
+    const [itemToDelete, setItemToDelete] = useState<number | null>(null);
 
     const columns: IColumn[] = [
         {
@@ -94,7 +92,7 @@ const PullRequestReviews = (props: any) => {
 
     const onDelete = useCallback(() => {
         if (itemToDelete) {
-            router.delete(pullRequestReview.destroy(itemToDelete!.id).url, {
+            router.delete(pullRequestReview.destroy(itemToDelete).url, {
                 onSuccess: () =>
                     toast.success('PR Review deleted successfully'),
                 onError: (error) =>

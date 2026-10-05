@@ -20,7 +20,7 @@ import type {
 
 const Projects = (props: any) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [itemToDelete, setItemToDelete] = useState<IProject | null>(null);
+    const [itemToDelete, setItemToDelete] = useState<number | null>(null);
     const [itemToEdit, setItemToEdit] = useState<IProject | null>(null);
     const [itemToViewId, setItemToViewId] = useState<number | null>(null);
 
@@ -109,7 +109,7 @@ const Projects = (props: any) => {
 
     const onDelete = useCallback(() => {
         if (itemToDelete) {
-            router.delete(project.destroy(itemToDelete!.id).url, {
+            router.delete(project.destroy(itemToDelete).url, {
                 onSuccess: () => toast.success('Project deleted successfully'),
                 onError: (error) =>
                     toast.error(`Project deletion failed: ${error?.message}`),

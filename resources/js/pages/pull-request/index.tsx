@@ -18,7 +18,7 @@ import type {
 } from '@/types/models/pull-request';
 
 const PullRequests = (props: any) => {
-    const [itemToDelete, setItemToDelete] = useState<IPullRequest | null>(null);
+    const [itemToDelete, setItemToDelete] = useState<number | null>(null);
 
     const columns: IColumn[] = [
         {
@@ -180,7 +180,7 @@ const PullRequests = (props: any) => {
 
     const onDelete = useCallback(() => {
         if (itemToDelete) {
-            router.delete(pullRequest.destroy(itemToDelete!.id).url, {
+            router.delete(pullRequest.destroy(itemToDelete).url, {
                 onSuccess: () =>
                     toast.success('Pull Request deleted successfully'),
                 onError: (error) =>

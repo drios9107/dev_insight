@@ -15,9 +15,7 @@ import type {
 } from '@/types/models/github-issue';
 
 const GithubsIssues = (props: any) => {
-    const [itemToDelete, setItemToDelete] = useState<IGithubsIssue | null>(
-        null,
-    );
+    const [itemToDelete, setItemToDelete] = useState<number | null>(null);
 
     const columns: IColumn[] = [
         {
@@ -116,7 +114,7 @@ const GithubsIssues = (props: any) => {
 
     const onDelete = useCallback(() => {
         if (itemToDelete) {
-            router.delete(githubIssue.destroy(itemToDelete!.id).url, {
+            router.delete(githubIssue.destroy(itemToDelete).url, {
                 onSuccess: () => toast.success('Issue deleted successfully'),
                 onError: (error) =>
                     toast.error(`Issue deletion failed: ${error?.message}`),

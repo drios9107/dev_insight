@@ -14,7 +14,7 @@ import type { ITeam } from '@/types/models/team';
 
 const Teams = (props: any) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [itemToDelete, setItemToDelete] = useState<ITeam | null>(null);
+    const [itemToDelete, setItemToDelete] = useState<number | null>(null);
     const [itemToEdit, setItemToEdit] = useState<ITeam | null>(null);
     const [itemToViewId, setItemToViewId] = useState<number | null>(null);
 
@@ -78,7 +78,7 @@ const Teams = (props: any) => {
 
     const onDelete = useCallback(() => {
         if (itemToDelete) {
-            router.delete(team.destroy(itemToDelete!.id).url, {
+            router.delete(team.destroy(itemToDelete).url, {
                 onSuccess: () => toast.success('Team deleted successfully'),
                 onError: (error) =>
                     toast.error(`Team deletion failed: ${error?.message}`),

@@ -62,7 +62,7 @@ interface IDataTableProps {
     searchFields?: string[];
     initialFilters?: Record<string, any>;
     onEdit?: (item: any) => void;
-    onDelete?: (item: any) => void;
+    onDelete?: (id: number) => void;
     onBulkDelete?: (ids: (number | string)[]) => void;
     onView?: (item: any) => void;
     onSync?: (item: any) => void;

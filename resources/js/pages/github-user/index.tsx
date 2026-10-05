@@ -16,7 +16,7 @@ import githubUser from '@/routes/github-user';
 import type { IGithubUser, IGithubUserList } from '@/types/models/github-user';
 
 const GithubUsers = (props: any) => {
-    const [itemToDelete, setItemToDelete] = useState<IGithubUser | null>(null);
+    const [itemToDelete, setItemToDelete] = useState<number | null>(null);
     const [showImportModal, setShowImportModal] = useState(false);
     const [itemToViewId, setItemToViewId] = useState<number | null>(null);
 
@@ -109,7 +109,7 @@ const GithubUsers = (props: any) => {
 
     const onDelete = useCallback(() => {
         if (itemToDelete) {
-            router.delete(githubUser.destroy(itemToDelete!.id).url, {
+            router.delete(githubUser.destroy(itemToDelete).url, {
                 onSuccess: () =>
                     toast.success('GitHub user deleted successfully'),
                 onError: (error) =>

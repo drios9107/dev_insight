@@ -15,9 +15,7 @@ import githubRepository from '@/routes/github-repository';
 import type { IGithubRepository } from '@/types/models/github-repository';
 
 const GithubRepositories = (props: any) => {
-    const [itemToDelete, setItemToDelete] = useState<IGithubRepository | null>(
-        null,
-    );
+    const [itemToDelete, setItemToDelete] = useState<number | null>(null);
     const [showSyncModal, setShowSyncModal] = useState(false);
     const [isSyncing, setIsSyncing] = useState(false);
     const [username, setUsername] = useState(props?.github_username ?? '');
@@ -93,7 +91,7 @@ const GithubRepositories = (props: any) => {
 
     const onDelete = useCallback(() => {
         if (itemToDelete) {
-            router.delete(githubRepository.destroy(itemToDelete!.id).url, {
+            router.delete(githubRepository.destroy(itemToDelete).url, {
                 onSuccess: () =>
                     toast.success('Repository deleted successfully'),
                 onError: (error) =>

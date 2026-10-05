@@ -12,7 +12,7 @@ import type { IRole } from '@/types/models/role';
 
 const Roles = (props: any) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [itemToDelete, setItemToDelete] = useState<IRole | null>(null);
+    const [itemToDelete, setItemToDelete] = useState<number | null>(null);
     const [itemToEdit, setItemToEdit] = useState<IRole | null>(null);
 
     const columns: IColumn[] = [
@@ -52,7 +52,7 @@ const Roles = (props: any) => {
 
     const onDelete = useCallback(() => {
         if (itemToDelete) {
-            router.delete(role.destroy(itemToDelete!.id).url, {
+            router.delete(role.destroy(itemToDelete).url, {
                 onSuccess: () => toast.success('Role deleted successfully'),
                 onError: (error) =>
                     toast.error(`Role deletion failed: ${error?.message}`),

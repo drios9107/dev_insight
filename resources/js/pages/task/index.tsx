@@ -17,7 +17,7 @@ import type { ITask, ITaskList } from '@/types/models/task';
 
 const Tasks = (props: any) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [itemToDelete, setItemToDelete] = useState<ITask | null>(null);
+    const [itemToDelete, setItemToDelete] = useState<number | null>(null);
     const [itemToEdit, setItemToEdit] = useState<ITask | null>(null);
     const [itemToViewId, setItemToViewId] = useState<number | null>(null);
 
@@ -196,7 +196,7 @@ const Tasks = (props: any) => {
 
     const onDelete = useCallback(() => {
         if (itemToDelete) {
-            router.delete(task.destroy(itemToDelete!.id).url, {
+            router.delete(task.destroy(itemToDelete).url, {
                 onSuccess: () => toast.success('Task deleted successfully'),
                 onError: (error) =>
                     toast.error(`Task deletion failed: ${error?.message}`),

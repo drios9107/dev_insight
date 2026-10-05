@@ -10,7 +10,7 @@ import commit from '@/routes/commit';
 import type { ICommit } from '@/types/models/commit';
 
 const Commits = (props: any) => {
-    const [itemToDelete, setItemToDelete] = useState<ICommit | null>(null);
+    const [itemToDelete, setItemToDelete] = useState<number | null>(null);
 
     const columns: IColumn[] = [
         {
@@ -98,7 +98,7 @@ const Commits = (props: any) => {
 
     const onDelete = useCallback(() => {
         if (itemToDelete) {
-            router.delete(commit.destroy(itemToDelete!.id).url, {
+            router.delete(commit.destroy(itemToDelete).url, {
                 onSuccess: () => toast.success('Commit deleted successfully'),
                 onError: (error) =>
                     toast.error(`Commit deletion failed: ${error?.message}`),
