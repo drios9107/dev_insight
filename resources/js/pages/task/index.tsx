@@ -52,7 +52,7 @@ const Tasks = (props: any) => {
             key: 'assignee',
             label: 'Assignee',
             render: (value) => value?.display_name || '-',
-            className: 'min-w-[125px]',
+            className: 'min-w-[200px]',
         },
         {
             key: 'reporter',
@@ -64,13 +64,13 @@ const Tasks = (props: any) => {
             key: 'project',
             label: 'Project',
             render: (value) => value?.name || '-',
-            className: 'min-w-[180px]',
+            className: 'min-w-[200px]',
         },
         {
             key: 'sprint',
             label: 'Sprint',
             render: (value) => value?.name || '-',
-            className: 'min-w-[125px]',
+            className: 'min-w-[150px]',
         },
         {
             key: 'story_points',
