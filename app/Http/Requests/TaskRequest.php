@@ -31,7 +31,7 @@ class TaskRequest extends FormRequest
             'description' => 'nullable|string',
             'project_id' => 'nullable|integer|exists:projects,id',
             'sprint_id' => 'nullable|integer|exists:sprints,id',
-            'assignee_id' => 'nullable|integer|exists:users,id',
+            'assignee_id' => 'nullable|integer|exists:github_users,id',
             'reporter_id' => 'required|integer|exists:users,id',
             'status' => [
                 'required',
@@ -51,7 +51,7 @@ class TaskRequest extends FormRequest
         ];
 
         if ($taskId) {
-            $rules['title'] = 'required|string|unique:tasks,title,'.$taskId;
+            $rules['title'] = 'required|string|unique:tasks,title,' . $taskId;
         }
 
         return $rules;
