@@ -21,7 +21,7 @@ const defaultData = {
     assignee_id: '',
     sprint_id: '',
     reporter_id: '',
-    status: 'planning',
+    status: 'backlog',
     priority: 'low',
     due_date: new Date().toISOString().slice(0, 10),
     completed_at: null,

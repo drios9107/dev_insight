@@ -43,7 +43,7 @@ export default function TeamMembersList({ members }: TeamMembersListProps) {
                                             .toUpperCase()}
                                         className="h-9 w-9"
                                     />
-                                    <div className="flex max-w-[160px] min-w-0 items-center gap-2">
+                                    <div className="flex min-w-0 min-w-[200px] items-center gap-2">
                                         <p className="font-medium text-gray-900">
                                             {member.name}
                                         </p>

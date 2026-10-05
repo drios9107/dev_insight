@@ -102,19 +102,19 @@ const PullRequests = (props: any) => {
             key: 'created_at',
             label: 'Created',
             sortable: true,
-            render: (value) => value ?? '-',
+            className: 'min-w-[125px]',
         },
         {
             key: 'closed_at',
             label: 'Closed',
             sortable: true,
-            render: (value) => value ?? '-',
+            className: 'min-w-[125px]',
         },
         {
             key: 'merged_at',
             label: 'Merged',
             sortable: true,
-            render: (value) => value ?? '-',
+            className: 'min-w-[125px]',
         },
     ];
 

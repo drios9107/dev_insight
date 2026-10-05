@@ -29,6 +29,7 @@ const Projects = (props: any) => {
             key: 'name',
             label: 'Name',
             sortable: true,
+            className: 'min-w-[250px]',
         },
         {
             key: 'status',
@@ -50,6 +51,7 @@ const Projects = (props: any) => {
         {
             key: 'owner',
             label: 'Owner',
+            className: 'min-w-[150px]',
             render: (value) => value?.name || '-',
         },
         {

@@ -38,7 +38,7 @@ const GithubUsers = (props: any) => {
             label: 'Name',
             sortable: true,
             render: (value: string, row: IGithubUser) => (
-                <div>
+                <div className="min-w-[250px]">
                     <p className="font-medium">{value}</p>
                     <p className="text-xs text-gray-400">@{row.username}</p>
                 </div>
