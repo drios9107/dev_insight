@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\ActivityTypeEnum;
+use App\Models\User;
 use App\Services\ActivityLoggerService;
 use App\Services\GithubService;
 use App\Services\PullRequestService;
@@ -19,10 +20,14 @@ class PullRequestSeeder extends Seeder
 
         $service->fetchData($gservice, 'all', $ownerKey, $repoName);
 
+        $adminId = User::whereName('Admin')->value('id')
+            ?? throw new \RuntimeException('Admin user not found');
+
         app(ActivityLoggerService::class)->log(
             ActivityTypeEnum::Imported,
             'Pull requests imported from seeder',
             data: ['owner_key' => $ownerKey, 'repo_name' => $repoName],
+            userId: $adminId,
         );
     }
 }

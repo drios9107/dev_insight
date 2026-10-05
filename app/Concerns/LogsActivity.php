@@ -18,7 +18,6 @@ trait LogsActivity
             app(ActivityLoggerService::class)->log(
                 ActivityTypeEnum::Created,
                 "{$model->activityLabel()} was created",
-                subject: $model,
                 data: ['attributes' => $model->getAttributes()],
             );
         });
@@ -35,7 +34,6 @@ trait LogsActivity
             app(ActivityLoggerService::class)->log(
                 ActivityTypeEnum::Updated,
                 "{$model->activityLabel()} was updated",
-                subject: $model,
                 data: [
                     'before' => array_intersect_key($model->getOriginal(), $dirty),
                     'after' => $dirty,
@@ -48,7 +46,6 @@ trait LogsActivity
             app(ActivityLoggerService::class)->log(
                 ActivityTypeEnum::Deleted,
                 "{$model->activityLabel()} was deleted",
-                subject: $model,
                 data: ['attributes' => $model->getOriginal()],
             );
         });
@@ -71,9 +68,9 @@ trait LogsActivity
         $value ??= (string) $this->getKey();
 
         if (strlen($value) > 60) {
-            $value = substr($value, 0, 57).'...';
+            $value = substr($value, 0, 57) . '...';
         }
 
-        return class_basename($this).' «'.$value.'»';
+        return class_basename($this) . ' «' . $value . '»';
     }
 }

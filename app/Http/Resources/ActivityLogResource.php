@@ -18,9 +18,6 @@ use Illuminate\Support\Carbon;
  * @property-read string|null $user_agent
  * @property-read Carbon|null $created_at
  * @property-read User|null $user
- * @property-read Team|null $team
- * @property-read Project|null $project
- * @property-read Task|null $task
  */
 class ActivityLogResource extends JsonResource
 {
@@ -35,21 +32,9 @@ class ActivityLogResource extends JsonResource
             'id' => $this->id,
             'type' => $this->type,
             'description' => $this->description,
-            'user' => $this->whenLoaded('user', fn () => [
+            'user' => $this->whenLoaded('user', fn() => [
                 'id' => $this->user->id,
                 'name' => $this->user->name,
-            ]),
-            'team' => $this->whenLoaded('team', fn () => [
-                'id' => $this->team->id,
-                'name' => $this->team->name,
-            ]),
-            'project' => $this->whenLoaded('project', fn () => [
-                'id' => $this->project->id,
-                'name' => $this->project->name,
-            ]),
-            'task' => $this->whenLoaded('task', fn () => [
-                'id' => $this->task->id,
-                'title' => $this->task->title,
             ]),
             'ip_address' => $this->ip_address,
             'user_agent' => $this->user_agent,

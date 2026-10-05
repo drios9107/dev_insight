@@ -16,9 +16,6 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
-            $table->foreignId('team_id')->nullable()->constrained('teams')->nullOnDelete();
-            $table->foreignId('project_id')->nullable()->constrained('projects')->nullOnDelete();
-            $table->foreignId('task_id')->nullable()->constrained('tasks')->nullOnDelete();
 
             $table->string('type', 50);
             $table->text('description');
@@ -26,8 +23,6 @@ return new class extends Migration
             $table->string('ip_address', 45)->nullable();
             $table->string('user_agent', 255)->nullable();
 
-            $table->index(['team_id', 'created_at']);
-            $table->index(['project_id', 'created_at']);
             $table->index(['user_id', 'created_at']);
             $table->index(['type', 'created_at']);
         });

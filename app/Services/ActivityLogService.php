@@ -15,10 +15,10 @@ class ActivityLogService
      */
     public function index(?Request $request = null): LengthAwarePaginator
     {
-        $query = ActivityLog::query()->with(['user', 'team', 'project', 'task']);
+        $query = ActivityLog::query()->with(['user']);
 
         if ($request?->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('type', 'ilike', $search)
                     ->orWhere('description', 'ilike', $search)

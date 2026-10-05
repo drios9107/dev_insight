@@ -24,7 +24,7 @@ const ActivityLogs = (props: any) => {
             key: 'description',
             label: 'Description',
             render: (value: string) => (
-                <span className="block max-w-[200px] truncate">{value}</span>
+                <span className="max-w-fulltruncate block">{value}</span>
             ),
         },
         {
@@ -32,24 +32,6 @@ const ActivityLogs = (props: any) => {
             label: 'User',
             render: (value) => value?.name || '-',
             className: 'min-w-[180px]',
-        },
-        {
-            key: 'team',
-            label: 'Team',
-            render: (value) => value?.name || '-',
-            className: 'min-w-[180px]',
-        },
-        {
-            key: 'project',
-            label: 'Project',
-            render: (value) => value?.name || '-',
-            className: 'min-w-[180px]',
-        },
-        {
-            key: 'task',
-            label: 'Task',
-            render: (value) => value?.title ?? '-',
-            className: 'min-w-[200px]',
         },
         {
             key: 'created_at',
@@ -106,6 +88,9 @@ const ActivityLogs = (props: any) => {
             created: 'success',
             updated: 'warning',
             deleted: 'destructive',
+            imported: 'info',
+            synced: 'default',
+            fetched: 'info',
         };
 
         return mapping[type] || 'default';
