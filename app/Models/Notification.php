@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Concerns\LogsDeletion;
 use Database\Factories\NotificationFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -27,7 +28,7 @@ use Illuminate\Support\Carbon;
 class Notification extends Model
 {
     /** @use HasFactory<NotificationFactory> */
-    use HasFactory;
+    use HasFactory, LogsDeletion;
 
     protected $casts = [
         'is_read' => 'boolean',

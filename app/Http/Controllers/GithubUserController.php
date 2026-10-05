@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActivityTypeEnum;
 use App\Http\Resources\GithubUserResource;
 use App\Models\GithubUser;
+use App\Services\ActivityLoggerService;
 use App\Services\GithubService;
 use App\Services\GithubUserService;
 use Illuminate\Http\RedirectResponse;
@@ -33,6 +35,12 @@ class GithubUserController extends Controller
             $user = GithubUser::findOrFail($id);
             $this->service->syncFromGithub($githubService, $user->username);
 
+            app(ActivityLoggerService::class)->log(
+                ActivityTypeEnum::Synced,
+                'GitHub user sync completed',
+                subject: $user,
+            );
+
             return redirect()->back();
         } catch (ValidationException $e) {
             throw $e;
@@ -51,6 +59,12 @@ class GithubUserController extends Controller
             ]);
 
             $this->service->syncFromGithub($githubService, $validated['username']);
+
+            app(ActivityLoggerService::class)->log(
+                ActivityTypeEnum::Imported,
+                'GitHub user imported',
+                data: ['username' => $validated['username']],
+            );
 
             return redirect()->back();
         } catch (ValidationException $e) {

@@ -38,8 +38,8 @@ class GithubRepositoryResource extends JsonResource
             'is_private' => $this->is_private,
             'default_branch' => $this->default_branch,
             'last_synced_at' => $this->last_synced_at ? date('Y-m-d', strtotime($this->last_synced_at)) : null,
-            'created_at' => date_format($this->created_at, 'Y-m-d'),
-            'updated_at' => date_format($this->updated_at, 'Y-m-d'),
+            'created_at' => $this->created_at ? date('Y-m-d', strtotime($this->created_at)) : null,
+            'updated_at' => $this->updated_at ? date('Y-m-d', strtotime($this->updated_at)) : null,
         ];
     }
 }

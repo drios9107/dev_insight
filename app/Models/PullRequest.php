@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Concerns\LogsDeletion;
 use Database\Factories\PullRequestFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -44,7 +45,7 @@ use Illuminate\Support\Carbon;
 class PullRequest extends Model
 {
     /** @use HasFactory<PullRequestFactory> */
-    use HasFactory;
+    use HasFactory, LogsDeletion;
 
     protected $casts = [
         'closed_at' => 'datetime',

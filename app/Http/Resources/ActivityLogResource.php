@@ -35,25 +35,25 @@ class ActivityLogResource extends JsonResource
             'id' => $this->id,
             'type' => $this->type,
             'description' => $this->description,
-            'user' => $this->whenLoaded('user', fn () => [
+            'user' => $this->whenLoaded('user', fn() => [
                 'id' => $this->user->id,
                 'name' => $this->user->name,
             ]),
-            'team' => $this->whenLoaded('team', fn () => [
+            'team' => $this->whenLoaded('team', fn() => [
                 'id' => $this->team->id,
                 'name' => $this->team->name,
             ]),
-            'project' => $this->whenLoaded('project', fn () => [
+            'project' => $this->whenLoaded('project', fn() => [
                 'id' => $this->project->id,
                 'name' => $this->project->name,
             ]),
-            'task' => $this->whenLoaded('task', fn () => [
+            'task' => $this->whenLoaded('task', fn() => [
                 'id' => $this->task->id,
                 'title' => $this->task->title,
             ]),
             'ip_address' => $this->ip_address,
             'user_agent' => $this->user_agent,
-            'created_at' => $this->created_at?->format('Y-m-d H:i:s'),
+            'created_at' => $this->created_at ? date('Y-m-d H:i:s', strtotime($this->created_at)) : null,
         ];
     }
 }

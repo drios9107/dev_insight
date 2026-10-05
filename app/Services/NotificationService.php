@@ -18,8 +18,8 @@ class NotificationService
         $query = Notification::query()
             ->with('user');
 
-        if ($request->filled('search')) {
-            $search = '%'.$request->search.'%';
+        if ($request?->filled('search')) {
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('message', 'ilike', $search)
@@ -29,7 +29,7 @@ class NotificationService
             });
         }
 
-        if ($request->filled('type') && $request->type !== 'all') {
+        if ($request?->filled('type') && $request->type !== 'all') {
             $query->where('type', $request->type);
         }
 
@@ -70,7 +70,7 @@ class NotificationService
      */
     public function update(int $id, array $data): bool
     {
-        return Notification::whereId($id)->update($data) > 0;
+        return Notification::findOrFail($id)->update($data);
     }
 
     /**

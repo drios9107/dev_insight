@@ -31,28 +31,31 @@ const ActivityLogs = (props: any) => {
             key: 'user',
             label: 'User',
             render: (value) => value?.name || '-',
+            className: 'min-w-[180px]',
         },
         {
             key: 'team',
             label: 'Team',
             render: (value) => value?.name || '-',
+            className: 'min-w-[180px]',
         },
         {
             key: 'project',
             label: 'Project',
             render: (value) => value?.name || '-',
+            className: 'min-w-[180px]',
         },
         {
             key: 'task',
             label: 'Task',
-            render: (value) => (value?.title ? `#${value.id}` : '-'),
+            render: (value) => value?.title ?? '-',
+            className: 'min-w-[200px]',
         },
         {
             key: 'created_at',
             label: 'Date',
             sortable: true,
             className: 'min-w-[125px]',
-            render: (value) => (value ? new Date(value).toLocaleString() : '-'),
         },
     ];
 

@@ -107,8 +107,8 @@ class GithubRepositoryService
     {
         $query = GithubRepository::query();
 
-        if ($request->filled('search')) {
-            $search = '%'.$request->search.'%';
+        if ($request?->filled('search')) {
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('full_name', 'ilike', $search)
                     ->orWhere('name', 'ilike', $search)
@@ -153,7 +153,7 @@ class GithubRepositoryService
      */
     public function update(int $id, array $data): bool
     {
-        return GithubRepository::whereId($id)->update($data) > 0;
+        return GithubRepository::findOrFail($id)->update($data);
     }
 
     /**

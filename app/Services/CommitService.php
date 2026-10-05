@@ -76,8 +76,8 @@ class CommitService
         $query = Commit::query()
             ->with(['author', 'githubRepository', 'pullRequest']);
 
-        if ($request->filled('search')) {
-            $search = '%'.$request->search.'%';
+        if ($request?->filled('search')) {
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('message', 'ilike', $search)
                     ->orWhere('sha', 'ilike', $search)
@@ -93,11 +93,11 @@ class CommitService
             });
         }
 
-        if ($request->filled('repository_id') && $request->repository_id !== 'all') {
+        if ($request?->filled('repository_id') && $request->repository_id !== 'all') {
             $query->where('github_repository_id', $request->repository_id);
         }
 
-        if ($request->filled('pull_request_id') && $request->pull_request_id !== 'all') {
+        if ($request?->filled('pull_request_id') && $request->pull_request_id !== 'all') {
             $query->where('pull_request_id', $request->pull_request_id);
         }
 
@@ -135,7 +135,7 @@ class CommitService
      */
     public function update(int $id, array $data): bool
     {
-        return Commit::whereId($id)->update($data) > 0;
+        return Commit::findOrFail($id)->update($data);
     }
 
     /**

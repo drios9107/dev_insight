@@ -75,8 +75,8 @@ class GithubIssueService
         $query = GithubIssue::query()
             ->with('author', 'githubRepository', 'task');
 
-        if ($request->filled('search')) {
-            $search = '%'.$request->search.'%';
+        if ($request?->filled('search')) {
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('body', 'ilike', $search)
@@ -89,11 +89,11 @@ class GithubIssueService
             });
         }
 
-        if ($request->filled('state') && $request->state !== 'all') {
+        if ($request?->filled('state') && $request->state !== 'all') {
             $query->where('state', $request->state);
         }
 
-        if ($request->filled('repository_id') && $request->repository_id !== 'all') {
+        if ($request?->filled('repository_id') && $request->repository_id !== 'all') {
             $query->where('github_repository_id', $request->repository_id);
         }
 
@@ -130,7 +130,7 @@ class GithubIssueService
      */
     public function update(int $id, array $data): bool
     {
-        return GithubIssue::whereId($id)->update($data) > 0;
+        return GithubIssue::findOrFail($id)->update($data);
     }
 
     /**

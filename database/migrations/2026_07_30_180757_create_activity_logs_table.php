@@ -14,15 +14,22 @@ return new class extends Migration
         Schema::create('activity_logs', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('user_id')->nullable()->constrained('users');
-            $table->foreignId('team_id')->nullable()->constrained('teams');
-            $table->foreignId('project_id')->nullable()->constrained('projects');
-            $table->foreignId('task_id')->nullable()->constrained('tasks');
-            $table->string('type');
+
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('team_id')->nullable()->constrained('teams')->nullOnDelete();
+            $table->foreignId('project_id')->nullable()->constrained('projects')->nullOnDelete();
+            $table->foreignId('task_id')->nullable()->constrained('tasks')->nullOnDelete();
+
+            $table->string('type', 50);
             $table->text('description');
             $table->json('data')->nullable();
-            $table->string('ip_address')->nullable();
-            $table->string('user_agent')->nullable();
+            $table->string('ip_address', 45)->nullable();
+            $table->string('user_agent', 255)->nullable();
+
+            $table->index(['team_id', 'created_at']);
+            $table->index(['project_id', 'created_at']);
+            $table->index(['user_id', 'created_at']);
+            $table->index(['type', 'created_at']);
         });
     }
 

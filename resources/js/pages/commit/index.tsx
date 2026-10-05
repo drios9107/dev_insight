@@ -33,11 +33,13 @@ const Commits = (props: any) => {
             key: 'author',
             label: 'Author',
             render: (value) => value?.name || '-',
+            className: 'min-w-[180px]',
         },
         {
             key: 'github_repository',
             label: 'Repository',
             render: (value) => value?.full_name || '-',
+            className: 'min-w-[200px]',
         },
         {
             key: 'date',

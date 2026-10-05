@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Concerns\LogsDeletion;
 use Database\Factories\GithubRepositoryFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -39,7 +40,7 @@ use Illuminate\Support\Carbon;
 class GithubRepository extends Model
 {
     /** @use HasFactory<GithubRepositoryFactory> */
-    use HasFactory;
+    use HasFactory, LogsDeletion;
 
     protected $casts = [
         'is_private' => 'boolean',

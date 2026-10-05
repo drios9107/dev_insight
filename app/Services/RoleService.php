@@ -17,8 +17,8 @@ class RoleService
     {
         $query = Role::query()->withCount('users');
 
-        if ($request->filled('search')) {
-            $search = '%'.$request->search.'%';
+        if ($request?->filled('search')) {
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
                     ->orWhere('description', 'ilike', $search);
@@ -58,7 +58,7 @@ class RoleService
      */
     public function update(int $id, array $data): bool
     {
-        return Role::whereId($id)->update($data) > 0;
+        return Role::findOrFail($id)->update($data);
     }
 
     /**

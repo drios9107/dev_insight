@@ -6,6 +6,7 @@ use App\Models\Sprint;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SprintService
 {
@@ -19,8 +20,8 @@ class SprintService
         $query = Sprint::query()
             ->with(['project']);
 
-        if ($request->filled('search')) {
-            $search = '%'.$request->search.'%';
+        if ($request?->filled('search')) {
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
                     ->orWhere('goal', 'ilike', $search)
@@ -30,7 +31,7 @@ class SprintService
             });
         }
 
-        if ($request->filled('status') && $request->status !== 'all') {
+        if ($request?->filled('status') && $request->status !== 'all') {
             $query->where('status', $request->status);
         }
 
@@ -44,6 +45,8 @@ class SprintService
      */
     public function store(array $data): Sprint
     {
+
+        $data['created_by'] = Auth::id();
         return Sprint::create($data);
     }
 
@@ -65,7 +68,7 @@ class SprintService
      */
     public function update(int $id, array $data): bool
     {
-        return Sprint::whereId($id)->update($data) > 0;
+        return Sprint::findOrFail($id)->update($data);
     }
 
     /**

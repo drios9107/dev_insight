@@ -17,8 +17,8 @@ class UserService
     {
         $query = User::query()->with('role');
 
-        if ($request->filled('search')) {
-            $search = '%'.$request->search.'%';
+        if ($request?->filled('search')) {
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
                     ->orWhere('email', 'ilike', $search)
@@ -28,7 +28,7 @@ class UserService
             });
         }
 
-        if ($request->filled('role_id') && $request->role_id !== 'all') {
+        if ($request?->filled('role_id') && $request->role_id !== 'all') {
             $query->where('role_id', $request->role_id);
         }
 
@@ -65,7 +65,7 @@ class UserService
      */
     public function update(int $id, array $data): bool
     {
-        return User::whereId($id)->update($data) > 0;
+        return User::findOrFail($id)->update($data);
     }
 
     /**

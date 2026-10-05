@@ -67,13 +67,14 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
                 );
                 onClose();
             },
-            onError: () => {
-                toast.error(`Team creation failed: ${errors.toString()}`, {
+            onError: (errors) => {
+                const firstError = Object.values(errors)[0];
+                toast.error(firstError ?? 'Unable to save', {
                     className: 'text-red-500',
                 });
             },
         });
-    }, [item, put, post, errors, onClose]);
+    }, [item, onClose, post, put]);
 
     return (
         <SimpleModal

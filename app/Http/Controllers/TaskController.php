@@ -12,6 +12,7 @@ use App\Services\TaskService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -60,12 +61,20 @@ class TaskController extends Controller
      */
     public function store(TaskRequest $request): RedirectResponse
     {
-        $validated = $request->validated();
+        try {
+            $validated = $request->validated();
 
-        $this->service->store($validated);
+            $this->service->store($validated);
 
-        return redirect()->route('task.index')
-            ->with('success', 'Task created successfully!');
+            return redirect()->back()
+                ->with('success', 'Task created successfully!');
+        } catch (ValidationException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            throw ValidationException::withMessages([
+                'content' => 'Failed to create the item: ' . $e->getMessage(),
+            ]);
+        }
     }
 
     public function show(Task $task): TaskResource

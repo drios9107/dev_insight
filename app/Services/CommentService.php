@@ -19,8 +19,8 @@ class CommentService
     {
         $query = Comment::query()->with(['user', 'task', 'parent']);
 
-        if ($request->filled('search')) {
-            $search = '%'.$request->search.'%';
+        if ($request?->filled('search')) {
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('content', 'ilike', $search)
                     ->orWhereHas('user', function ($u) use ($search) {
@@ -32,7 +32,7 @@ class CommentService
             });
         }
 
-        if ($request->filled('task_id') && $request->task_id !== 'all') {
+        if ($request?->filled('task_id') && $request->task_id !== 'all') {
             $query->where('task_id', $request->task_id);
         }
 

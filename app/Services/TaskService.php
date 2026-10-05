@@ -24,8 +24,8 @@ class TaskService
                 'reporter',
             ]);
 
-        if ($request->filled('search')) {
-            $search = '%'.$request->search.'%';
+        if ($request?->filled('search')) {
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('description', 'ilike', $search)
@@ -45,24 +45,24 @@ class TaskService
             });
         }
 
-        if ($request->boolean('overdue')) {
+        if ($request?->boolean('overdue')) {
             $query->where('due_date', '<', now())
                 ->whereNotIn('status', ['done', 'cancelled']);
         }
 
-        if ($request->filled('status') && $request->status !== 'all') {
+        if ($request?->filled('status') && $request->status !== 'all') {
             $query->where('status', $request->status);
         }
 
-        if ($request->filled('priority') && $request->priority !== 'all') {
+        if ($request?->filled('priority') && $request->priority !== 'all') {
             $query->where('priority', $request->priority);
         }
 
-        if ($request->filled('project_id')) {
+        if ($request?->filled('project_id')) {
             $query->where('project_id', $request->project_id);
         }
 
-        if ($request->filled('assignee_id')) {
+        if ($request?->filled('assignee_id')) {
             $query->where('assignee_id', $request->assignee_id);
         }
 
@@ -102,7 +102,7 @@ class TaskService
     {
         $updated = $this->updateStatus($data);
 
-        return Task::whereId($id)->update($updated) > 0;
+        return Task::findOrFail($id)->update($updated);
     }
 
     /**

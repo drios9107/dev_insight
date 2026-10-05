@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ActivityTypeEnum;
+use App\Services\ActivityLoggerService;
 use App\Services\GithubService;
 use App\Services\PullRequestService;
 use Illuminate\Database\Seeder;
@@ -16,5 +18,11 @@ class PullRequestSeeder extends Seeder
         $gservice = new GithubService;
 
         $service->fetchData($gservice, 'all', $ownerKey, $repoName);
+
+        app(ActivityLoggerService::class)->log(
+            ActivityTypeEnum::Imported,
+            'Pull requests imported from seeder',
+            data: ['owner_key' => $ownerKey, 'repo_name' => $repoName],
+        );
     }
 }

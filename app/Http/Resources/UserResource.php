@@ -27,13 +27,13 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'role' => $this->whenLoaded('role', fn () => [
+            'role' => $this->whenLoaded('role', fn() => [
                 'id' => $this->role->id,
                 'name' => $this->role->name,
             ]),
             'avatar_url' => $this->avatar_url,
-            'created_at' => $this->created_at?->format('Y-m-d H:i:s'),
-            'updated_at' => $this->updated_at?->format('Y-m-d H:i:s'),
+            'created_at' => $this->created_at ? date('Y-m-d', strtotime($this->created_at)) : null,
+            'updated_at' => $this->updated_at ? date('Y-m-d', strtotime($this->updated_at)) : null,
         ];
     }
 }

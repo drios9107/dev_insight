@@ -89,10 +89,6 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
         const url = item ? `/project/${item.id}` : '/project';
         const fn = item ? put : post;
         fn(url, {
-            onBefore: () => {
-                // setData('start_date', 1)
-                // setData('end_date', 1)
-            },
             onSuccess: () => {
                 toast.success(
                     item
@@ -102,13 +98,14 @@ const CustomForm = ({ item, onClose }: { item?: any; onClose: () => void }) => {
                 );
                 onClose();
             },
-            onError: () => {
-                toast.error(`Project creation failed: ${errors.toString()}`, {
+            onError: (errors) => {
+                const firstError = Object.values(errors)[0];
+                toast.error(firstError ?? 'Unable to save', {
                     className: 'text-red-500',
                 });
             },
         });
-    }, [item, errors, onClose, post, put]);
+    }, [item, onClose, post, put]);
 
     return (
         <SimpleModal

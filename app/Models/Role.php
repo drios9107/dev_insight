@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Concerns\LogsActivity;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -19,6 +20,8 @@ use Illuminate\Support\Carbon;
 #[Fillable(['name', 'description'])]
 class Role extends Model
 {
+    use LogsActivity;
+
     /**
      * @return HasMany<User, $this>
      */

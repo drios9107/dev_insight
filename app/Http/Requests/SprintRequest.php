@@ -20,39 +20,39 @@ class SprintRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
-    /**
      * @return array<string, mixed>
      */
     public function rules(): array
     {
         $sprintId = $this->input('id') ?? $this->route('sprint');
+
+        $nameRule = $sprintId
+            ? 'sometimes|required|string|unique:sprints,name,' . $sprintId
+            : 'required|string|unique:sprints,name';
+
         $rules = [
-            'name' => 'required|string|unique:sprints,name',
+            'name' => $nameRule,
             'goal' => 'nullable|string',
             'project_id' => 'required|integer|exists:projects,id',
             'start_date' => 'required|date',
-            'end_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
             'status' => [
                 'required',
                 Rule::in(array_column(SprintStatusEnum::cases(), 'value')),
             ],
             'velocity' => 'nullable|numeric|min:0',
             'actual_velocity' => 'nullable|numeric|min:0',
-            'created_by' => 'required|integer|exists:users,id',
         ];
+
         if ($sprintId) {
-            $rules['name'] = 'nullable|string|unique:sprints,name,'.$sprintId;
-            if ($this->input('project_id')) {
-                $rules['project_id'] = 'nullable|integer|exists:projects,id';
-            }
-            if ($this->input('start_date')) {
-                $rules['start_date'] = 'nullable|date';
-            }
-            if ($this->input('end_date')) {
-                $rules['end_date'] = 'nullable|date';
-            }
+            $rules['project_id'] = 'sometimes|required|integer|exists:projects,id';
+            $rules['start_date'] = 'sometimes|required|date';
+            $rules['end_date'] = 'sometimes|required|date|after_or_equal:start_date';
+            $rules['status'] = [
+                'sometimes',
+                'required',
+                Rule::in(array_column(SprintStatusEnum::cases(), 'value')),
+            ];
         }
 
         return $rules;

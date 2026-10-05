@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActivityTypeEnum;
 use App\Models\GithubRepository;
+use App\Services\ActivityLoggerService;
 use App\Services\GithubService;
 use Illuminate\Http\JsonResponse;
 
@@ -21,6 +23,12 @@ class GithubController extends Controller
             $repository = GithubRepository::findOrFail($repositoryId);
 
             $this->service->syncRepository($repository);
+
+            app(ActivityLoggerService::class)->log(
+                ActivityTypeEnum::Synced,
+                'Repository sync completed (issues, commits, users, pr, reviewers)',
+                subject: $repository,
+            );
 
             return response()->json([
                 'message' => 'Repository synced successfully',

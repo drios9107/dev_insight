@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Concerns\LogsActivity;
 use Database\Factories\SprintFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Collection;
@@ -32,7 +33,7 @@ use Illuminate\Support\Carbon;
 class Sprint extends Model
 {
     /** @use HasFactory<SprintFactory> */
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $casts = [
         'start_date' => 'datetime',

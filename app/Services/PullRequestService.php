@@ -114,7 +114,7 @@ class PullRequestService
 
             return response()->json([
                 'success' => true,
-                'message' => count($data).' pull requests sincronizados',
+                'message' => count($data) . ' pull requests sincronizados',
                 'count' => count($data),
             ]);
         } catch (\Exception $e) {
@@ -122,7 +122,7 @@ class PullRequestService
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error al sincronizar: '.$e->getMessage(),
+                'message' => 'Error al sincronizar: ' . $e->getMessage(),
             ], 500);
         }
     }
@@ -138,7 +138,7 @@ class PullRequestService
                     ->update(['pull_request_id' => $prId]);
             }
         } catch (\Exception $e) {
-            Log::warning("Failed to sync commits for PR #{$prNumber}: ".$e->getMessage());
+            Log::warning("Failed to sync commits for PR #{$prNumber}: " . $e->getMessage());
         }
     }
 
@@ -150,8 +150,8 @@ class PullRequestService
     public function index(?Request $request = null): LengthAwarePaginator
     {
         $query = PullRequest::query()->with(['author', 'assignees', 'githubRepository', 'task']);
-        if ($request->filled('search')) {
-            $search = '%'.$request->search.'%';
+        if ($request?->filled('search')) {
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('body', 'ilike', $search)
@@ -167,16 +167,16 @@ class PullRequestService
             });
         }
 
-        if ($request->boolean('stale')) {
+        if ($request?->boolean('stale')) {
             $query->where('state', 'open')
                 ->where('updated_at', '<', now()->subDays(7));
         }
 
-        if ($request->filled('state') && $request->state !== 'all') {
+        if ($request?->filled('state') && $request->state !== 'all') {
             $query->where('state', $request->state);
         }
 
-        if ($request->filled('repository_id') && $request->repository_id !== 'all') {
+        if ($request?->filled('repository_id') && $request->repository_id !== 'all') {
             $query->where('github_repository_id', $request->repository_id);
         }
 
@@ -213,7 +213,7 @@ class PullRequestService
      */
     public function update(int $id, array $data): bool
     {
-        return PullRequest::whereId($id)->update($data) > 0;
+        return PullRequest::findOrFail($id)->update($data);
     }
 
     /**

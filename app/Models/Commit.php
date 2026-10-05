@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Concerns\LogsDeletion;
 use Database\Factories\CommitFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -33,7 +34,7 @@ use Illuminate\Support\Carbon;
 class Commit extends Model
 {
     /** @use HasFactory<CommitFactory> */
-    use HasFactory;
+    use HasFactory, LogsDeletion;
 
     /**
      * @return BelongsTo<GithubRepository, $this>

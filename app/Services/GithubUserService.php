@@ -46,8 +46,8 @@ class GithubUserService
                 'githubIssues',
             ]);
 
-        if ($request->filled('search')) {
-            $search = '%'.$request->search.'%';
+        if ($request?->filled('search')) {
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('username', 'ilike', $search)
                     ->orWhere('name', 'ilike', $search)
@@ -55,13 +55,13 @@ class GithubUserService
             });
         }
 
-        if ($request->boolean('inactive')) {
+        if ($request?->boolean('inactive')) {
             $query->whereDoesntHave('commits', function ($q) {
                 $q->where('date', '>=', now()->subDays(7));
             });
         }
 
-        return $query->latest()->paginate($request->integer('per_page', 10));
+        return $query->latest()->paginate($request?->integer('per_page', 10));
     }
 
     /**

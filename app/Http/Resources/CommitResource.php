@@ -33,18 +33,18 @@ class CommitResource extends JsonResource
         return [
             'id' => $this->id,
             'sha' => $this->sha,
-            'github_repository' => $this->whenLoaded('githubRepository', fn () => [
+            'github_repository' => $this->whenLoaded('githubRepository', fn() => [
                 'id' => $this->githubRepository->id,
                 'name' => $this->githubRepository->name,
                 'full_name' => $this->githubRepository->full_name,
             ]),
-            'author' => $this->whenLoaded('author', fn () => [
+            'author' => $this->whenLoaded('author', fn() => [
                 'id' => $this->author->id,
                 'name' => $this->author->displayName,
                 'username' => $this->author->username,
                 'avatar' => $this->author->avatar,
             ]),
-            'pull_request' => $this->whenLoaded('pullRequest', fn () => [
+            'pull_request' => $this->whenLoaded('pullRequest', fn() => [
                 'id' => $this->pullRequest->id,
                 'number' => $this->pullRequest->number,
                 'title' => $this->pullRequest->title,
@@ -52,8 +52,8 @@ class CommitResource extends JsonResource
             'message' => $this->message,
             'date' => $this->date ? date('Y-m-d', strtotime($this->date)) : null,
             'url' => $this->url,
-            'created_at' => $this->created_at?->format('Y-m-d'),
-            'updated_at' => $this->updated_at?->format('Y-m-d'),
+            'created_at' => $this->created_at ? date('Y-m-d', strtotime($this->created_at)) : null,
+            'updated_at' => $this->updated_at ? date('Y-m-d', strtotime($this->updated_at)) : null,
         ];
     }
 }

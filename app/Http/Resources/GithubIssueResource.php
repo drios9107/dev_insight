@@ -36,7 +36,7 @@ class GithubIssueResource extends JsonResource
             'id' => $this->id,
             'github_id' => $this->github_id,
             'github_repository' => $this->githubRepository,
-            'author' => $this->whenLoaded('author', fn () => [
+            'author' => $this->whenLoaded('author', fn() => [
                 'id' => $this->author->id,
                 'name' => $this->author->displayName,
             ]),
@@ -46,8 +46,8 @@ class GithubIssueResource extends JsonResource
             'body' => $this->body,
             'state' => $this->state,
             'closed_at' => $this->closed_at ? date('Y-m-d', strtotime($this->closed_at)) : null,
-            'created_at' => date_format($this->created_at, 'Y-m-d'),
-            'updated_at' => date_format($this->updated_at, 'Y-m-d'),
+            'created_at' => $this->created_at ? date('Y-m-d', strtotime($this->created_at)) : null,
+            'updated_at' => $this->updated_at ? date('Y-m-d', strtotime($this->updated_at)) : null,
         ];
     }
 }

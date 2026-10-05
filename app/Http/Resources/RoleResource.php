@@ -26,8 +26,8 @@ class RoleResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'created_at' => date_format($this->created_at, 'Y-m-d'),
-            'updated_at' => date_format($this->updated_at, 'Y-m-d'),
+            'created_at' => $this->created_at ? date('Y-m-d', strtotime($this->created_at)) : null,
+            'updated_at' => $this->updated_at ? date('Y-m-d', strtotime($this->updated_at)) : null,
         ];
     }
 }

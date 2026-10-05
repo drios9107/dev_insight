@@ -5,7 +5,9 @@ namespace App\Http\Requests;
 use App\Enums\TaskPriorityEnum;
 use App\Enums\TaskStatusEnum;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
 class TaskRequest extends FormRequest
@@ -21,14 +23,12 @@ class TaskRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
-    /**
      * @return array<string, mixed>
      */
     public function rules(): array
     {
         $taskId = $this->input('id') ?? $this->route('task');
+
         $rules = [
             'title' => 'required|string|unique:tasks,title',
             'description' => 'nullable|string',
@@ -54,7 +54,7 @@ class TaskRequest extends FormRequest
         ];
 
         if ($taskId) {
-            $rules['title'] = 'required|string|unique:tasks,title,'.$taskId;
+            $rules['title'] = 'required|string|unique:tasks,title,' . $taskId;
         }
 
         return $rules;

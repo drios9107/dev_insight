@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActivityTypeEnum;
 use App\Http\Requests\GithubRepositoryRequest;
 use App\Http\Resources\GithubRepositoryResource;
+use App\Services\ActivityLoggerService;
 use App\Services\GithubRepositoryService;
 use App\Services\GithubService;
 use Illuminate\Http\RedirectResponse;
@@ -92,6 +94,12 @@ class GithubRepositoryController extends Controller
             }
 
             $results = $this->service->syncAllFromGithub($githubService, $username);
+
+            app(ActivityLoggerService::class)->log(
+                ActivityTypeEnum::Synced,
+                'Global repository sync completed',
+                data: $results,
+            );
 
             return back()->with('success', sprintf(
                 'Synced: %d created, %d updated',

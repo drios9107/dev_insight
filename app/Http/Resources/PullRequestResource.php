@@ -45,7 +45,7 @@ class PullRequestResource extends JsonResource
             'title' => $this->title,
             'body' => $this->body,
             'state' => $this->state,
-            'github_repository' => $this->whenLoaded('githubRepository', fn () => [
+            'github_repository' => $this->whenLoaded('githubRepository', fn() => [
                 'id' => $this->githubRepository->id,
                 'name' => $this->githubRepository->name,
                 'full_name' => $this->githubRepository->full_name,
@@ -53,12 +53,12 @@ class PullRequestResource extends JsonResource
             'author' => $this->author,
             'assignees' => $this->whenLoaded(
                 'assignees',
-                fn () => $this->assignees->map(fn ($user) => [
+                fn() => $this->assignees->map(fn($user) => [
                     'id' => $user->id,
                     'name' => $user->displayName,
                 ])
             ),
-            'task' => $this->whenLoaded('task', fn () => [
+            'task' => $this->whenLoaded('task', fn() => [
                 'id' => $this->task->id,
                 'title' => $this->task->title,
             ]),
@@ -67,8 +67,8 @@ class PullRequestResource extends JsonResource
             'merge_commit_sha' => $this->merge_commit_sha,
             'closed_at' => $this->closed_at ? date('Y-m-d', strtotime($this->closed_at)) : null,
             'merged_at' => $this->merged_at ? date('Y-m-d', strtotime($this->merged_at)) : null,
-            'created_at' => date_format($this->created_at, 'Y-m-d'),
-            'updated_at' => date_format($this->updated_at, 'Y-m-d'),
+            'created_at' => $this->created_at ? date('Y-m-d', strtotime($this->created_at)) : null,
+            'updated_at' => $this->updated_at ? date('Y-m-d', strtotime($this->updated_at)) : null,
         ];
     }
 }

@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\GithubRepository;
+use App\Enums\ActivityTypeEnum;
+use App\Services\ActivityLoggerService;
 use App\Services\GithubRepositoryService;
 use App\Services\GithubService;
 use Illuminate\Database\Seeder;
@@ -18,5 +19,11 @@ class GithubRepositorySeeder extends Seeder
         $gservice = new GithubService;
 
         $service->fetchData($gservice, $ownerKey, $repoName);
+
+        app(ActivityLoggerService::class)->log(
+            ActivityTypeEnum::Imported,
+            'GitHub repository imported from seeder',
+            data: ['owner_key' => $ownerKey, 'repo_name' => $repoName],
+        );
     }
 }

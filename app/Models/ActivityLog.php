@@ -33,6 +33,10 @@ class ActivityLog extends Model
     /** @use HasFactory<ActivityLogFactory> */
     use HasFactory;
 
+    protected $casts = [
+        'data' => 'array',
+    ];
+
     /**
      * @return BelongsTo<User, $this>
      */

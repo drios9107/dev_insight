@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Concerns\LogsDeletion;
 use Database\Factories\GithubUserFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -33,7 +34,7 @@ use Illuminate\Support\Carbon;
 class GithubUser extends Model
 {
     /** @use HasFactory<GithubUserFactory> */
-    use HasFactory;
+    use HasFactory, LogsDeletion;
 
     protected $table = 'github_users';
 

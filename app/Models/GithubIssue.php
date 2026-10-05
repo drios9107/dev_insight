@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Concerns\LogsDeletion;
 use Database\Factories\GithubIssueFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -31,7 +32,7 @@ use Illuminate\Support\Carbon;
 class GithubIssue extends Model
 {
     /** @use HasFactory<GithubIssueFactory> */
-    use HasFactory;
+    use HasFactory, LogsDeletion;
 
     /**
      * @return BelongsTo<GithubRepository, $this>

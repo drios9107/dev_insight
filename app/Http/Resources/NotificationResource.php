@@ -30,7 +30,7 @@ class NotificationResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user' => $this->whenLoaded('user', fn () => [
+            'user' => $this->whenLoaded('user', fn() => [
                 'id' => $this->user->id,
                 'name' => $this->user->name,
             ]),
@@ -40,8 +40,8 @@ class NotificationResource extends JsonResource
             'link' => $this->link,
             'is_read' => $this->is_read,
             'read_at' => $this->read_at ? date('Y-m-d', strtotime($this->read_at)) : null,
-            'created_at' => date_format($this->created_at, 'Y-m-d'),
-            'updated_at' => date_format($this->updated_at, 'Y-m-d'),
+            'created_at' => $this->created_at ? date('Y-m-d', strtotime($this->created_at)) : null,
+            'updated_at' => $this->updated_at ? date('Y-m-d', strtotime($this->updated_at)) : null,
         ];
     }
 }
