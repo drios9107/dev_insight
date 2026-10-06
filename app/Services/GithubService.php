@@ -27,33 +27,41 @@ class GithubService
      */
     private function get(string $endpoint, array $params = []): array
     {
-        $url = $this->apiBase.$endpoint;
+        $url = $this->apiBase . $endpoint;
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.$this->token,
+            'Authorization' => 'Bearer ' . $this->token,
             'Accept' => 'application/vnd.github.v3+json',
         ])->get($url, $params);
 
         if ($response->failed()) {
-            Log::error('***GitHub API error', [
+            Log::error('GitHub API error', [
                 'endpoint' => $endpoint,
                 'status' => $response->status(),
                 'body' => $response->body(),
             ]);
 
-            throw new Exception('GitHub API error: '.$response->status());
+            throw new Exception('GitHub API error: ' . $response->status());
         }
 
-        return $response->json();
+        /** @var array<int|string, mixed> $data */
+        $data = $response->json() ?? [];
+
+        return $data;
     }
 
     /**
+     * Fetch a GitHub user by username.
+     *
      * @return array<string, mixed>|null
      */
     public function getUser(string $username): ?array
     {
         try {
-            return $this->get("/users/{$username}");
+            /** @var array<string, mixed> $user */
+            $user = $this->get("/users/{$username}");
+
+            return $user;
         } catch (Exception $e) {
             return null;
         }
@@ -61,53 +69,49 @@ class GithubService
 
     /**
      * @return array<int, array<string, mixed>>
-     */
-    public function getCommits(string $owner, string $repo, int $perPage = 100): array
-    {
-        /** @var array<int, array<string, mixed>> $response */
-        $response = $this->get("/repos/{$owner}/{$repo}/commits", [
-            'per_page' => $perPage,
-        ]);
-
-        return $response;
-    }
-
-    /**
-     * @return array<int, array<string, mixed>>
-     */
-    public function getPullRequests(string $owner, string $repo, string $state = 'all', int $perPage = 100): array
-    {
-        /** @var array<int, array<string, mixed>> $response */
-        $response = $this->get("/repos/{$owner}/{$repo}/pulls", [
-            'state' => $state,
-            'per_page' => $perPage,
-        ]);
-
-        return $response;
-    }
-
-    /**
-     * Obtener issues de un repositorio.
      *
-     * @return array<int, array<string, mixed>>
+     * @throws \Exception
      */
-    public function getIssues(string $owner, string $repo, string $state = 'all', int $perPage = 100): array
+    public function getCommits(string $owner, string $repo): array
     {
-        /** @var array<int, array<string, mixed>> $response */
-        $response = $this->get("/repos/{$owner}/{$repo}/issues", [
-            'state' => $state,
-            'per_page' => $perPage,
-        ]);
-
-        return array_values(array_filter($response, function ($item) {
-            return ! isset($item['pull_request']);
-        }));
+        return $this->getAllPages("/repos/{$owner}/{$repo}/commits");
     }
 
     /**
-     * Obtener detalles de un repositorio.
+     * @return array<int, array<string, mixed>>
+     *
+     * @throws \Exception
+     */
+    public function getPullRequests(string $owner, string $repo, string $state = 'all'): array
+    {
+        return $this->getAllPages("/repos/{$owner}/{$repo}/pulls", [
+            'state' => $state,
+        ]);
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     *
+     * @throws \Exception
+     */
+    public function getIssues(string $owner, string $repo, string $state = 'all'): array
+    {
+        $all = $this->getAllPages("/repos/{$owner}/{$repo}/issues", [
+            'state' => $state,
+        ]);
+
+        return array_values(array_filter(
+            $all,
+            fn(array $item): bool => ! isset($item['pull_request']),
+        ));
+    }
+
+    /**
+     * Fetch a repository from GitHub.
      *
      * @return array<string, mixed>
+     *
+     * @throws \Exception
      */
     public function getRepository(string $owner, string $repo): array
     {
@@ -115,9 +119,11 @@ class GithubService
     }
 
     /**
-     * Obtener un solo commit por SHA.
+     * Fetch a single commit by SHA.
      *
      * @return array<string, mixed>
+     *
+     * @throws \Exception
      */
     public function getCommit(string $owner, string $repo, string $sha): array
     {
@@ -125,7 +131,10 @@ class GithubService
     }
 
     /**
-     * @param  array<string, mixed>  $commitData
+     * @param  array{
+     *     commit?: array{author?: array{email?: string|null}},
+     *     author?: array{id?: int|null, login?: string|null}
+     * }  $commitData
      */
     public function getAuthorIdFromCommit(array $commitData): ?int
     {
@@ -160,22 +169,23 @@ class GithubService
     }
 
     /**
-     * Obtener todas las revisiones de un pull request.
+     * Fetch all reviews for a pull request.
      *
      * @return array<int, array<string, mixed>>
+     *
+     * @throws \Exception
      */
     public function getPullRequestReviews(string $owner, string $repo, int $pullNumber): array
     {
-        /** @var array<int, array<string, mixed>> $response */
-        $response = $this->get("/repos/{$owner}/{$repo}/pulls/{$pullNumber}/reviews");
-
-        return $response;
+        return $this->getAllPages("/repos/{$owner}/{$repo}/pulls/{$pullNumber}/reviews");
     }
 
     /**
-     * Obtener una revisión específica.
+     * Fetch a single pull request review.
      *
      * @return array<string, mixed>
+     *
+     * @throws \Exception
      */
     public function getPullRequestReview(string $owner, string $repo, int $pullNumber, int $reviewId): array
     {
@@ -183,44 +193,67 @@ class GithubService
     }
 
     /**
-     * Obtener todos los repositorios de una cuenta de GitHub.
+     * Fetch all repositories for a GitHub account.
      *
      * @return array<int, array<string, mixed>>
+     *
+     * @throws \Exception
      */
     public function getUserRepositories(string $username): array
     {
-        $repos = [];
+        return $this->getAllPages("/users/{$username}/repos", [
+            'sort' => 'updated',
+            'direction' => 'desc',
+        ]);
+    }
+
+    /**
+     * Fetch all commits for a pull request.
+     *
+     * @return array<int, array<string, mixed>>
+     *
+     * @throws \Exception
+     */
+    public function getPullRequestCommits(string $owner, string $repo, int $prNumber): array
+    {
+        return $this->getAllPages("/repos/{$owner}/{$repo}/pulls/{$prNumber}/commits");
+    }
+
+    /**
+     * Fetch all pages from a paginated GitHub endpoint.
+     *
+     * @param  array<string, mixed>  $query
+     * @return array<int, array<string, mixed>>
+     *
+     * @throws \Exception
+     */
+    private function getAllPages(string $url, array $query = []): array
+    {
+        $all = [];
         $page = 1;
         $perPage = 100;
 
-        do {
+        while (true) {
             /** @var array<int, array<string, mixed>> $response */
-            $response = $this->get("/users/{$username}/repos", [
+            $response = $this->get($url, array_merge($query, [
                 'per_page' => $perPage,
                 'page' => $page,
-                'sort' => 'updated',
-                'direction' => 'desc',
-            ]);
+            ]));
 
             if (empty($response)) {
                 break;
             }
 
-            $repos = array_merge($repos, $response);
+            $all = array_merge($all, $response);
+
+            // last page: less than maximum value
+            if (count($response) < $perPage) {
+                break;
+            }
+
             $page++;
-        } while (count($response) === $perPage);
+        }
 
-        return $repos;
-    }
-
-    /**
-     * @return array<int, array<string, mixed>>
-     */
-    public function getPullRequestCommits(string $owner, string $repo, int $prNumber): array
-    {
-        /** @var array<int, array<string, mixed>> $response */
-        $response = $this->get("/repos/{$owner}/{$repo}/pulls/{$prNumber}/commits");
-
-        return $response;
+        return $all;
     }
 }
