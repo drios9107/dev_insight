@@ -28,10 +28,10 @@ class GithubService
      */
     private function get(string $endpoint, array $params = []): array
     {
-        $url = $this->apiBase.$endpoint;
+        $url = $this->apiBase . $endpoint;
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.$this->token,
+            'Authorization' => 'Bearer ' . $this->token,
             'Accept' => 'application/vnd.github.v3+json',
         ])->get($url, $params);
 
@@ -42,7 +42,7 @@ class GithubService
                 'body' => $response->body(),
             ]);
 
-            throw new Exception('GitHub API error: '.$response->status());
+            throw new Exception('GitHub API error: ' . $response->status());
         }
 
         return $response->json();
@@ -183,48 +183,6 @@ class GithubService
         return $this->get("/repos/{$owner}/{$repo}/pulls/{$pullNumber}/reviews/{$reviewId}");
     }
 
-    /**
-     * Sincronizar un repositorio completo (commits, PRs, issues, reviews).
-     *
-     * @return array<string, bool>
-     *
-     * @throws Exception
-     */
-    public function syncRepository(GithubRepository $repository): array
-    {
-        [$owner, $repoName] = explode('/', $repository->full_name);
-
-        $results = [
-            'commits' => false,
-            'pull_requests' => false,
-            'issues' => false,
-            'reviews' => false,
-        ];
-
-        try {
-            app(CommitService::class)->fetchData($this, $owner, $repoName);
-            $results['commits'] = true;
-
-            app(PullRequestService::class)->fetchData($this, 'all', $owner, $repoName);
-            $results['pull_requests'] = true;
-
-            app(GithubIssueService::class)->fetchData($this, $owner, $repoName);
-            $results['issues'] = true;
-
-            app(PullRequestReviewService::class)->fetchData($this, $owner, $repoName);
-            $results['reviews'] = true;
-
-            $repository->update(['last_synced_at' => now()]);
-
-            Log::info("Repository synced: {$repository->full_name}", $results);
-
-            return $results;
-        } catch (Exception $e) {
-            Log::error("Sync failed for {$repository->full_name}: ".$e->getMessage());
-
-            throw $e;
-        }
-    }
 
     /**
      * Obtener todos los repositorios de una cuenta de GitHub.

@@ -6,7 +6,6 @@ use App\Enums\ActivityTypeEnum;
 use App\Models\User;
 use App\Services\ActivityLoggerService;
 use App\Services\CommitService;
-use App\Services\GithubService;
 use Illuminate\Database\Seeder;
 
 class CommitSeeder extends Seeder
@@ -16,9 +15,7 @@ class CommitSeeder extends Seeder
      */
     public function run(CommitService $service, string $ownerKey, string $repoName): void
     {
-        $gservice = new GithubService;
-
-        $service->fetchData($gservice, $ownerKey, $repoName);
+        $response = $service->fetchData($ownerKey, $repoName);
 
         $adminId = User::whereName('Admin')->value('id')
             ?? throw new \RuntimeException('Admin user not found');
@@ -26,7 +23,11 @@ class CommitSeeder extends Seeder
         app(ActivityLoggerService::class)->log(
             ActivityTypeEnum::Imported,
             'Commits imported from seeder',
-            changes: ['owner_key' => $ownerKey, 'repo_name' => $repoName],
+            changes: [
+                'owner_key' => $ownerKey,
+                'repo_name' => $repoName,
+                'count' => $response['count'] ?? null,
+            ],
             userId: $adminId,
         );
     }

@@ -7,7 +7,7 @@ use App\Http\Requests\GithubRepositoryRequest;
 use App\Http\Resources\GithubRepositoryResource;
 use App\Services\ActivityLoggerService;
 use App\Services\GithubRepositoryService;
-use App\Services\GithubService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -84,7 +84,7 @@ class GithubRepositoryController extends Controller
         return redirect()->back()->with('success', 'Github Repository deleted successfully!');
     }
 
-    public function syncAll(GithubService $githubService, Request $request): RedirectResponse
+    public function syncAll(Request $request): RedirectResponse
     {
         try {
             $username = $request->input('ownerKey');
@@ -93,7 +93,7 @@ class GithubRepositoryController extends Controller
                 throw new \Exception('No github username was provided');
             }
 
-            $results = $this->service->syncAllFromGithub($githubService, $username);
+            $results = $this->service->syncAllFromGithub($username);
 
             app(ActivityLoggerService::class)->log(
                 ActivityTypeEnum::Synced,
@@ -110,6 +110,58 @@ class GithubRepositoryController extends Controller
             throw ValidationException::withMessages([
                 'ownerKey' => $e->getMessage(),
             ]);
+        }
+    }
+
+    /**
+     * Endpoint to import and create a single repository
+     */
+    public function import(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'owner_key' => ['required', 'string', 'max:255'],
+            'repo_name' => ['required', 'string', 'max:255'],
+        ]);
+
+        try {
+            $repository = $this->service->import(
+                $validated['owner_key'],
+                $validated['repo_name'],
+            );
+
+            return response()->json([
+                'message' => 'Repository imported successfully',
+                'repository_id' => $repository->id,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Import failed: ' . $e->getMessage(),
+            ], 422);
+        }
+    }
+
+    /**
+     * Endpoint to update a single repository with github data
+     */
+    public function sync(int $repositoryId): JsonResponse
+    {
+        try {
+            $repository = GithubRepository::findOrFail($repositoryId);
+
+            $this->service->syncRepository($repository);
+
+            app(ActivityLoggerService::class)->log(
+                ActivityTypeEnum::Synced,
+                'Repository sync completed (issues, commits, users, pr, reviewers)',
+            );
+
+            return response()->json([
+                'message' => 'Repository synced successfully',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Sync failed: ' . $e->getMessage(),
+            ], 422);
         }
     }
 }

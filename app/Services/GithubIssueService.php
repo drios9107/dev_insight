@@ -9,32 +9,52 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class GithubIssueService
+class GithubIssueService extends BaseGithubService
 {
     private GithubUserService $githubUserService;
 
-    public function __construct(GithubUserService $githubUserService)
-    {
+    public function __construct(
+        GithubService $github,
+        GithubUserService $githubUserService,
+    ) {
+        parent::__construct($github);
         $this->githubUserService = $githubUserService;
     }
 
-    public function fetchData(GithubService $service, string $ownerKey, string $repoName): JsonResponse
+    /**
+     * Fetch issues from GitHub and upsert them into the database.
+     *
+     * @return array{success: bool, message: string, count?: int}
+     *
+     * @throws \Exception
+     */
+    public function fetchData(string $ownerKey, string $repoName): array
     {
-        $issues = $service->getIssues($ownerKey, $repoName);
+        $issues = $this->github->getIssues($ownerKey, $repoName);
 
         if (empty($issues)) {
-            return response()->json([
+            return [
                 'success' => false,
-                'message' => 'No se encontraron pull requests',
-            ]);
+                'message' => 'No issues found',
+            ];
         }
 
-        $repo = $service->getRepository($ownerKey, $repoName);
+        $repo = $this->github->getRepository($ownerKey, $repoName);
+
         $repoId = GithubRepository::whereGithubId($repo['id'])->value('id');
 
-        $data = array_map(function ($issue) use ($repoId) {
+        if ($repoId === null) {
+            return [
+                'success' => false,
+                'message' => 'Repository not found in database',
+            ];
+        }
+
+        /** @var array<int, array<string, mixed>> $data */
+        $data = array_map(function (array $issue) use ($repoId): array {
             $author = null;
-            if (isset($issue['user']) && isset($issue['user']['id'])) {
+
+            if (isset($issue['user']['id'])) {
                 $author = $this->githubUserService->findOrCreate($issue['user']);
             }
 
@@ -55,14 +75,14 @@ class GithubIssueService
         DB::table('github_issues')->upsert(
             $data,
             ['github_id'],
-            ['github_repository_id', 'number', 'title', 'body', 'state', 'author_id', 'closed_at', 'updated_at']
+            ['github_repository_id', 'number', 'title', 'body', 'state', 'author_id', 'closed_at', 'updated_at'],
         );
 
-        return response()->json([
+        return [
             'success' => true,
-            'message' => 'Issues sincronizados',
+            'message' => 'Issues synced',
             'count' => count($data),
-        ]);
+        ];
     }
 
     /**
@@ -76,7 +96,7 @@ class GithubIssueService
             ->with('author', 'githubRepository', 'task');
 
         if ($request?->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('body', 'ilike', $search)

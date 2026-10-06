@@ -3,47 +3,54 @@
 namespace App\Services;
 
 use App\Models\GithubRepository;
+use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class GithubRepositoryService
+class GithubRepositoryService extends BaseGithubService
 {
-    public function fetchData(GithubService $service, string $ownerKey, string $repoName): JsonResponse
+    /**
+     * Fetch repository data from the seeder.
+     *
+     * @return array{success: bool, message: string, repository?: string, count?: int}
+     *
+     * @throws \Exception
+     */
+    public function fetchData(string $ownerKey, string $repoName): array
     {
-        $repo = $service->getRepository($ownerKey, $repoName);
+        $repo = $this->github->getRepository($ownerKey, $repoName);
 
         if (empty($repo)) {
-            return response()->json([
+            return [
                 'success' => false,
-                'message' => 'No se encontró el repositorio',
-            ]);
+                'message' => 'Repository not found',
+            ];
         }
-
-        $data = [
-            'github_id' => $repo['id'],
-            'name' => $repo['name'],
-            'full_name' => $repo['full_name'],
-            'url' => $repo['html_url'],
-            'description' => $repo['description'] ?? null,
-            'default_branch' => $repo['default_branch'],
-            'is_private' => $repo['private'],
-            'last_synced_at' => now(),
-            'created_at' => now(),
-            'updated_at' => now(),
-        ];
 
         DB::table('github_repositories')->updateOrInsert(
             ['github_id' => $repo['id']],
-            $data
+            [
+                'github_id' => $repo['id'],
+                'name' => $repo['name'],
+                'full_name' => $repo['full_name'],
+                'url' => $repo['html_url'],
+                'description' => $repo['description'] ?? null,
+                'default_branch' => $repo['default_branch'],
+                'is_private' => $repo['private'],
+                'last_synced_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         );
 
-        return response()->json([
+        return [
             'success' => true,
-            'message' => 'Repositorio sincronizado',
+            'message' => 'Repository synced',
             'repository' => $repo['full_name'],
-        ]);
+            'count' => 1,
+        ];
     }
 
     /**
@@ -53,14 +60,14 @@ class GithubRepositoryService
      *
      * @throws \Exception
      */
-    public function syncAllFromGithub(GithubService $githubService, string $username): array
+    public function syncAllFromGithub(string $username): array
     {
-        $user = $githubService->getUser($username);
+        $user = $this->github->getUser($username);
         if ($user === null) {
             throw new \Exception("GitHub user '{$username}' not found");
         }
 
-        $repos = $githubService->getUserRepositories($username);
+        $repos = $this->github->getUserRepositories($username);
         if (empty($repos)) {
             throw new \Exception("GitHub user '{$username}' has no public repositories");
         }
@@ -99,6 +106,98 @@ class GithubRepositoryService
     }
 
     /**
+     * Obtener atributos del repo desde la API de GitHub.
+     *
+     * @return array<string, mixed>
+     *
+     * @throws Exception
+     */
+    protected function fetchRepositoryAttributes(string $owner, string $repoName): array
+    {
+        $response = $this->github->getRepository($owner, $repoName);
+
+        return [
+            'github_id' => $response['id'],
+            'name' => $response['name'],
+            'full_name' => $response['full_name'],
+            'url' => $response['html_url'],
+            'description' => $response['description'] ?? null,
+            'is_private' => $response['private'] ?? false,
+            'default_branch' => $response['default_branch'] ?? 'main',
+        ];
+    }
+
+    /**
+     * Import a gitHub repository.
+     *
+     * @param  string  $owner
+     * @param  string  $repoName
+     * @return GithubRepository
+     *
+     * @throws Exception
+     */
+    public function import(string $owner, string $repoName): GithubRepository
+    {
+        $repository = GithubRepository::firstOrCreate(
+            ['full_name' => "{$owner}/{$repoName}"],
+            $this->fetchRepositoryAttributes($owner, $repoName),
+        );
+
+        $this->syncRepository($repository);
+
+        app(ActivityLoggerService::class)->log(
+            ActivityTypeEnum::Imported,
+            'Repository imported from GitHub',
+            changes: ['owner_key' => $owner, 'repo_name' => $repoName],
+        );
+
+        return $repository;
+    }
+
+    /**
+     * Sincronizar un repositorio completo (commits, PRs, issues, reviews).
+     *
+     * @return array<string, bool>
+     *
+     * @throws Exception
+     */
+    public function syncRepository(GithubRepository $repository): array
+    {
+        [$owner, $repoName] = explode('/', $repository->full_name);
+
+        $results = [
+            'commits' => false,
+            'pull_requests' => false,
+            'issues' => false,
+            'reviews' => false,
+        ];
+
+        try {
+            app(CommitService::class)->fetchData($owner, $repoName);
+            $results['commits'] = true;
+
+            app(PullRequestService::class)->fetchData('all', $owner, $repoName);
+            $results['pull_requests'] = true;
+
+            app(GithubIssueService::class)->fetchData($owner, $repoName);
+            $results['issues'] = true;
+
+            app(PullRequestReviewService::class)->fetchData($owner, $repoName);
+            $results['reviews'] = true;
+
+            $repository->update(['last_synced_at' => now()]);
+
+            Log::info("Repository synced: {$repository->full_name}", $results);
+
+            return $results;
+        } catch (Exception $e) {
+            Log::error("Sync failed for {$repository->full_name}: " . $e->getMessage());
+
+            throw $e;
+        }
+    }
+
+    /**
      * Returns a paginated list
      *
      * @return LengthAwarePaginator<int, GithubRepository>
@@ -108,7 +207,7 @@ class GithubRepositoryService
         $query = GithubRepository::query();
 
         if ($request?->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('full_name', 'ilike', $search)
                     ->orWhere('name', 'ilike', $search)

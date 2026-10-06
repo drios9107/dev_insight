@@ -10,43 +10,67 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class PullRequestService
+class PullRequestService extends BaseGithubService
 {
     private GithubUserService $githubUserService;
 
-    public function __construct(GithubUserService $githubUserService)
-    {
+    public function __construct(
+        GithubService $github,
+        GithubUserService $githubUserService,
+    ) {
+        parent::__construct($github);
         $this->githubUserService = $githubUserService;
     }
 
-    public function fetchData(GithubService $service, string $state, string $ownerKey, string $repoName): JsonResponse
+    /**
+     * Fetch pull requests from GitHub and sync them into the database.
+     *
+     * @return array{success: bool, message: string, count?: int}
+     *
+     * @throws \Exception
+     */
+    public function fetchData(string $state, string $ownerKey, string $repoName): array
     {
-        $prs = $service->getPullRequests($ownerKey, $repoName, $state);
+        $prs = $this->github->getPullRequests($ownerKey, $repoName, $state);
 
         if (empty($prs)) {
-            return response()->json([
+            return [
                 'success' => false,
-                'message' => 'No se encontraron pull requests',
-            ]);
+                'message' => 'No pull requests found',
+            ];
         }
 
-        $repo = $service->getRepository($ownerKey, $repoName);
+        $repo = $this->github->getRepository($ownerKey, $repoName);
+
         $repoId = GithubRepository::whereGithubId($repo['id'])->value('id');
 
-        $data = array_map(function ($pr) use ($repoId) {
+        if ($repoId === null) {
+            return [
+                'success' => false,
+                'message' => 'Repository not found in database',
+            ];
+        }
 
+        /**
+         * @var array<int, array{
+         *     pull_request_data: array<string, mixed>,
+         *     assignee_ids: array<int, int>,
+         *     pr_number: int
+         * }> $data
+         */
+        $data = array_map(function (array $pr) use ($repoId): array {
             $author = null;
-            if (isset($pr['user']) && isset($pr['user']['id'])) {
+
+            if (isset($pr['user']['id'])) {
                 $author = $this->githubUserService->findOrCreate($pr['user']);
             }
 
             $assigneeIds = [];
-            if (isset($pr['assignees']) && is_array($pr['assignees'])) {
-                foreach ($pr['assignees'] as $assigneeData) {
-                    if (isset($assigneeData['id'])) {
-                        $assignee = $this->githubUserService->findOrCreate($assigneeData);
-                        $assigneeIds[] = $assignee->id;
-                    }
+
+            foreach ($pr['assignees'] ?? [] as $assigneeData) {
+                if (isset($assigneeData['id'])) {
+                    $assignee = $this->githubUserService->findOrCreate($assigneeData);
+                    $assigneeIds[] = $assignee->id;
                 }
             }
 
@@ -83,7 +107,7 @@ class PullRequestService
 
                 DB::table('pull_requests')->updateOrInsert(
                     ['github_id' => $prData['github_id']],
-                    $prData
+                    $prData,
                 );
 
                 $prId = DB::table('pull_requests')
@@ -106,31 +130,28 @@ class PullRequestService
                 }
 
                 if ($prId) {
-                    $this->syncPullRequestCommits($service, $ownerKey, $repoName, $prId, $item['pr_number']);
+                    $this->syncPullRequestCommits($ownerKey, $repoName, $prId, $item['pr_number']);
                 }
             }
 
             DB::commit();
 
-            return response()->json([
+            return [
                 'success' => true,
-                'message' => count($data).' pull requests sincronizados',
+                'message' => count($data) . ' pull requests synced',
                 'count' => count($data),
-            ]);
-        } catch (\Exception $e) {
+            ];
+        } catch (Exception $e) {
             DB::rollBack();
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al sincronizar: '.$e->getMessage(),
-            ], 500);
+            throw $e;
         }
     }
 
-    private function syncPullRequestCommits(GithubService $service, string $owner, string $repo, int $prId, int $prNumber): void
+    private function syncPullRequestCommits(string $owner, string $repo, int $prId, int $prNumber): void
     {
         try {
-            $commits = $service->getPullRequestCommits($owner, $repo, $prNumber);
+            $commits = $this->github->getPullRequestCommits($owner, $repo, $prNumber);
 
             foreach ($commits as $commit) {
                 DB::table('commits')
@@ -138,7 +159,7 @@ class PullRequestService
                     ->update(['pull_request_id' => $prId]);
             }
         } catch (\Exception $e) {
-            Log::warning("Failed to sync commits for PR #{$prNumber}: ".$e->getMessage());
+            Log::warning("Failed to sync commits for PR #{$prNumber}: " . $e->getMessage());
         }
     }
 
@@ -151,7 +172,7 @@ class PullRequestService
     {
         $query = PullRequest::query()->with(['author', 'assignees', 'githubRepository', 'task']);
         if ($request?->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('body', 'ilike', $search)

@@ -3,7 +3,6 @@
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CommitController;
-use App\Http\Controllers\GithubController;
 use App\Http\Controllers\GithubIssueController;
 use App\Http\Controllers\GithubRepositoryController;
 use App\Http\Controllers\GithubUserController;
@@ -36,11 +35,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('task.comments.store');
 
     // sync project
-    Route::post('/github/sync/{repositoryId}', [GithubController::class, 'sync'])
+    Route::post('/github/sync/{repositoryId}', [GithubRepositoryController::class, 'sync'])
         ->name('github.sync');
 
     Route::post('/github-repository/sync-all', [GithubRepositoryController::class, 'syncAll'])
         ->name('github-repository.sync-all');
+
+    //import repository
+    Route::post('/github/import', [GithubRepositoryController::class, 'import'])
+        ->name('github.import');
 
     // sync github user
     Route::post('/github-user/sync/{id}', [GithubUserController::class, 'sync'])
@@ -90,4 +93,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('metric', [MetricController::class, 'index'])->name('metric.index');
 });
 
-require __DIR__.'/settings.php';
+require __DIR__ . '/settings.php';

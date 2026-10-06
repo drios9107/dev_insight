@@ -6,14 +6,14 @@ use App\Models\GithubUser;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 
-class GithubUserService
+class GithubUserService extends BaseGithubService
 {
     /**
      * @throws \Exception
      */
-    public function syncFromGithub(GithubService $githubService, string $username): GithubUser
+    public function syncFromGithub(string $username): GithubUser
     {
-        $githubUser = $githubService->getUser($username);
+        $githubUser = $this->github->getUser($username);
 
         if ($githubUser === null) {
             throw new \Exception("GitHub user '{$username}' not found");
@@ -47,7 +47,7 @@ class GithubUserService
             ]);
 
         if ($request?->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('username', 'ilike', $search)
                     ->orWhere('name', 'ilike', $search)

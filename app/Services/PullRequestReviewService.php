@@ -10,37 +10,57 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class PullRequestReviewService
+class PullRequestReviewService extends BaseGithubService
 {
     private GithubUserService $githubUserService;
 
-    public function __construct(GithubUserService $githubUserService)
-    {
+    public function __construct(
+        GithubService $github,
+        GithubUserService $githubUserService,
+    ) {
+        parent::__construct($github);
         $this->githubUserService = $githubUserService;
     }
 
-    public function fetchData(GithubService $service, string $ownerKey, string $repoName): JsonResponse
+    /**
+     * Fetch pull request reviews from GitHub and upsert them into the database.
+     *
+     * @return array{success: bool, message: string, count?: int}
+     *
+     * @throws \Exception
+     */
+    public function fetchData(string $ownerKey, string $repoName): array
     {
-        $repo = $service->getRepository($ownerKey, $repoName);
+        $repo = $this->github->getRepository($ownerKey, $repoName);
+
         $repoId = GithubRepository::whereGithubId($repo['id'])->value('id');
+
+        if ($repoId === null) {
+            return [
+                'success' => false,
+                'message' => 'Repository not found in database',
+            ];
+        }
 
         $prs = PullRequest::whereGithubRepositoryId($repoId)->get();
 
         if ($prs->isEmpty()) {
-            return response()->json([
+            return [
                 'success' => false,
-                'message' => 'No se encontraron pull requests en el sistema',
-            ]);
+                'message' => 'No pull requests found in the system',
+            ];
         }
 
+        /** @var array<int, array<string, mixed>> $allReviews */
         $allReviews = [];
 
         foreach ($prs as $pr) {
-            $reviews = $service->getPullRequestReviews($ownerKey, $repoName, $pr->number);
+            $reviews = $this->github->getPullRequestReviews($ownerKey, $repoName, $pr->number);
 
             foreach ($reviews as $review) {
                 $reviewer = null;
-                if (isset($review['user']) && isset($review['user']['id'])) {
+
+                if (isset($review['user']['id'])) {
                     $reviewer = $this->githubUserService->findOrCreate($review['user']);
                 }
 
@@ -59,23 +79,24 @@ class PullRequestReviewService
         }
 
         if (empty($allReviews)) {
-            return response()->json([
+            return [
                 'success' => true,
-                'message' => 'No hay revisiones para sincronizar',
-            ]);
+                'message' => 'No reviews to sync',
+                'count' => 0,
+            ];
         }
 
         DB::table('pull_request_reviews')->upsert(
             $allReviews,
             ['github_id'],
-            ['state', 'body', 'submitted_at', 'commit_id', 'updated_at']
+            ['state', 'body', 'submitted_at', 'commit_id', 'updated_at'],
         );
 
-        return response()->json([
+        return [
             'success' => true,
-            'message' => count($allReviews).' revisiones sincronizadas',
+            'message' => count($allReviews) . ' reviews synced',
             'count' => count($allReviews),
-        ]);
+        ];
     }
 
     /**
@@ -88,7 +109,7 @@ class PullRequestReviewService
         $query = PullRequestReview::query()->with(['pullRequest', 'reviewer']);
 
         if ($request?->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('body', 'ilike', $search)
                     ->orWhereHas('reviewer', function ($r) use ($search) {

@@ -6,7 +6,6 @@ use App\Enums\ActivityTypeEnum;
 use App\Http\Resources\GithubUserResource;
 use App\Models\GithubUser;
 use App\Services\ActivityLoggerService;
-use App\Services\GithubService;
 use App\Services\GithubUserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -29,11 +28,11 @@ class GithubUserController extends Controller
         return GithubUserResource::collection($this->service->index());
     }
 
-    public function sync(GithubService $githubService, int $id): RedirectResponse
+    public function sync(int $id): RedirectResponse
     {
         try {
             $user = GithubUser::findOrFail($id);
-            $this->service->syncFromGithub($githubService, $user->username);
+            $this->service->syncFromGithub($user->username);
 
             app(ActivityLoggerService::class)->log(
                 ActivityTypeEnum::Synced,
@@ -50,7 +49,7 @@ class GithubUserController extends Controller
         }
     }
 
-    public function import(GithubService $githubService, Request $request): RedirectResponse
+    public function import(Request $request): RedirectResponse
     {
         try {
             $validated = $request->validate([
@@ -58,7 +57,7 @@ class GithubUserController extends Controller
             ]);
             $username = $validated['username'];
 
-            $this->service->syncFromGithub($githubService, $username);
+            $this->service->syncFromGithub($username);
 
             app(ActivityLoggerService::class)->log(
                 ActivityTypeEnum::Imported,

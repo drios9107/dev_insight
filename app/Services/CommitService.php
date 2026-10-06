@@ -9,39 +9,57 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class CommitService
+class CommitService extends BaseGithubService
 {
     private GithubUserService $githubUserService;
 
-    public function __construct(GithubUserService $githubUserService)
-    {
+    public function __construct(
+        GithubService $github,
+        GithubUserService $githubUserService,
+    ) {
+        parent::__construct($github);
         $this->githubUserService = $githubUserService;
     }
 
-    public function fetchData(GithubService $service, string $ownerKey, string $repoName): JsonResponse
+    /**
+     * Fetch commits from GitHub and upsert them into the database.
+     *
+     * @return array{success: bool, message: string, count?: int}
+     *
+     * @throws \Exception
+     */
+    public function fetchData(string $ownerKey, string $repoName): array
     {
-        $commits = $service->getCommits($ownerKey, $repoName);
+        $commits = $this->github->getCommits($ownerKey, $repoName);
 
         if (empty($commits)) {
-            return response()->json([
+            return [
                 'success' => false,
-                'message' => 'No se encontraron commits',
-            ]);
+                'message' => 'No commits found',
+            ];
         }
 
-        $repo = $service->getRepository($ownerKey, $repoName);
+        $repo = $this->github->getRepository($ownerKey, $repoName);
+
         $repoId = GithubRepository::whereGithubId($repo['id'])->value('id');
 
-        $data = array_map(function ($commit) use ($repoId) {
+        if ($repoId === null) {
+            return [
+                'success' => false,
+                'message' => 'Repository not found in database',
+            ];
+        }
+
+        /** @var array<int, array<string, mixed>> $data */
+        $data = array_map(function (array $commit) use ($repoId): array {
             $author = null;
-            if (isset($commit['author']) && isset($commit['author']['id'])) {
+
+            if (isset($commit['author']['id'])) {
                 $author = $this->githubUserService->findOrCreate($commit['author']);
             }
 
-            $sha = $commit['sha'];
-
             return [
-                'sha' => $sha,
+                'sha' => $commit['sha'],
                 'github_repository_id' => $repoId,
                 'author_id' => $author?->id,
                 'pull_request_id' => null,
@@ -56,14 +74,14 @@ class CommitService
         DB::table('commits')->upsert(
             $data,
             ['sha'],
-            ['github_repository_id', 'author_id', 'message', 'date', 'url', 'updated_at']
+            ['github_repository_id', 'author_id', 'message', 'date', 'url', 'updated_at'],
         );
 
-        return response()->json([
+        return [
             'success' => true,
-            'message' => 'Commits sincronizados',
+            'message' => 'Commits synced',
             'count' => count($data),
-        ]);
+        ];
     }
 
     /**
@@ -77,7 +95,7 @@ class CommitService
             ->with(['author', 'githubRepository', 'pullRequest']);
 
         if ($request?->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('message', 'ilike', $search)
                     ->orWhere('sha', 'ilike', $search)
