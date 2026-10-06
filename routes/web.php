@@ -35,15 +35,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('task.comments.store');
 
     // sync project
-    Route::post('/github/sync/{repositoryId}', [GithubRepositoryController::class, 'sync'])
-        ->name('github.sync');
+    Route::post('/github-repository/sync/{repositoryId}', [GithubRepositoryController::class, 'sync'])
+        ->name('github-repository.sync');
 
     Route::post('/github-repository/sync-all', [GithubRepositoryController::class, 'syncAll'])
         ->name('github-repository.sync-all');
 
     //import repository
-    Route::post('/github/import', [GithubRepositoryController::class, 'import'])
-        ->name('github.import');
+    Route::post('/github-repository/import', [GithubRepositoryController::class, 'import'])
+        ->name('github-repository.import');
 
     // sync github user
     Route::post('/github-user/sync/{id}', [GithubUserController::class, 'sync'])

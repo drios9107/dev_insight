@@ -114,54 +114,59 @@ class GithubRepositoryController extends Controller
     }
 
     /**
-     * Endpoint to import and create a single repository
+     * Import a GitHub repository and sync its content.
      */
-    public function import(Request $request): JsonResponse
+    public function import(Request $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'owner_key' => ['required', 'string', 'max:255'],
-            'repo_name' => ['required', 'string', 'max:255'],
-        ]);
-
         try {
-            $repository = $this->service->import(
-                $validated['owner_key'],
-                $validated['repo_name'],
+            $ownerKey = $request->input('owner_key');
+            $repoName = $request->input('repo_name');
+
+            if (! $ownerKey || ! $repoName) {
+                throw new \Exception('Owner and repository name are required');
+            }
+
+            $repository = $this->service->import($ownerKey, $repoName);
+
+            app(ActivityLoggerService::class)->log(
+                ActivityTypeEnum::Imported,
+                "Repository «{$repository->full_name}» was imported",
+                changes: [
+                    'owner_key' => $ownerKey,
+                    'repo_name' => $repoName,
+                    'repository_id' => $repository->id,
+                ],
             );
 
-            return response()->json([
-                'message' => 'Repository imported successfully',
-                'repository_id' => $repository->id,
-            ]);
+            return back()->with('success', 'Repository imported successfully');
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Import failed: ' . $e->getMessage(),
-            ], 422);
+            throw ValidationException::withMessages([
+                'owner_key' => $e->getMessage(),
+            ]);
         }
     }
 
     /**
-     * Endpoint to update a single repository with github data
+     * Sync a single repository (commits, PRs, issues, reviews).
      */
-    public function sync(int $repositoryId): JsonResponse
+    public function sync(int $repositoryId): RedirectResponse
     {
         try {
             $repository = GithubRepository::findOrFail($repositoryId);
 
-            $this->service->syncRepository($repository);
+            $results = $this->service->syncRepository($repository);
 
             app(ActivityLoggerService::class)->log(
                 ActivityTypeEnum::Synced,
                 'Repository sync completed (issues, commits, users, pr, reviewers)',
+                changes: $results,
             );
 
-            return response()->json([
-                'message' => 'Repository synced successfully',
-            ]);
+            return back()->with('success', 'Repository synced successfully');
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Sync failed: ' . $e->getMessage(),
-            ], 422);
+            throw ValidationException::withMessages([
+                'sync' => $e->getMessage(),
+            ]);
         }
     }
 }

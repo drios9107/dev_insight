@@ -2,12 +2,14 @@
 
 namespace App\Services;
 
+use App\Enums\ActivityTypeEnum;
 use App\Models\GithubRepository;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class GithubRepositoryService extends BaseGithubService
 {

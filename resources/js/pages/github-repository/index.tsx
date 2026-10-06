@@ -1,5 +1,5 @@
 import { Head, router } from '@inertiajs/react';
-import { ExternalLink, RefreshCw } from 'lucide-react';
+import { ExternalLink, Plus, RefreshCw } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import BodyWrapper from '@/components/custom/body-wrapper';
@@ -12,10 +12,12 @@ import type { IColumn } from '@/components/custom/table/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import githubRepository from '@/routes/github-repository';
+import ImportGithubRepositoryModal from '@/components/custom/import-github-repository-modal';
 
 const GithubRepositories = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<number | null>(null);
     const [showSyncModal, setShowSyncModal] = useState(false);
+    const [showImportModal, setShowImportModal] = useState(false);
     const [isSyncing, setIsSyncing] = useState(false);
     const [username, setUsername] = useState(props?.github_username ?? '');
 
@@ -132,24 +134,34 @@ const GithubRepositories = (props: any) => {
                 onFinish: () => setIsSyncing(false),
             },
         );
-    }, [username, setShowSyncModal, setIsSyncing]);
+    }, [username]);
 
     return (
         <>
             <Head title={props.title} />
             <h1 className="sr-only">{props.title}</h1>
             <Header title={props.title}>
-                <Button
-                    onClick={() => setShowSyncModal(true)}
-                    disabled={isSyncing}
-                    variant="outline"
-                    className="gap-2"
-                >
-                    <RefreshCw
-                        className={`h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`}
-                    />
-                    {isSyncing ? 'Syncing...' : 'Sync All Repos'}
-                </Button>
+                <div className="flex gap-2">
+                    <Button
+                        onClick={() => setShowImportModal(true)}
+                        variant="outline"
+                        className="gap-2"
+                    >
+                        <Plus className="h-4 w-4" />
+                        Import Repository
+                    </Button>
+                    <Button
+                        onClick={() => setShowSyncModal(true)}
+                        disabled={isSyncing}
+                        variant="outline"
+                        className="gap-2"
+                    >
+                        <RefreshCw
+                            className={`h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`}
+                        />
+                        {isSyncing ? 'Syncing...' : 'Sync All Repos'}
+                    </Button>
+                </div>
             </Header>
 
             <BodyWrapper>
@@ -199,6 +211,13 @@ const GithubRepositories = (props: any) => {
                         </div>
                     </div>
                 </SimpleModal>
+            )}
+
+            {showImportModal && (
+                <ImportGithubRepositoryModal
+                    onClose={() => setShowImportModal(false)}
+                    onSuccess={() => router.reload()}
+                />
             )}
         </>
     );
