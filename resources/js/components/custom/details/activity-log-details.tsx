@@ -31,8 +31,6 @@ export function ActivityLogDetails({
             .finally(() => setIsLoading(false));
     }, [itemId, getOne]);
 
-    console.log('***itemtoview', itemToView);
-
     return (
         <ShadDrawer
             title="Activity Details"

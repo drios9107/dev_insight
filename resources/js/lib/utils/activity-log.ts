@@ -25,36 +25,58 @@ export interface ActivityDiffRow {
     field: string;
     oldValue: unknown;
     newValue: unknown;
-    kind: 'created' | 'updated' | 'deleted';
+    kind: 'created' | 'updated' | 'deleted' | 'info';
 }
 
 const HIDDEN_FIELDS = ['id', 'created_at', 'updated_at', 'deleted_at'];
+
+const DIFF_TYPES: TActivityLogType[] = ['created', 'updated', 'deleted'];
 
 export function buildActivityDiff(log: IActivityLogShow): ActivityDiffRow[] {
     const changes = log.changes;
 
     if (!changes) return [];
 
-    // created → attributes
-    // updated → before / after
-    // deleted → attributes (o before según cómo loguees)
-    const oldVals = changes.before ?? changes.old ?? {};
-    const newVals = changes.after ?? changes.new ?? changes.attributes ?? {};
+    // created / updated / deleted → before/after o attributes
+    if (DIFF_TYPES.includes(log.type)) {
+        const oldVals =
+            (changes.before as Record<string, unknown> | undefined) ??
+            (changes.old as Record<string, unknown> | undefined) ??
+            {};
+        const newVals =
+            (changes.after as Record<string, unknown> | undefined) ??
+            (changes.new as Record<string, unknown> | undefined) ??
+            (changes.attributes as Record<string, unknown> | undefined) ??
+            {};
 
-    const fields = new Set([...Object.keys(oldVals), ...Object.keys(newVals)]);
+        const fields = new Set([
+            ...Object.keys(oldVals),
+            ...Object.keys(newVals),
+        ]);
 
-    return Array.from(fields)
-        .filter((field) => !HIDDEN_FIELDS.includes(field))
-        .map((field) => {
-            const oldValue = oldVals[field];
-            const newValue = newVals[field];
+        return Array.from(fields)
+            .filter((field) => !HIDDEN_FIELDS.includes(field))
+            .map((field) => {
+                const oldValue = oldVals[field];
+                const newValue = newVals[field];
 
-            let kind: ActivityDiffRow['kind'] = 'updated';
-            if (oldValue === undefined) kind = 'created';
-            else if (newValue === undefined) kind = 'deleted';
+                let kind: ActivityDiffRow['kind'] = 'updated';
+                if (oldValue === undefined) kind = 'created';
+                else if (newValue === undefined) kind = 'deleted';
 
-            return { field, oldValue, newValue, kind };
-        });
+                return { field, oldValue, newValue, kind };
+            });
+    }
+
+    // imported / synced / fetched → plano key/value
+    return Object.entries(changes)
+        .filter(([field]) => !HIDDEN_FIELDS.includes(field))
+        .map(([field, value]) => ({
+            field,
+            oldValue: null,
+            newValue: value,
+            kind: 'info' as const,
+        }));
 }
 
 export function formatActivityValue(value: unknown): string {
