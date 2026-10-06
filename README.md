@@ -8,13 +8,14 @@ DevInsights es una aplicación web que centraliza y visualiza las métricas de t
 
 ## ✨ Características
 
-- **📊 Dashboard de métricas** — Visualiza commits, pull requests, issues y reviews en tiempo real
+- **📊 Dashboard de métricas** — Visualiza commits, pull requests, issues y reviews desde tres perspectivas: por repositorio, por proyecto y por desarrollador
 - **👥 Gestión de equipos** — Organiza desarrolladores, proyectos y sprints
-- **🔗 Integración con GitHub** — Sincroniza repositorios, commits, PRs e issues automáticamente
+- **🔗 Integración con GitHub** — Sincroniza repositorios, commits, PRs, issues y reviews; importa repos individuales o todos los de un usuario
 - **📈 Análisis de productividad** — Rankings, velocidad del equipo y tendencias
 - **⚠️ Alertas inteligentes** — Detecta PRs estancados, desarrolladores inactivos y tareas vencidas
 - **📅 Actividad por desarrollador** — Días sin commits, estado de actividad y más
 - **🎯 Code quality** — Tasa de aprobación, tiempo de revisión y merge rate
+- **📝 Activity Log** — Registro detallado de acciones (creación, actualización, eliminación, importación y sincronización) con vista de diff campo por campo
 
 ---
 
@@ -101,42 +102,72 @@ GITHUB_USERNAME=tu-usuario
 
 ### Sincronizar repositorios
 
+#### Sincronizar todos los repos de un usuario
+
 1. Ve a **GitHub Repositories** en el sidebar
 2. Haz clic en **Sync All Repos**
 3. Ingresa el username de GitHub
 4. Espera a que se complete la sincronización
 
+#### Importar un repositorio específico
+
+1. Ve a **GitHub Repositories** en el sidebar
+2. Haz clic en **Import Repository**
+3. Ingresa el **owner** y el **nombre del repositorio**
+4. El sistema importará el repositorio y sincronizará su contenido (commits, PRs, issues, reviews)
+
+#### Sincronizar un repositorio existente
+
+1. En la tabla de repositorios, usa la acción **Sync** de la fila
+2. El sistema re-sincronizará commits, PRs, issues y reviews
+
 ### Ver métricas
 
 1. Ve a **Metrics** en el sidebar
-2. Selecciona un repositorio en el filtro
-3. Explora el dashboard con:
+2. Elige una de las tres vistas disponibles:
+    - **📊 By Repository** — Métricas agregadas por repositorio
+    - **📁 By Project** — Métricas agregadas por proyecto
+    - **👥 By Developer** — Métricas agregadas por desarrollador
+3. Usa el selector del header para filtrar por la entidad correspondiente al tab activo
+4. Explora el dashboard con:
     - Cards de resumen
     - Gráficos de actividad
     - Rankings de desarrolladores
     - Alertas y acciones
 
-### Gestionar tareas
+### Gestionar proyectos, sprints y tareas
 
-1. Ve a **Tasks**
-2. Haz clic en 👁️ para ver detalles
-3. Agrega comentarios internos
+**Proyectos**
+
+1. Ve a **Projects** en el sidebar
+2. Crea uno con **New Project**, y haz clic en 👁️ para ver detalles, tareas y progreso
+
+**Sprints**
+
+1. Ve a **Sprints** en el sidebar
+2. Crea uno con **New Sprint**, y haz clic en 👁️ para ver detalles, tareas y velocidad
+
+**Tareas**
+
+1. Ve a **Tasks** en el sidebar
+2. Filtra por estado, prioridad, proyecto, sprint o assignee
+3. Haz clic en 👁️ para ver detalles, comentarios y metadata
 4. Edita o elimina según necesites
 
 ---
 
 ## 📊 Métricas Disponibles
 
-| Categoría         | Métricas                                               |
-| ----------------- | ------------------------------------------------------ |
-| **Commits**       | Total, por día, por desarrollador, promedio diario     |
-| **Pull Requests** | Abiertos, mergeados, tiempo de merge, tasa de merge    |
-| **Issues**        | Abiertos, cerrados, tiempo de resolución               |
-| **Reviews**       | Total, tasa de aprobación, tiempo de revisión          |
-| **Equipo**        | Desarrolladores activos, inactivos, ranking            |
-| **Sprints**       | Velocidad, tasa de completación                        |
-| **Tareas**        | En progreso, en review, vencidas, tasa de completación |
-| **Proyectos**     | Activos, totales, duración promedio                    |
+| Categoría         | Métricas                                                 |
+| ----------------- | -------------------------------------------------------- |
+| **Commits**       | Total, por día, por desarrollador, promedio diario       |
+| **Pull Requests** | Abiertos, mergeados, tiempo de merge, tasa de merge      |
+| **Issues**        | Abiertos, cerrados, tiempo de resolución                 |
+| **Reviews**       | Total, tasa de aprobación, tiempo de revisión            |
+| **Equipo**        | Desarrolladores activos, inactivos, ranking              |
+| **Sprints**       | Velocidad, tasa de completamiento                        |
+| **Tareas**        | En progreso, en review, vencidas, tasa de completamiento |
+| **Proyectos**     | Activos, totales, duración promedio                      |
 
 ---
 
