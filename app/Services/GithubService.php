@@ -27,10 +27,10 @@ class GithubService
      */
     private function get(string $endpoint, array $params = []): array
     {
-        $url = $this->apiBase . $endpoint;
+        $url = $this->apiBase.$endpoint;
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->token,
+            'Authorization' => 'Bearer '.$this->token,
             'Accept' => 'application/vnd.github.v3+json',
         ])->get($url, $params);
 
@@ -41,7 +41,7 @@ class GithubService
                 'body' => $response->body(),
             ]);
 
-            throw new Exception('GitHub API error: ' . $response->status());
+            throw new Exception('GitHub API error: '.$response->status());
         }
 
         /** @var array<int|string, mixed> $data */
@@ -70,7 +70,7 @@ class GithubService
     /**
      * @return array<int, array<string, mixed>>
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getCommits(string $owner, string $repo): array
     {
@@ -80,7 +80,7 @@ class GithubService
     /**
      * @return array<int, array<string, mixed>>
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getPullRequests(string $owner, string $repo, string $state = 'all'): array
     {
@@ -92,7 +92,7 @@ class GithubService
     /**
      * @return array<int, array<string, mixed>>
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getIssues(string $owner, string $repo, string $state = 'all'): array
     {
@@ -102,7 +102,7 @@ class GithubService
 
         return array_values(array_filter(
             $all,
-            fn(array $item): bool => ! isset($item['pull_request']),
+            fn (array $item): bool => ! isset($item['pull_request']),
         ));
     }
 
@@ -111,7 +111,7 @@ class GithubService
      *
      * @return array<string, mixed>
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getRepository(string $owner, string $repo): array
     {
@@ -123,7 +123,7 @@ class GithubService
      *
      * @return array<string, mixed>
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getCommit(string $owner, string $repo, string $sha): array
     {
@@ -173,7 +173,7 @@ class GithubService
      *
      * @return array<int, array<string, mixed>>
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getPullRequestReviews(string $owner, string $repo, int $pullNumber): array
     {
@@ -185,7 +185,7 @@ class GithubService
      *
      * @return array<string, mixed>
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getPullRequestReview(string $owner, string $repo, int $pullNumber, int $reviewId): array
     {
@@ -197,7 +197,7 @@ class GithubService
      *
      * @return array<int, array<string, mixed>>
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getUserRepositories(string $username): array
     {
@@ -212,7 +212,7 @@ class GithubService
      *
      * @return array<int, array<string, mixed>>
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getPullRequestCommits(string $owner, string $repo, int $prNumber): array
     {
@@ -225,7 +225,7 @@ class GithubService
      * @param  array<string, mixed>  $query
      * @return array<int, array<string, mixed>>
      *
-     * @throws \Exception
+     * @throws Exception
      */
     private function getAllPages(string $url, array $query = []): array
     {
