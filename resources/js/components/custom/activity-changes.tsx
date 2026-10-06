@@ -1,8 +1,8 @@
-import type { IActivityLogShow } from '@/types/models/activity-log';
 import {
     buildActivityDiff,
     formatActivityValue,
 } from '@/lib/utils/activity-log';
+import type { IActivityLogShow } from '@/types/models/activity-log';
 
 interface ActivityChangesProps {
     item: IActivityLogShow;

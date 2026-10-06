@@ -12,7 +12,7 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $user_id
  * @property-read string $type
  * @property-read string $description
- * @property-read array<string, mixed>|null $data
+ * @property-read array<string, mixed>|null $changes
  * @property-read string|null $ip_address
  * @property-read string|null $user_agent
  * @property-read Carbon|null $created_at
@@ -32,7 +32,7 @@ class ActivityLogResource extends JsonResource
             'id' => $this->id,
             'type' => $this->type,
             'description' => $this->description,
-            'user' => $this->whenLoaded('user', fn() => [
+            'user' => $this->whenLoaded('user', fn () => [
                 'id' => $this->user?->id,
                 'name' => $this->user?->name,
             ]),

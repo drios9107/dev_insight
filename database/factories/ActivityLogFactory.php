@@ -3,9 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\ActivityLog;
-use App\Models\Project;
-use App\Models\Task;
-use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

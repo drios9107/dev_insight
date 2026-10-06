@@ -61,6 +61,7 @@ export function buildActivityDiff(log: IActivityLogShow): ActivityDiffRow[] {
                 const newValue = newVals[field];
 
                 let kind: ActivityDiffRow['kind'] = 'updated';
+
                 if (oldValue === undefined) kind = 'created';
                 else if (newValue === undefined) kind = 'deleted';
 
@@ -81,7 +82,10 @@ export function buildActivityDiff(log: IActivityLogShow): ActivityDiffRow[] {
 
 export function formatActivityValue(value: unknown): string {
     if (value === null || value === undefined) return '—';
+
     if (typeof value === 'boolean') return value ? 'true' : 'false';
+
     if (typeof value === 'object') return JSON.stringify(value);
+
     return String(value);
 }

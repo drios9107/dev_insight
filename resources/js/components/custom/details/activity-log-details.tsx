@@ -6,10 +6,10 @@ import { useFetch } from '@/hooks/use-fetch';
 import { getActivityLogTypeColor } from '@/lib/utils/activity-log';
 import activityLog from '@/routes/activity-log';
 import type { IActivityLogShow } from '@/types/models/activity-log';
+import ActivityChanges from '../activity-changes';
 import DetailItem from '../detail-item';
 import { Loader } from '../loader';
 import ShadDrawer from '../shad-drawer';
-import ActivityChanges from '../activity-changes';
 
 interface ActivityLogDetailsProps {
     itemId: number;

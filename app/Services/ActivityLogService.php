@@ -18,7 +18,7 @@ class ActivityLogService
         $query = ActivityLog::query()->with(['user']);
 
         if ($request?->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('type', 'ilike', $search)
                     ->orWhere('description', 'ilike', $search)
@@ -51,9 +51,6 @@ class ActivityLogService
 
     /**
      * Display the specified item.
-     *
-     * @param  int  $id
-     * @return ActivityLog
      */
     public function show(int $id): ActivityLog
     {

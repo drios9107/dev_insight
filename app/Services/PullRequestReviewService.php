@@ -6,7 +6,6 @@ use App\Models\GithubRepository;
 use App\Models\PullRequest;
 use App\Models\PullRequestReview;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -94,7 +93,7 @@ class PullRequestReviewService extends BaseGithubService
 
         return [
             'success' => true,
-            'message' => count($allReviews) . ' reviews synced',
+            'message' => count($allReviews).' reviews synced',
             'count' => count($allReviews),
         ];
     }
@@ -109,7 +108,7 @@ class PullRequestReviewService extends BaseGithubService
         $query = PullRequestReview::query()->with(['pullRequest', 'reviewer']);
 
         if ($request?->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('body', 'ilike', $search)
                     ->orWhereHas('reviewer', function ($r) use ($search) {

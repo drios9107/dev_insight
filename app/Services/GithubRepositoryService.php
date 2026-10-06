@@ -6,7 +6,6 @@ use App\Enums\ActivityTypeEnum;
 use App\Models\GithubRepository;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -18,7 +17,7 @@ class GithubRepositoryService extends BaseGithubService
      *
      * @return array{success: bool, message: string, repository?: string, count?: int}
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function fetchData(string $ownerKey, string $repoName): array
     {
@@ -60,18 +59,18 @@ class GithubRepositoryService extends BaseGithubService
      *
      * @return array<string, int>
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function syncAllFromGithub(string $username): array
     {
         $user = $this->github->getUser($username);
         if ($user === null) {
-            throw new \Exception("GitHub user '{$username}' not found");
+            throw new Exception("GitHub user '{$username}' not found");
         }
 
         $repos = $this->github->getUserRepositories($username);
         if (empty($repos)) {
-            throw new \Exception("GitHub user '{$username}' has no public repositories");
+            throw new Exception("GitHub user '{$username}' has no public repositories");
         }
 
         $results = [
@@ -132,9 +131,6 @@ class GithubRepositoryService extends BaseGithubService
     /**
      * Import a gitHub repository.
      *
-     * @param  string  $owner
-     * @param  string  $repoName
-     * @return GithubRepository
      *
      * @throws Exception
      */
@@ -193,7 +189,7 @@ class GithubRepositoryService extends BaseGithubService
 
             return $results;
         } catch (Exception $e) {
-            Log::error("Sync failed for {$repository->full_name}: " . $e->getMessage());
+            Log::error("Sync failed for {$repository->full_name}: ".$e->getMessage());
 
             throw $e;
         }
@@ -209,7 +205,7 @@ class GithubRepositoryService extends BaseGithubService
         $query = GithubRepository::query();
 
         if ($request?->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('full_name', 'ilike', $search)
                     ->orWhere('name', 'ilike', $search)

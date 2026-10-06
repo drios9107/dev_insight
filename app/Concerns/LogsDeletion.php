@@ -25,6 +25,6 @@ trait LogsDeletion
 
     public function activityLabel(): string
     {
-        return class_basename($this) . ' #' . $this->getKey();
+        return class_basename($this).' #'.$this->getKey();
     }
 }

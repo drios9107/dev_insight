@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\GithubIssue;
 use App\Models\GithubRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -96,7 +95,7 @@ class GithubIssueService extends BaseGithubService
             ->with('author', 'githubRepository', 'task');
 
         if ($request?->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('body', 'ilike', $search)

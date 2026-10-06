@@ -4,8 +4,8 @@ namespace App\Services;
 
 use App\Models\GithubRepository;
 use App\Models\PullRequest;
+use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -27,7 +27,7 @@ class PullRequestService extends BaseGithubService
      *
      * @return array{success: bool, message: string, count?: int}
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function fetchData(string $state, string $ownerKey, string $repoName): array
     {
@@ -138,7 +138,7 @@ class PullRequestService extends BaseGithubService
 
             return [
                 'success' => true,
-                'message' => count($data) . ' pull requests synced',
+                'message' => count($data).' pull requests synced',
                 'count' => count($data),
             ];
         } catch (Exception $e) {
@@ -158,8 +158,8 @@ class PullRequestService extends BaseGithubService
                     ->where('sha', $commit['sha'])
                     ->update(['pull_request_id' => $prId]);
             }
-        } catch (\Exception $e) {
-            Log::warning("Failed to sync commits for PR #{$prNumber}: " . $e->getMessage());
+        } catch (Exception $e) {
+            Log::warning("Failed to sync commits for PR #{$prNumber}: ".$e->getMessage());
         }
     }
 
@@ -172,7 +172,7 @@ class PullRequestService extends BaseGithubService
     {
         $query = PullRequest::query()->with(['author', 'assignees', 'githubRepository', 'task']);
         if ($request?->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('body', 'ilike', $search)

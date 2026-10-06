@@ -14,7 +14,7 @@ use Illuminate\Support\Carbon;
  * @property int|null $user_id
  * @property string $type
  * @property string $description
- * @property array<string, mixed>|null $data
+ * @property array<string, mixed>|null $changes
  * @property string|null $ip_address
  * @property string|null $user_agent
  * @property Carbon|null $created_at

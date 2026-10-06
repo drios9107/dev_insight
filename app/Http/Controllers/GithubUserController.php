@@ -44,7 +44,7 @@ class GithubUserController extends Controller
             throw $e;
         } catch (\Exception $e) {
             throw ValidationException::withMessages([
-                'sync' => 'Sync failed: ' . $e->getMessage(),
+                'sync' => 'Sync failed: '.$e->getMessage(),
             ]);
         }
     }
@@ -61,7 +61,7 @@ class GithubUserController extends Controller
 
             app(ActivityLoggerService::class)->log(
                 ActivityTypeEnum::Imported,
-                'GitHub user imported: ' . $username,
+                'GitHub user imported: '.$username,
                 changes: ['username' => $username],
             );
 
@@ -70,7 +70,7 @@ class GithubUserController extends Controller
             throw $e;
         } catch (\Exception $e) {
             throw ValidationException::withMessages([
-                'username' => 'Import failed: ' . $e->getMessage(),
+                'username' => 'Import failed: '.$e->getMessage(),
             ]);
         }
     }

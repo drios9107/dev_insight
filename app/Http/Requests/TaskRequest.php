@@ -51,7 +51,7 @@ class TaskRequest extends FormRequest
         ];
 
         if ($taskId) {
-            $rules['title'] = 'required|string|unique:tasks,title,' . $taskId;
+            $rules['title'] = 'required|string|unique:tasks,title,'.$taskId;
         }
 
         return $rules;

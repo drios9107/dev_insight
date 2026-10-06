@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\Commit;
 use App\Models\GithubRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -95,7 +94,7 @@ class CommitService extends BaseGithubService
             ->with(['author', 'githubRepository', 'pullRequest']);
 
         if ($request?->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('message', 'ilike', $search)
                     ->orWhere('sha', 'ilike', $search)
