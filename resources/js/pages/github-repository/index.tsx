@@ -5,21 +5,18 @@ import { toast } from 'sonner';
 import BodyWrapper from '@/components/custom/body-wrapper';
 import { DeleteModal } from '@/components/custom/delete-modal';
 import Header from '@/components/custom/header';
-import ShadInput from '@/components/custom/inputs/shad-input';
-import { SimpleModal } from '@/components/custom/simple-modal';
+import ImportGithubRepositoryModal from '@/components/custom/modals/import-github-repository-modal';
+import SyncAllRepositoriesModal from '@/components/custom/modals/sync-all-repositories-modal';
 import { DataTable } from '@/components/custom/table/data-table';
 import type { IColumn } from '@/components/custom/table/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import githubRepository from '@/routes/github-repository';
-import ImportGithubRepositoryModal from '@/components/custom/import-github-repository-modal';
 
 const GithubRepositories = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<number | null>(null);
     const [showSyncModal, setShowSyncModal] = useState(false);
     const [showImportModal, setShowImportModal] = useState(false);
-    const [isSyncing, setIsSyncing] = useState(false);
-    const [username, setUsername] = useState(props?.github_username ?? '');
 
     const columns: IColumn[] = [
         {
@@ -106,36 +103,6 @@ const GithubRepositories = (props: any) => {
 
     const onClose = useCallback(() => setItemToDelete(null), [setItemToDelete]);
 
-    const handleSyncAll = useCallback(() => {
-        if (!username.trim()) {
-            toast.error('Please enter a GitHub username');
-
-            return;
-        }
-
-        setIsSyncing(true);
-
-        router.post(
-            githubRepository.syncAll().url,
-            { ownerKey: username },
-            {
-                onSuccess: () => {
-                    toast.success('Repositories synced successfully');
-                    setShowSyncModal(false);
-                    router.reload();
-                },
-                onError: (errors) => {
-                    if (errors.ownerKey) {
-                        toast.error(errors.ownerKey);
-                    } else {
-                        toast.error('Sync failed');
-                    }
-                },
-                onFinish: () => setIsSyncing(false),
-            },
-        );
-    }, [username]);
-
     return (
         <>
             <Head title={props.title} />
@@ -152,14 +119,11 @@ const GithubRepositories = (props: any) => {
                     </Button>
                     <Button
                         onClick={() => setShowSyncModal(true)}
-                        disabled={isSyncing}
                         variant="outline"
                         className="gap-2"
                     >
-                        <RefreshCw
-                            className={`h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`}
-                        />
-                        {isSyncing ? 'Syncing...' : 'Sync All Repos'}
+                        <RefreshCw className="h-4 w-4" />
+                        Sync All Repos
                     </Button>
                 </div>
             </Header>
@@ -179,38 +143,11 @@ const GithubRepositories = (props: any) => {
             </BodyWrapper>
 
             {showSyncModal && (
-                <SimpleModal
-                    title="Sync GitHub Repositories"
-                    description="Enter a GitHub username to sync all their repositories"
+                <SyncAllRepositoriesModal
+                    defaultUsername={props?.github_username ?? ''}
                     onClose={() => setShowSyncModal(false)}
-                    onClick={handleSyncAll}
-                    isLoading={isSyncing}
-                    confirmText="Sync"
-                    height={null}
-                >
-                    <div className="space-y-4 py-4">
-                        <div className="space-y-2">
-                            <ShadInput
-                                required
-                                label="Github username"
-                                name="github-username"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                                disabled={isSyncing}
-                                placeholder="Username"
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                        handleSyncAll();
-                                    }
-                                }}
-                            />
-                            <p className="text-xs text-gray-500">
-                                This will fetch and sync all public and private
-                                repositories of the user
-                            </p>
-                        </div>
-                    </div>
-                </SimpleModal>
+                    onSuccess={() => router.reload()}
+                />
             )}
 
             {showImportModal && (

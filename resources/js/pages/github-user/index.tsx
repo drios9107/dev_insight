@@ -7,7 +7,7 @@ import CustomAvatar from '@/components/custom/custom-avatar';
 import { DeleteModal } from '@/components/custom/delete-modal';
 import { GithubUserDetails } from '@/components/custom/details/github-user-details';
 import Header from '@/components/custom/header';
-import ImportGithubUserModal from '@/components/custom/import-github-user-modal';
+import ImportGithubUserModal from '@/components/custom/modals/import-github-user-modal';
 import { DataTable } from '@/components/custom/table/data-table';
 import type { IColumn } from '@/components/custom/table/data-table';
 import type { ICheck } from '@/components/custom/table/data-table-filters';
