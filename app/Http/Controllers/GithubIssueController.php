@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BulkDestroyRequest;
 use App\Http\Requests\GithubIssueRequest;
 use App\Http\Resources\GithubIssueResource;
 use App\Models\GithubRepository;
@@ -82,5 +83,13 @@ class GithubIssueController extends Controller
         $this->service->destroy($id);
 
         return redirect()->back()->with('success', 'Github Issue deleted successfully!');
+    }
+
+    public function bulkDestroy(BulkDestroyRequest $request): RedirectResponse
+    {
+        $this->service->bulkDestroy($request->validated()['ids']);
+
+        return redirect()->back()
+            ->with('success', 'Deleted successfully!');
     }
 }

@@ -145,6 +145,25 @@ const Notifications = (props: any) => {
         return mapping[item] as 'info' | 'warning' | 'destructive' | 'success';
     }, []);
 
+    const onBulkDelete = useCallback((ids: (number | string)[]) => {
+        if (
+            !confirm(`Are you sure you want to delete ${ids.length} record(s)?`)
+        )
+            return;
+
+        router.delete(notification.bulkDestroy().url, {
+            data: { ids },
+            preserveScroll: true,
+            onSuccess: () => {
+                toast.success('Records deleted');
+            },
+            onError: (errors) => {
+                const first = Object.values(errors)[0];
+                toast.error(first ?? 'Error deleting records');
+            },
+        });
+    }, []);
+
     return (
         <>
             <Head title={props.title} />
@@ -157,6 +176,8 @@ const Notifications = (props: any) => {
                     filters={filterOptions}
                     initialFilters={props.filters}
                     onDelete={setItemToDelete}
+                    onBulkDelete={onBulkDelete}
+                    selectable
                 />
 
                 {itemToDelete && (

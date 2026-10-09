@@ -94,7 +94,7 @@ class CommitService extends BaseGithubService
             ->with(['author', 'githubRepository', 'pullRequest']);
 
         if ($request?->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('message', 'ilike', $search)
                     ->orWhere('sha', 'ilike', $search)
@@ -164,5 +164,22 @@ class CommitService extends BaseGithubService
     public function destroy($id)
     {
         return Commit::destroy($id) > 0;
+    }
+
+    /**
+     * @param  array<int, int|string>  $ids
+     */
+    public function bulkDestroy(array $ids): int
+    {
+        $items = Comment::whereIn('id', $ids)->get();
+
+        $count = 0;
+
+        foreach ($items as $i) {
+            $i->delete();
+            $count++;
+        }
+
+        return $count;
     }
 }

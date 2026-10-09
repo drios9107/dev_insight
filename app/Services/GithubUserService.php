@@ -47,7 +47,7 @@ class GithubUserService extends BaseGithubService
             ]);
 
         if ($request?->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('username', 'ilike', $search)
                     ->orWhere('name', 'ilike', $search)
@@ -133,5 +133,22 @@ class GithubUserService extends BaseGithubService
     public function getByGithubId(int $githubId): ?GithubUser
     {
         return GithubUser::where('github_id', $githubId)->first();
+    }
+
+    /**
+     * @param  array<int, int|string>  $ids
+     */
+    public function bulkDestroy(array $ids): int
+    {
+        $items = GithubUser::whereIn('id', $ids)->get();
+
+        $count = 0;
+
+        foreach ($items as $i) {
+            $i->delete();
+            $count++;
+        }
+
+        return $count;
     }
 }

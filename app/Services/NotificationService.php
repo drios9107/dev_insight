@@ -19,7 +19,7 @@ class NotificationService
             ->with('user');
 
         if ($request?->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('message', 'ilike', $search)
@@ -82,5 +82,22 @@ class NotificationService
     public function destroy($id)
     {
         return Notification::destroy($id) > 0;
+    }
+
+    /**
+     * @param  array<int, int|string>  $ids
+     */
+    public function bulkDestroy(array $ids): int
+    {
+        $items = Notification::whereIn('id', $ids)->get();
+
+        $count = 0;
+
+        foreach ($items as $i) {
+            $i->delete();
+            $count++;
+        }
+
+        return $count;
     }
 }

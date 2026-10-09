@@ -18,14 +18,14 @@ class ProjectService
         $query = Project::query()
             ->with(['team', 'owner', 'githubRepository', 'tasks']);
         if ($request && $request->search) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
                     ->orWhere('description', 'ilike', $search)
                     ->orWhere('color', 'ilike', $search)
-                    ->orWhereHas('team', fn ($sub) => $sub->where('name', 'ilike', $search))
-                    ->orWhereHas('owner', fn ($sub) => $sub->where('name', 'ilike', $search))
-                    ->orWhereHas('githubRepository', fn ($sub) => $sub->where('name', 'ilike', $search)
+                    ->orWhereHas('team', fn($sub) => $sub->where('name', 'ilike', $search))
+                    ->orWhereHas('owner', fn($sub) => $sub->where('name', 'ilike', $search))
+                    ->orWhereHas('githubRepository', fn($sub) => $sub->where('name', 'ilike', $search)
                         ->orWhere('full_name', 'ilike', $search));
             });
         }
@@ -81,5 +81,22 @@ class ProjectService
     public function destroy($id)
     {
         return Project::destroy($id) > 0;
+    }
+
+    /**
+     * @param  array<int, int|string>  $ids
+     */
+    public function bulkDestroy(array $ids): int
+    {
+        $items = Project::whereIn('id', $ids)->get();
+
+        $count = 0;
+
+        foreach ($items as $i) {
+            $i->delete();
+            $count++;
+        }
+
+        return $count;
     }
 }

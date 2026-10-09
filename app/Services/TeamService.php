@@ -18,7 +18,7 @@ class TeamService
         $query = Team::query()->with(['owner', 'githubUsers']);
 
         if ($request?->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
                     ->orWhere('description', 'ilike', $search)
@@ -93,5 +93,22 @@ class TeamService
     public function destroy($id)
     {
         return Team::destroy($id) > 0;
+    }
+
+    /**
+     * @param  array<int, int|string>  $ids
+     */
+    public function bulkDestroy(array $ids): int
+    {
+        $items = Team::whereIn('id', $ids)->get();
+
+        $count = 0;
+
+        foreach ($items as $i) {
+            $i->delete();
+            $count++;
+        }
+
+        return $count;
     }
 }

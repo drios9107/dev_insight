@@ -73,6 +73,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('all-users', [UserController::class, 'all'])->name('user.all');
     Route::get('all-github-users', [GithubUserController::class, 'all'])->name('github-user.all');
 
+    Route::delete('/comment/bulk', [CommentController::class, 'bulkDestroy'])->name('comment.bulk-destroy');
+    Route::delete('/commit/bulk', [CommitController::class, 'bulkDestroy'])->name('commit.bulk-destroy');
+    Route::delete('/github-issue/bulk', [GithubIssueController::class, 'bulkDestroy'])->name('github-issue.bulk-destroy');
+    Route::delete('/github-repository/bulk', [GithubRepositoryController::class, 'bulkDestroy'])->name('github-repository.bulk-destroy');
+    Route::delete('/notification/bulk', [NotificationController::class, 'bulkDestroy'])->name('notification.bulk-destroy');
+    Route::delete('/project/bulk', [ProjectController::class, 'bulkDestroy'])->name('project.bulk-destroy');
+    Route::delete('/pull-request/bulk', [PullRequestController::class, 'bulkDestroy'])->name('pull-request.bulk-destroy');
+    Route::delete('/pull-request-review/bulk', [PullRequestReviewController::class, 'bulkDestroy'])->name('pull-request-review.bulk-destroy');
+    Route::delete('/role/bulk', [RoleController::class, 'bulkDestroy'])->name('role.bulk-destroy');
+    Route::delete('/sprint/bulk', [SprintController::class, 'bulkDestroy'])->name('sprint.bulk-destroy');
+    Route::delete('/task/bulk', [TaskController::class, 'bulkDestroy'])->name('task.bulk-destroy');
+    Route::delete('/team/bulk', [TeamController::class, 'bulkDestroy'])->name('team.bulk-destroy');
+    Route::delete('/user/bulk', [UserController::class, 'bulkDestroy'])->name('user.bulk-destroy');
+    Route::delete('/github-user/bulk', [GithubUserController::class, 'bulkDestroy'])->name('github-user.bulk-destroy');
+
     // table lists
     Route::resource('/comment', CommentController::class)->only($apiRoutes);
     Route::resource('/commit', CommitController::class)->only($apiRoutes);
@@ -93,4 +108,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('metric', [MetricController::class, 'index'])->name('metric.index');
 });
 
-require __DIR__.'/settings.php';
+require __DIR__ . '/settings.php';

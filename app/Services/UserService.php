@@ -18,7 +18,7 @@ class UserService
         $query = User::query()->with('role');
 
         if ($request?->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
                     ->orWhere('email', 'ilike', $search)
@@ -77,5 +77,22 @@ class UserService
     public function destroy($id)
     {
         return User::destroy($id) > 0;
+    }
+
+    /**
+     * @param  array<int, int|string>  $ids
+     */
+    public function bulkDestroy(array $ids): int
+    {
+        $items = User::whereIn('id', $ids)->get();
+
+        $count = 0;
+
+        foreach ($items as $i) {
+            $i->delete();
+            $count++;
+        }
+
+        return $count;
     }
 }

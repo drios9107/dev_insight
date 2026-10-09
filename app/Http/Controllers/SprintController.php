@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BulkDestroyRequest;
 use App\Http\Requests\SprintRequest;
 use App\Http\Resources\SprintResource;
 use App\Models\Sprint;
@@ -92,5 +93,13 @@ class SprintController extends Controller
         $sprints = $this->service->byProject($projectId);
 
         return response()->json(['data' => $sprints]);
+    }
+
+    public function bulkDestroy(BulkDestroyRequest $request): RedirectResponse
+    {
+        $this->service->bulkDestroy($request->validated()['ids']);
+
+        return redirect()->back()
+            ->with('success', 'Deleted successfully!');
     }
 }

@@ -95,7 +95,7 @@ class GithubIssueService extends BaseGithubService
             ->with('author', 'githubRepository', 'task');
 
         if ($request?->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('body', 'ilike', $search)
@@ -161,5 +161,22 @@ class GithubIssueService extends BaseGithubService
     public function destroy($id)
     {
         return GithubIssue::destroy($id) > 0;
+    }
+
+    /**
+     * @param  array<int, int|string>  $ids
+     */
+    public function bulkDestroy(array $ids): int
+    {
+        $items = GithubIssue::whereIn('id', $ids)->get();
+
+        $count = 0;
+
+        foreach ($items as $i) {
+            $i->delete();
+            $count++;
+        }
+
+        return $count;
     }
 }

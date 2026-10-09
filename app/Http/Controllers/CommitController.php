@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BulkDestroyRequest;
 use App\Http\Requests\CommitRequest;
 use App\Http\Resources\CommitResource;
 use App\Models\GithubRepository;
@@ -88,5 +89,13 @@ class CommitController extends Controller
         $this->service->destroy($id);
 
         return redirect()->back()->with('success', 'Commit deleted successfully!');
+    }
+
+    public function bulkDestroy(BulkDestroyRequest $request): RedirectResponse
+    {
+        $this->service->bulkDestroy($request->validated()['ids']);
+
+        return redirect()->back()
+            ->with('success', 'Deleted successfully!');
     }
 }

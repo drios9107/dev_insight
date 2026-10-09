@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BulkDestroyRequest;
 use App\Http\Requests\PullRequestReviewRequest;
 use App\Http\Resources\PullRequestReviewResource;
 use App\Models\User;
@@ -82,5 +83,13 @@ class PullRequestReviewController extends Controller
         $this->service->destroy($id);
 
         return redirect()->back()->with('success', 'PR Review deleted successfully!');
+    }
+
+    public function bulkDestroy(BulkDestroyRequest $request): RedirectResponse
+    {
+        $this->service->bulkDestroy($request->validated()['ids']);
+
+        return redirect()->back()
+            ->with('success', 'Deleted successfully!');
     }
 }

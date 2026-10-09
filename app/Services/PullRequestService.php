@@ -138,7 +138,7 @@ class PullRequestService extends BaseGithubService
 
             return [
                 'success' => true,
-                'message' => count($data).' pull requests synced',
+                'message' => count($data) . ' pull requests synced',
                 'count' => count($data),
             ];
         } catch (Exception $e) {
@@ -159,7 +159,7 @@ class PullRequestService extends BaseGithubService
                     ->update(['pull_request_id' => $prId]);
             }
         } catch (Exception $e) {
-            Log::warning("Failed to sync commits for PR #{$prNumber}: ".$e->getMessage());
+            Log::warning("Failed to sync commits for PR #{$prNumber}: " . $e->getMessage());
         }
     }
 
@@ -172,7 +172,7 @@ class PullRequestService extends BaseGithubService
     {
         $query = PullRequest::query()->with(['author', 'assignees', 'githubRepository', 'task']);
         if ($request?->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'ilike', $search)
                     ->orWhere('body', 'ilike', $search)
@@ -246,5 +246,22 @@ class PullRequestService extends BaseGithubService
     public function destroy($id)
     {
         return PullRequest::destroy($id) > 0;
+    }
+
+    /**
+     * @param  array<int, int|string>  $ids
+     */
+    public function bulkDestroy(array $ids): int
+    {
+        $items = PullRequest::whereIn('id', $ids)->get();
+
+        $count = 0;
+
+        foreach ($items as $i) {
+            $i->delete();
+            $count++;
+        }
+
+        return $count;
     }
 }

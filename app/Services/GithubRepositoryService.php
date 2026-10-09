@@ -189,7 +189,7 @@ class GithubRepositoryService extends BaseGithubService
 
             return $results;
         } catch (Exception $e) {
-            Log::error("Sync failed for {$repository->full_name}: ".$e->getMessage());
+            Log::error("Sync failed for {$repository->full_name}: " . $e->getMessage());
 
             throw $e;
         }
@@ -205,7 +205,7 @@ class GithubRepositoryService extends BaseGithubService
         $query = GithubRepository::query();
 
         if ($request?->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('full_name', 'ilike', $search)
                     ->orWhere('name', 'ilike', $search)
@@ -262,5 +262,22 @@ class GithubRepositoryService extends BaseGithubService
     public function destroy($id)
     {
         return GithubRepository::destroy($id) > 0;
+    }
+
+    /**
+     * @param  array<int, int|string>  $ids
+     */
+    public function bulkDestroy(array $ids): int
+    {
+        $items = GithubRepository::whereIn('id', $ids)->get();
+
+        $count = 0;
+
+        foreach ($items as $i) {
+            $i->delete();
+            $count++;
+        }
+
+        return $count;
     }
 }

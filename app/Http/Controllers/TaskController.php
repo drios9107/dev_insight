@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Concerns\ExtractsFilters;
+use App\Http\Requests\BulkDestroyRequest;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\GithubUser;
@@ -72,7 +73,7 @@ class TaskController extends Controller
             throw $e;
         } catch (\Exception $e) {
             throw ValidationException::withMessages([
-                'content' => 'Failed to create the item: '.$e->getMessage(),
+                'content' => 'Failed to create the item: ' . $e->getMessage(),
             ]);
         }
     }
@@ -103,5 +104,13 @@ class TaskController extends Controller
         $this->service->destroy($id);
 
         return redirect()->back()->with('success', 'Task deleted successfully!');
+    }
+
+    public function bulkDestroy(BulkDestroyRequest $request): RedirectResponse
+    {
+        $this->service->bulkDestroy($request->validated()['ids']);
+
+        return redirect()->back()
+            ->with('success', 'Deleted successfully!');
     }
 }

@@ -6,6 +6,8 @@ import { DataTable } from '@/components/custom/table/data-table';
 import type { IColumn } from '@/components/custom/table/data-table';
 import user from '@/routes/user';
 import type { IUser } from '@/types/user';
+import { toast } from 'sonner';
+import { useCallback } from 'react';
 
 const Users = (props: any) => {
     const columns: IColumn[] = [
@@ -69,6 +71,25 @@ const Users = (props: any) => {
         },
     ];
 
+    const onBulkDelete = useCallback((ids: (number | string)[]) => {
+        if (
+            !confirm(`Are you sure you want to delete ${ids.length} record(s)?`)
+        )
+            return;
+
+        router.delete(user.bulkDestroy().url, {
+            data: { ids },
+            preserveScroll: true,
+            onSuccess: () => {
+                toast.success('Records deleted');
+            },
+            onError: (errors) => {
+                const first = Object.values(errors)[0];
+                toast.error(first ?? 'Error deleting records');
+            },
+        });
+    }, []);
+
     return (
         <>
             <Head title={props.title} />
@@ -80,8 +101,8 @@ const Users = (props: any) => {
                     columns={columns}
                     filters={filterOptions}
                     initialFilters={props.filters}
-                    actions={false}
-                    selectable={false}
+                    onBulkDelete={onBulkDelete}
+                    selectable
                 />
             </BodyWrapper>
         </>

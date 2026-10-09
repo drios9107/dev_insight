@@ -126,6 +126,25 @@ const Projects = (props: any) => {
         setItemToDelete(null);
     }, [setIsOpen, setItemToEdit, setItemToDelete]);
 
+    const onBulkDelete = useCallback((ids: (number | string)[]) => {
+        if (
+            !confirm(`Are you sure you want to delete ${ids.length} record(s)?`)
+        )
+            return;
+
+        router.delete(project.bulkDestroy().url, {
+            data: { ids },
+            preserveScroll: true,
+            onSuccess: () => {
+                toast.success('Records deleted');
+            },
+            onError: (errors) => {
+                const first = Object.values(errors)[0];
+                toast.error(first ?? 'Error deleting records');
+            },
+        });
+    }, []);
+
     const getBadgeColor = useCallback((status: TProjectStatus) => {
         const mapping = {
             planning: 'warning',
@@ -152,6 +171,8 @@ const Projects = (props: any) => {
                     onView={(item) => setItemToViewId(item?.id)}
                     onEdit={onEdit}
                     onDelete={setItemToDelete}
+                    onBulkDelete={onBulkDelete}
+                    selectable
                 />
 
                 {itemToViewId && (

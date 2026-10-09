@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BulkDestroyRequest;
 use App\Http\Requests\RoleRequest;
 use App\Http\Resources\RoleResource;
 use App\Services\RoleService;
@@ -78,5 +79,13 @@ class RoleController extends Controller
         $this->service->destroy($id);
 
         return redirect()->back()->with('success', 'Role deleted successfully!');
+    }
+
+    public function bulkDestroy(BulkDestroyRequest $request): RedirectResponse
+    {
+        $this->service->bulkDestroy($request->validated()['ids']);
+
+        return redirect()->back()
+            ->with('success', 'Deleted successfully!');
     }
 }

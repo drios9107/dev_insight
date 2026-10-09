@@ -203,6 +203,25 @@ const PullRequests = (props: any) => {
         return mapping[item] as 'default' | 'secondary' | 'success';
     }, []);
 
+    const onBulkDelete = useCallback((ids: (number | string)[]) => {
+        if (
+            !confirm(`Are you sure you want to delete ${ids.length} record(s)?`)
+        )
+            return;
+
+        router.delete(pullRequest.bulkDestroy().url, {
+            data: { ids },
+            preserveScroll: true,
+            onSuccess: () => {
+                toast.success('Records deleted');
+            },
+            onError: (errors) => {
+                const first = Object.values(errors)[0];
+                toast.error(first ?? 'Error deleting records');
+            },
+        });
+    }, []);
+
     return (
         <>
             <Head title={props.title} />
@@ -216,6 +235,8 @@ const PullRequests = (props: any) => {
                     checks={checksOptions}
                     initialFilters={props.filters}
                     onDelete={setItemToDelete}
+                    onBulkDelete={onBulkDelete}
+                    selectable
                 />
 
                 {itemToDelete && (

@@ -20,7 +20,7 @@ class CommentService
         $query = Comment::query()->with(['user', 'task', 'parent']);
 
         if ($request?->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('content', 'ilike', $search)
                     ->orWhereHas('user', function ($u) use ($search) {
@@ -95,5 +95,22 @@ class CommentService
     public function destroy(Comment $comment): bool
     {
         return $comment->delete();
+    }
+
+    /**
+     * @param  array<int, int|string>  $ids
+     */
+    public function bulkDestroy(array $ids): int
+    {
+        $items = Comment::whereIn('id', $ids)->get();
+
+        $count = 0;
+
+        foreach ($items as $i) {
+            $i->delete();
+            $count++;
+        }
+
+        return $count;
     }
 }

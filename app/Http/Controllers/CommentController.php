@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BulkDestroyRequest;
 use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\Task;
@@ -60,7 +61,7 @@ class CommentController extends Controller
             throw $e;
         } catch (\Exception $e) {
             throw ValidationException::withMessages([
-                'content' => 'Failed to add comment: '.$e->getMessage(),
+                'content' => 'Failed to add comment: ' . $e->getMessage(),
             ]);
         }
     }
@@ -83,7 +84,7 @@ class CommentController extends Controller
             throw $e;
         } catch (\Exception $e) {
             throw ValidationException::withMessages([
-                'content' => 'Failed to add comment: '.$e->getMessage(),
+                'content' => 'Failed to add comment: ' . $e->getMessage(),
             ]);
         }
     }
@@ -107,7 +108,7 @@ class CommentController extends Controller
             throw $e;
         } catch (\Exception $e) {
             throw ValidationException::withMessages([
-                'content' => 'Failed to update comment: '.$e->getMessage(),
+                'content' => 'Failed to update comment: ' . $e->getMessage(),
             ]);
         }
     }
@@ -120,8 +121,16 @@ class CommentController extends Controller
             return redirect()->back();
         } catch (\Exception $e) {
             throw ValidationException::withMessages([
-                'content' => 'Failed to delete comment: '.$e->getMessage(),
+                'content' => 'Failed to delete comment: ' . $e->getMessage(),
             ]);
         }
+    }
+
+    public function bulkDestroy(BulkDestroyRequest $request): RedirectResponse
+    {
+        $this->service->bulkDestroy($request->validated()['ids']);
+
+        return redirect()->back()
+            ->with('success', 'Deleted successfully!');
     }
 }

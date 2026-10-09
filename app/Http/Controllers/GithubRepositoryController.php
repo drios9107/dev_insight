@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ActivityTypeEnum;
+use App\Http\Requests\BulkDestroyRequest;
 use App\Http\Requests\GithubRepositoryRequest;
 use App\Http\Resources\GithubRepositoryResource;
 use App\Models\GithubRepository;
@@ -168,5 +169,13 @@ class GithubRepositoryController extends Controller
                 'sync' => $e->getMessage(),
             ]);
         }
+    }
+
+    public function bulkDestroy(BulkDestroyRequest $request): RedirectResponse
+    {
+        $this->service->bulkDestroy($request->validated()['ids']);
+
+        return redirect()->back()
+            ->with('success', 'Deleted successfully!');
     }
 }

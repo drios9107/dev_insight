@@ -108,6 +108,25 @@ const Commits = (props: any) => {
 
     const onClose = useCallback(() => setItemToDelete(null), [setItemToDelete]);
 
+    const onBulkDelete = useCallback((ids: (number | string)[]) => {
+        if (
+            !confirm(`Are you sure you want to delete ${ids.length} record(s)?`)
+        )
+            return;
+
+        router.delete(commit.bulkDestroy().url, {
+            data: { ids },
+            preserveScroll: true,
+            onSuccess: () => {
+                toast.success('Records deleted');
+            },
+            onError: (errors) => {
+                const first = Object.values(errors)[0];
+                toast.error(first ?? 'Error deleting records');
+            },
+        });
+    }, []);
+
     return (
         <>
             <Head title={props.title} />
@@ -120,6 +139,8 @@ const Commits = (props: any) => {
                     filters={filterOptions}
                     initialFilters={props.filters}
                     onDelete={setItemToDelete}
+                    onBulkDelete={onBulkDelete}
+                    selectable
                 />
 
                 {itemToDelete && (

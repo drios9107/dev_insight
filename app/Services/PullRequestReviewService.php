@@ -93,7 +93,7 @@ class PullRequestReviewService extends BaseGithubService
 
         return [
             'success' => true,
-            'message' => count($allReviews).' reviews synced',
+            'message' => count($allReviews) . ' reviews synced',
             'count' => count($allReviews),
         ];
     }
@@ -108,7 +108,7 @@ class PullRequestReviewService extends BaseGithubService
         $query = PullRequestReview::query()->with(['pullRequest', 'reviewer']);
 
         if ($request?->filled('search')) {
-            $search = '%'.$request->search.'%';
+            $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
                 $q->where('body', 'ilike', $search)
                     ->orWhereHas('reviewer', function ($r) use ($search) {
@@ -173,5 +173,22 @@ class PullRequestReviewService extends BaseGithubService
     public function destroy($id)
     {
         return PullRequestReview::destroy($id) > 0;
+    }
+
+    /**
+     * @param  array<int, int|string>  $ids
+     */
+    public function bulkDestroy(array $ids): int
+    {
+        $items = PullRequestReview::whereIn('id', $ids)->get();
+
+        $count = 0;
+
+        foreach ($items as $i) {
+            $i->delete();
+            $count++;
+        }
+
+        return $count;
     }
 }
