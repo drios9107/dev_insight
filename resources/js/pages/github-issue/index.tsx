@@ -13,6 +13,9 @@ import type { TGithubsIssueState } from '@/types/models/github-issue';
 
 const GithubsIssues = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<number | null>(null);
+    const [itemsToDelete, setItemsToDelete] = useState<
+        (string | number)[] | null
+    >(null);
 
     const columns: IColumn[] = [
         {
@@ -124,14 +127,9 @@ const GithubsIssues = (props: any) => {
         setItemToDelete(null);
     }, [setItemToDelete]);
 
-    const onBulkDelete = useCallback((ids: (number | string)[]) => {
-        if (
-            !confirm(`Are you sure you want to delete ${ids.length} record(s)?`)
-        )
-            return;
-
+    const onBulkDelete = useCallback(() => {
         router.delete(githubIssue.bulkDestroy().url, {
-            data: { ids },
+            data: { ids: itemsToDelete },
             preserveScroll: true,
             onSuccess: () => {
                 toast.success('Records deleted');
@@ -141,7 +139,7 @@ const GithubsIssues = (props: any) => {
                 toast.error(first ?? 'Error deleting records');
             },
         });
-    }, []);
+    }, [itemsToDelete]);
 
     const getBadgeColor = useCallback((status: TGithubsIssueState) => {
         const mapping = {
@@ -170,6 +168,12 @@ const GithubsIssues = (props: any) => {
 
                 {itemToDelete && (
                     <DeleteModal onClose={onClose} onClick={onDelete} />
+                )}
+                {itemsToDelete && (
+                    <DeleteModal
+                        onClose={() => setItemsToDelete(null)}
+                        onClick={onBulkDelete}
+                    />
                 )}
             </BodyWrapper>
         </>

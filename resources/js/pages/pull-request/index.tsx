@@ -16,6 +16,9 @@ import type { TPullRequestState } from '@/types/models/pull-request';
 
 const PullRequests = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<number | null>(null);
+    const [itemsToDelete, setItemsToDelete] = useState<
+        (string | number)[] | null
+    >(null);
 
     const columns: IColumn[] = [
         {
@@ -203,14 +206,9 @@ const PullRequests = (props: any) => {
         return mapping[item] as 'default' | 'secondary' | 'success';
     }, []);
 
-    const onBulkDelete = useCallback((ids: (number | string)[]) => {
-        if (
-            !confirm(`Are you sure you want to delete ${ids.length} record(s)?`)
-        )
-            return;
-
+    const onBulkDelete = useCallback(() => {
         router.delete(pullRequest.bulkDestroy().url, {
-            data: { ids },
+            data: { ids: itemsToDelete },
             preserveScroll: true,
             onSuccess: () => {
                 toast.success('Records deleted');
@@ -220,7 +218,7 @@ const PullRequests = (props: any) => {
                 toast.error(first ?? 'Error deleting records');
             },
         });
-    }, []);
+    }, [itemsToDelete]);
 
     return (
         <>
@@ -241,6 +239,12 @@ const PullRequests = (props: any) => {
 
                 {itemToDelete && (
                     <DeleteModal onClose={onClose} onClick={onDelete} />
+                )}
+                {itemsToDelete && (
+                    <DeleteModal
+                        onClose={() => setItemsToDelete(null)}
+                        onClick={onBulkDelete}
+                    />
                 )}
             </BodyWrapper>
         </>

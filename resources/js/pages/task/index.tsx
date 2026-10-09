@@ -18,6 +18,9 @@ import type { ITask, ITaskList } from '@/types/models/task';
 const Tasks = (props: any) => {
     const [isOpen, setIsOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState<number | null>(null);
+    const [itemsToDelete, setItemsToDelete] = useState<
+        (string | number)[] | null
+    >(null);
     const [itemToEdit, setItemToEdit] = useState<ITask | null>(null);
     const [itemToViewId, setItemToViewId] = useState<number | null>(null);
 
@@ -211,14 +214,9 @@ const Tasks = (props: any) => {
         setItemToDelete(null);
     }, [setIsOpen, setItemToEdit, setItemToDelete]);
 
-    const onBulkDelete = useCallback((ids: (number | string)[]) => {
-        if (
-            !confirm(`Are you sure you want to delete ${ids.length} record(s)?`)
-        )
-            return;
-
+    const onBulkDelete = useCallback(() => {
         router.delete(task.bulkDestroy().url, {
-            data: { ids },
+            data: { ids: itemsToDelete },
             preserveScroll: true,
             onSuccess: () => {
                 toast.success('Records deleted');
@@ -228,7 +226,7 @@ const Tasks = (props: any) => {
                 toast.error(first ?? 'Error deleting records');
             },
         });
-    }, []);
+    }, [itemsToDelete]);
 
     return (
         <>
@@ -259,6 +257,12 @@ const Tasks = (props: any) => {
                     <TaskDetails
                         itemId={itemToViewId}
                         onClose={() => setItemToViewId(null)}
+                    />
+                )}
+                {itemsToDelete && (
+                    <DeleteModal
+                        onClose={() => setItemsToDelete(null)}
+                        onClick={onBulkDelete}
                     />
                 )}
             </BodyWrapper>

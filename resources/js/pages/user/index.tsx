@@ -7,9 +7,14 @@ import type { IColumn } from '@/components/custom/table/data-table';
 import user from '@/routes/user';
 import type { IUser } from '@/types/user';
 import { toast } from 'sonner';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
+import { DeleteModal } from '@/components/custom/delete-modal';
 
 const Users = (props: any) => {
+    const [itemToDelete, setItemToDelete] = useState<number | null>(null);
+    const [itemsToDisable, setItemsToDisable] = useState<
+        (string | number)[] | null
+    >(null);
     const columns: IColumn[] = [
         {
             key: 'avatar_url',
@@ -71,24 +76,30 @@ const Users = (props: any) => {
         },
     ];
 
-    const onBulkDelete = useCallback((ids: (number | string)[]) => {
-        if (
-            !confirm(`Are you sure you want to delete ${ids.length} record(s)?`)
-        )
-            return;
+    const onDelete = useCallback(() => {
+        if (itemToDelete) {
+            router.delete(user.disable(itemToDelete).url, {
+                onSuccess: () => toast.success('User disabled successfully'),
+                onError: (error) =>
+                    toast.error(`User disabled failed: ${error?.message}`),
+                onFinish: () => setItemToDelete(null),
+            });
+        }
+    }, [itemToDelete]);
 
-        router.delete(user.bulkDestroy().url, {
-            data: { ids },
+    const onBulkDelete = useCallback(() => {
+        router.delete(user.bulkDisable().url, {
+            data: { ids: itemsToDisable },
             preserveScroll: true,
             onSuccess: () => {
-                toast.success('Records deleted');
+                toast.success('Records disabled');
             },
             onError: (errors) => {
                 const first = Object.values(errors)[0];
-                toast.error(first ?? 'Error deleting records');
+                toast.error(first ?? 'Error disabling records');
             },
         });
-    }, []);
+    }, [itemsToDisable]);
 
     return (
         <>
@@ -101,9 +112,23 @@ const Users = (props: any) => {
                     columns={columns}
                     filters={filterOptions}
                     initialFilters={props.filters}
-                    onBulkDelete={onBulkDelete}
+                    onBulkDelete={setItemsToDisable}
                     selectable
                 />
+
+                {itemToDelete && (
+                    <DeleteModal
+                        onClose={() => setItemToDelete(null)}
+                        onClick={onDelete}
+                    />
+                )}
+                {itemsToDisable && (
+                    <DeleteModal
+                        onClose={() => setItemsToDisable(null)}
+                        onClick={onBulkDelete}
+                        isDisable
+                    />
+                )}
             </BodyWrapper>
         </>
     );

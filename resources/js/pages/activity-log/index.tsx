@@ -114,6 +114,12 @@ const ActivityLogs = (props: any) => {
                         onClose={onCloseDetails}
                     />
                 )}
+                {itemsToDelete && (
+                    <DeleteModal
+                        onClose={() => setItemsToDelete(null)}
+                        onClick={onBulkDelete}
+                    />
+                )}
             </BodyWrapper>
         </>
     );

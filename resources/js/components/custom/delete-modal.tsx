@@ -10,23 +10,36 @@ import {
     DialogClose,
 } from '@/components/ui/dialog';
 import { Loader } from './loader';
+import { useMemo } from 'react';
 
 interface DeleteModalProps {
     onClose: () => void;
     onClick: () => void;
     isLoading?: boolean;
+    isDisable?: boolean;
 }
 
-export function DeleteModal({ onClose, onClick, isLoading }: DeleteModalProps) {
+export function DeleteModal({
+    onClose,
+    onClick,
+    isLoading,
+    isDisable = false,
+}: DeleteModalProps) {
+    const title = useMemo(
+        () => (isDisable ? 'Disable' : 'Delete'),
+        [isDisable],
+    );
+
     return (
         <Dialog open onOpenChange={onClose}>
             <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
                     <DialogTitle className="text-center text-xl font-semibold">
-                        Delete
+                        {title}
                     </DialogTitle>
                     <DialogDescription className="text-center">
-                        Are you sure you want to delete this resource?
+                        Are you sure you want to{' '}
+                        {isDisable ? 'disable' : 'delete'} this resource?
                     </DialogDescription>
                 </DialogHeader>
 
@@ -35,7 +48,7 @@ export function DeleteModal({ onClose, onClick, isLoading }: DeleteModalProps) {
                 <DialogFooter className="flex justify-center">
                     <Button type="button" onClick={onClick}>
                         <Trash />
-                        Delete
+                        {title}
                     </Button>
                     <DialogClose asChild>
                         <Button variant="outline">Close</Button>

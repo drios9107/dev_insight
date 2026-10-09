@@ -14,6 +14,9 @@ import type { TNotificationType } from '@/types/models/notification';
 
 const Notifications = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<number | null>(null);
+    const [itemsToDelete, setItemsToDelete] = useState<
+        (string | number)[] | null
+    >(null);
 
     const columns: IColumn[] = [
         {
@@ -145,14 +148,9 @@ const Notifications = (props: any) => {
         return mapping[item] as 'info' | 'warning' | 'destructive' | 'success';
     }, []);
 
-    const onBulkDelete = useCallback((ids: (number | string)[]) => {
-        if (
-            !confirm(`Are you sure you want to delete ${ids.length} record(s)?`)
-        )
-            return;
-
+    const onBulkDelete = useCallback(() => {
         router.delete(notification.bulkDestroy().url, {
-            data: { ids },
+            data: { ids: itemsToDelete },
             preserveScroll: true,
             onSuccess: () => {
                 toast.success('Records deleted');
@@ -162,7 +160,7 @@ const Notifications = (props: any) => {
                 toast.error(first ?? 'Error deleting records');
             },
         });
-    }, []);
+    }, [itemsToDelete]);
 
     return (
         <>
@@ -182,6 +180,12 @@ const Notifications = (props: any) => {
 
                 {itemToDelete && (
                     <DeleteModal onClose={onClose} onClick={onDelete} />
+                )}
+                {itemsToDelete && (
+                    <DeleteModal
+                        onClose={() => setItemsToDelete(null)}
+                        onClick={onBulkDelete}
+                    />
                 )}
             </BodyWrapper>
         </>

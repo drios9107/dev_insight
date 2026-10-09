@@ -17,6 +17,9 @@ import type { IGithubUser, IGithubUserList } from '@/types/models/github-user';
 
 const GithubUsers = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<number | null>(null);
+    const [itemsToDelete, setItemsToDelete] = useState<
+        (string | number)[] | null
+    >(null);
     const [showImportModal, setShowImportModal] = useState(false);
     const [itemToViewId, setItemToViewId] = useState<number | null>(null);
 
@@ -123,14 +126,9 @@ const GithubUsers = (props: any) => {
         setItemToDelete(null);
     }, [setItemToDelete]);
 
-    const onBulkDelete = useCallback((ids: (number | string)[]) => {
-        if (
-            !confirm(`Are you sure you want to delete ${ids.length} record(s)?`)
-        )
-            return;
-
+    const onBulkDelete = useCallback(() => {
         router.delete(githubUser.bulkDestroy().url, {
-            data: { ids },
+            data: { ids: itemsToDelete },
             preserveScroll: true,
             onSuccess: () => {
                 toast.success('Records deleted');
@@ -140,7 +138,7 @@ const GithubUsers = (props: any) => {
                 toast.error(first ?? 'Error deleting records');
             },
         });
-    }, []);
+    }, [itemsToDelete]);
 
     return (
         <>
@@ -183,6 +181,12 @@ const GithubUsers = (props: any) => {
                 )}
                 {itemToDelete && (
                     <DeleteModal onClose={onClose} onClick={onDelete} />
+                )}
+                {itemsToDelete && (
+                    <DeleteModal
+                        onClose={() => setItemsToDelete(null)}
+                        onClick={onBulkDelete}
+                    />
                 )}
             </BodyWrapper>
         </>

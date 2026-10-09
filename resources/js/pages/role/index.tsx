@@ -13,6 +13,9 @@ import type { IRole } from '@/types/models/role';
 const Roles = (props: any) => {
     const [isOpen, setIsOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState<number | null>(null);
+    const [itemsToDelete, setItemsToDelete] = useState<
+        (string | number)[] | null
+    >(null);
     const [itemToEdit, setItemToEdit] = useState<IRole | null>(null);
 
     const columns: IColumn[] = [
@@ -67,14 +70,9 @@ const Roles = (props: any) => {
         setItemToDelete(null);
     }, [setIsOpen, setItemToEdit, setItemToDelete]);
 
-    const onBulkDelete = useCallback((ids: (number | string)[]) => {
-        if (
-            !confirm(`Are you sure you want to delete ${ids.length} record(s)?`)
-        )
-            return;
-
+    const onBulkDelete = useCallback(() => {
         router.delete(role.bulkDestroy().url, {
-            data: { ids },
+            data: { ids: itemsToDelete },
             preserveScroll: true,
             onSuccess: () => {
                 toast.success('Records deleted');
@@ -84,7 +82,7 @@ const Roles = (props: any) => {
                 toast.error(first ?? 'Error deleting records');
             },
         });
-    }, []);
+    }, [itemsToDelete]);
 
     return (
         <>
@@ -107,6 +105,12 @@ const Roles = (props: any) => {
                 )}
                 {itemToDelete && (
                     <DeleteModal onClose={onCloseForm} onClick={onDelete} />
+                )}
+                {itemsToDelete && (
+                    <DeleteModal
+                        onClose={() => setItemsToDelete(null)}
+                        onClick={onBulkDelete}
+                    />
                 )}
             </BodyWrapper>
         </>

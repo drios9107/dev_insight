@@ -10,6 +10,9 @@ import commit from '@/routes/commit';
 
 const Commits = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<number | null>(null);
+    const [itemsToDelete, setItemsToDelete] = useState<
+        (string | number)[] | null
+    >(null);
 
     const columns: IColumn[] = [
         {
@@ -108,14 +111,9 @@ const Commits = (props: any) => {
 
     const onClose = useCallback(() => setItemToDelete(null), [setItemToDelete]);
 
-    const onBulkDelete = useCallback((ids: (number | string)[]) => {
-        if (
-            !confirm(`Are you sure you want to delete ${ids.length} record(s)?`)
-        )
-            return;
-
+    const onBulkDelete = useCallback(() => {
         router.delete(commit.bulkDestroy().url, {
-            data: { ids },
+            data: { ids: itemsToDelete },
             preserveScroll: true,
             onSuccess: () => {
                 toast.success('Records deleted');
@@ -125,7 +123,7 @@ const Commits = (props: any) => {
                 toast.error(first ?? 'Error deleting records');
             },
         });
-    }, []);
+    }, [itemsToDelete]);
 
     return (
         <>
@@ -145,6 +143,12 @@ const Commits = (props: any) => {
 
                 {itemToDelete && (
                     <DeleteModal onClose={onClose} onClick={onDelete} />
+                )}
+                {itemsToDelete && (
+                    <DeleteModal
+                        onClose={() => setItemsToDelete(null)}
+                        onClick={onBulkDelete}
+                    />
                 )}
             </BodyWrapper>
         </>

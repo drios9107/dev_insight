@@ -21,6 +21,9 @@ const Sprints = (props: any) => {
     const [isOpen, setIsOpen] = useState(false);
     const [itemToViewId, setItemToViewId] = useState<number | null>(null);
     const [itemToDelete, setItemToDelete] = useState<number | null>(null);
+    const [itemsToDelete, setItemsToDelete] = useState<
+        (string | number)[] | null
+    >(null);
     const [itemToEdit, setItemToEdit] = useState<ISprint | null>(null);
 
     const columns: IColumn<ISprintList>[] = [
@@ -131,14 +134,9 @@ const Sprints = (props: any) => {
             'warning' | 'info' | 'success' | 'destructive';
     }, []);
 
-    const onBulkDelete = useCallback((ids: (number | string)[]) => {
-        if (
-            !confirm(`Are you sure you want to delete ${ids.length} record(s)?`)
-        )
-            return;
-
+    const onBulkDelete = useCallback(() => {
         router.delete(sprint.bulkDestroy().url, {
-            data: { ids },
+            data: { ids: itemsToDelete },
             preserveScroll: true,
             onSuccess: () => {
                 toast.success('Records deleted');
@@ -148,7 +146,7 @@ const Sprints = (props: any) => {
                 toast.error(first ?? 'Error deleting records');
             },
         });
-    }, []);
+    }, [itemsToDelete]);
 
     return (
         <>
@@ -179,6 +177,12 @@ const Sprints = (props: any) => {
                 )}
                 {itemToDelete && (
                     <DeleteModal onClose={onCloseForm} onClick={onDelete} />
+                )}
+                {itemsToDelete && (
+                    <DeleteModal
+                        onClose={() => setItemsToDelete(null)}
+                        onClick={onBulkDelete}
+                    />
                 )}
             </BodyWrapper>
         </>
