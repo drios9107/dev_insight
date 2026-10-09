@@ -23,7 +23,7 @@ export function ColumnHeader({
 
     return (
         <th
-            className={`px-4 py-3 text-${align} bg-blue-100 text-gray-600 ${onSort ? 'cursor-pointer hover:bg-gray-50' : ''} ${className} `}
+            className={`px-4 py-3 text-${align} bg-blue-100 text-gray-600 ${onSort ? 'cursor-pointer hover:bg-blue-50' : ''} ${className} `}
             onClick={() => onSort?.(field)}
         >
             <div className={`flex items-center gap-1 justify-${align}`}>

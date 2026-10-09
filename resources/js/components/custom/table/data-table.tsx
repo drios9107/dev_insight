@@ -13,6 +13,7 @@ import type { ICheck, IFilter } from './data-table-filters';
 import { DataTableFilters } from './data-table-filters';
 import { DataTablePagination } from './data-table-pagination';
 import { TableActions } from './table-actions';
+import ShadCheckbox from '../inputs/shad-checkbox';
 
 export interface BaseEntity {
     id: number;
@@ -146,22 +147,21 @@ export function DataTable({
             <Box className="datatable-container w-full overflow-x-auto rounded-lg border">
                 <Table.Root variant="surface" size="2">
                     <Table.Header>
-                        <Table.Row>
+                        <Table.Row className="bg-blue-100">
                             {/* Selector */}
                             {selectable && (
-                                <Table.ColumnHeaderCell className="w-8">
-                                    <input
-                                        type="checkbox"
-                                        checked={
+                                <Table.ColumnHeaderCell className="w-10 px-4 py-3 hover:bg-blue-50">
+                                    <ShadCheckbox
+                                        name="selectAll"
+                                        value={
                                             items.length > 0 &&
                                             selectedRows.length === items.length
                                         }
                                         onChange={toggleAllRows}
-                                        className="rounded border-gray-300"
+                                        extraclasses="bg-white"
                                     />
                                 </Table.ColumnHeaderCell>
                             )}
-
                             {/* Columns */}
                             {columns.map((col) => (
                                 <ColumnHeader
@@ -179,10 +179,9 @@ export function DataTable({
                                     className={col.className}
                                 />
                             ))}
-
                             {/* Actions */}
                             {hasActions && (
-                                <Table.ColumnHeaderCell className="w-30 bg-blue-100 text-center text-gray-600">
+                                <Table.ColumnHeaderCell className="w-32 text-center text-gray-600">
                                     Actions
                                 </Table.ColumnHeaderCell>
                             )}
@@ -209,20 +208,19 @@ export function DataTable({
                             items.map((item) => (
                                 <Table.Row
                                     key={item.id}
-                                    className="h-[52px] transition-colors duration-150 hover:bg-gray-100"
+                                    className="h-[52px] transition-colors duration-150 hover:bg-blue-50"
                                 >
                                     {/* Checkbox */}
                                     {selectable && (
                                         <Table.Cell className="px-4 py-3">
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedRows.includes(
+                                            <ShadCheckbox
+                                                name={`select-${item.id}`}
+                                                value={selectedRows.includes(
                                                     item.id,
                                                 )}
                                                 onChange={() =>
                                                     toggleRowSelection(item.id)
                                                 }
-                                                className="rounded border-gray-300"
                                             />
                                         </Table.Cell>
                                     )}
