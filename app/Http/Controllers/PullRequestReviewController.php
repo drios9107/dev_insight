@@ -6,7 +6,6 @@ use App\Http\Requests\BulkDestroyRequest;
 use App\Http\Requests\PullRequestReviewRequest;
 use App\Http\Resources\PullRequestReviewResource;
 use App\Models\GithubUser;
-use App\Models\User;
 use App\Services\PullRequestReviewService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

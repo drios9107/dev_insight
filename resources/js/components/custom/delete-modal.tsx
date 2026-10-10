@@ -1,4 +1,5 @@
 import { Trash } from 'lucide-react';
+import { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -10,7 +11,6 @@ import {
     DialogClose,
 } from '@/components/ui/dialog';
 import { Loader } from './loader';
-import { useMemo } from 'react';
 
 interface DeleteModalProps {
     onClose: () => void;

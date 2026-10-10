@@ -21,7 +21,7 @@ class SprintService
             ->with(['project']);
 
         if ($request?->filled('search')) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
                     ->orWhere('goal', 'ilike', $search)

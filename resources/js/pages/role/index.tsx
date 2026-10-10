@@ -96,7 +96,7 @@ const Roles = (props: any) => {
                     initialFilters={props.filters}
                     onEdit={onEdit}
                     onDelete={setItemToDelete}
-                    onBulkDelete={onBulkDelete}
+                    onBulkDelete={setItemsToDelete}
                     selectable
                 />
 

@@ -162,7 +162,7 @@ const GithubsIssues = (props: any) => {
                     filters={filterOptions}
                     initialFilters={props.filters}
                     onDelete={setItemToDelete}
-                    onBulkDelete={onBulkDelete}
+                    onBulkDelete={setItemsToDelete}
                     selectable
                 />
 

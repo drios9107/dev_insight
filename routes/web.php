@@ -108,4 +108,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('metric', [MetricController::class, 'index'])->name('metric.index');
 });
 
-require __DIR__ . '/settings.php';
+require __DIR__.'/settings.php';

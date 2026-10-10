@@ -1,5 +1,5 @@
 import { router } from '@inertiajs/react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import type { PaginatedData } from '@/components/custom/table/data-table';
 
 interface IFilters {
@@ -34,64 +34,94 @@ export function useTable({
     const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
     // Update filters and navigate
-    const updateFilters = (newFilters: IFilters) => {
-        const updated = { ...filters, ...newFilters };
-        setFilters(updated);
+    const updateFilters = useCallback(
+        (newFilters: IFilters) => {
+            const updated = { ...filters, ...newFilters };
+            setFilters(updated);
 
-        // Reset page
-        if (newFilters.search !== undefined || newFilters.sort !== undefined) {
-            updated.page = 1;
-        }
+            // Reset page
+            if (
+                newFilters.search !== undefined ||
+                newFilters.sort !== undefined
+            ) {
+                updated.page = 1;
+            }
 
-        router.get(window.location.pathname, updated, {
-            preserveState: true,
-            preserveScroll: true,
-        });
-    };
+            router.get(window.location.pathname, updated, {
+                preserveState: true,
+                preserveScroll: true,
+            });
+        },
+        [filters],
+    );
 
     // Sort
-    const handleSort = (field: string) => {
-        const direction =
-            filters.sort === field && filters.direction === 'asc'
-                ? 'desc'
-                : 'asc';
-        updateFilters({ sort: field, direction });
-    };
+    const handleSort = useCallback(
+        (field: string) => {
+            const direction =
+                filters.sort === field && filters.direction === 'asc'
+                    ? 'desc'
+                    : 'asc';
+            updateFilters({ sort: field, direction });
+        },
+        [filters.sort, filters.direction, updateFilters],
+    );
 
     // Search
-    const handleSearch = (value: string) => {
-        updateFilters({ search: value });
-    };
+    const handleSearch = useCallback(
+        (value: string) => {
+            updateFilters({ search: value });
+        },
+        [updateFilters],
+    );
 
     // Change page
-    const handlePageChange = (page: number) => {
-        updateFilters({ page });
-    };
+    const handlePageChange = useCallback(
+        (page: number) => {
+            updateFilters({ page });
+        },
+        [updateFilters],
+    );
 
     // Change items per page
-    const handlePerPageChange = (perPage: number) => {
-        updateFilters({ per_page: perPage, page: 1 });
-    };
+    const handlePerPageChange = useCallback(
+        (perPage: number) => {
+            updateFilters({ per_page: perPage, page: 1 });
+        },
+        [updateFilters],
+    );
 
-    // Select rows
-    const toggleRowSelection = (id: number) => {
+    // Select single row
+    const toggleRowSelection = useCallback((id: number) => {
         setSelectedRows((prev) =>
             prev.includes(id)
                 ? prev.filter((rowId) => rowId !== id)
                 : [...prev, id],
         );
-    };
+    }, []);
 
-    const toggleAllRows = () => {
-        if (selectedRows.length === data.data?.length) {
-            setSelectedRows([]);
-        } else {
-            setSelectedRows(data.data?.map((item) => item.id) || []);
-        }
-    };
+    // Select/deselect all rows on the current page
+    const toggleAllRows = useCallback(
+        (checked?: boolean) => {
+            const currentPageIds = data.data?.map((item) => item.id) ?? [];
 
-    // Reset selection
-    const clearSelection = () => setSelectedRows([]);
+            setSelectedRows((prev) => {
+                const allSelected =
+                    currentPageIds.length > 0 &&
+                    currentPageIds.every((id) => prev.includes(id));
+
+                const shouldSelectAll = checked ?? !allSelected;
+
+                return shouldSelectAll ? currentPageIds : [];
+            });
+        },
+        [data.data],
+    );
+
+    // Clear selection
+    const clearSelection = useCallback(() => {
+        setSelectedRows([]);
+    }, []);
 
     return {
         filters,

@@ -18,14 +18,14 @@ class ProjectService
         $query = Project::query()
             ->with(['team', 'owner', 'githubRepository', 'tasks']);
         if ($request && $request->search) {
-            $search = '%' . $request->search . '%';
+            $search = '%'.$request->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'ilike', $search)
                     ->orWhere('description', 'ilike', $search)
                     ->orWhere('color', 'ilike', $search)
-                    ->orWhereHas('team', fn($sub) => $sub->where('name', 'ilike', $search))
-                    ->orWhereHas('owner', fn($sub) => $sub->where('name', 'ilike', $search))
-                    ->orWhereHas('githubRepository', fn($sub) => $sub->where('name', 'ilike', $search)
+                    ->orWhereHas('team', fn ($sub) => $sub->where('name', 'ilike', $search))
+                    ->orWhereHas('owner', fn ($sub) => $sub->where('name', 'ilike', $search))
+                    ->orWhereHas('githubRepository', fn ($sub) => $sub->where('name', 'ilike', $search)
                         ->orWhere('full_name', 'ilike', $search));
             });
         }

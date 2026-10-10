@@ -162,7 +162,7 @@ const Sprints = (props: any) => {
                     onView={(item) => setItemToViewId(item?.id)}
                     onEdit={onEdit}
                     onDelete={setItemToDelete}
-                    onBulkDelete={onBulkDelete}
+                    onBulkDelete={setItemsToDelete}
                     selectable
                 />
 

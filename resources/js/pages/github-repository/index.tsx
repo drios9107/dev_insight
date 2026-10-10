@@ -152,12 +152,19 @@ const GithubRepositories = (props: any) => {
                     filters={filterOptions}
                     initialFilters={props.filters}
                     onDelete={setItemToDelete}
-                    onBulkDelete={onBulkDelete}
+                    onBulkDelete={setItemsToDelete}
                     selectable
                 />
 
                 {itemToDelete && (
                     <DeleteModal onClose={onClose} onClick={onDelete} />
+                )}
+
+                {itemsToDelete && (
+                    <DeleteModal
+                        onClose={() => setItemsToDelete(null)}
+                        onClick={onBulkDelete}
+                    />
                 )}
             </BodyWrapper>
 

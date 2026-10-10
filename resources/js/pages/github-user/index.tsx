@@ -163,7 +163,7 @@ const GithubUsers = (props: any) => {
                     onSync={onSync}
                     onView={(item) => setItemToViewId(item?.id)}
                     onDelete={setItemToDelete}
-                    onBulkDelete={onBulkDelete}
+                    onBulkDelete={setItemsToDelete}
                     selectable
                 />
 

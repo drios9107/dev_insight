@@ -2,19 +2,18 @@ import {
     Table,
     Box,
     Text,
-    Button,
     ThemeContext,
     useThemeContext,
 } from '@radix-ui/themes';
 import { useMemo } from 'react';
 import { useTable } from '../../../hooks/use-table';
+import ShadCheckbox from '../inputs/shad-checkbox';
 import { ColumnHeader } from './column-header';
+import { DataTableBulkActions } from './data-table-bulk-actions';
 import type { ICheck, IFilter } from './data-table-filters';
 import { DataTableFilters } from './data-table-filters';
 import { DataTablePagination } from './data-table-pagination';
 import { TableActions } from './table-actions';
-import ShadCheckbox from '../inputs/shad-checkbox';
-import { DataTableBulkActions } from './data-table-bulk-actions';
 
 export interface BaseEntity {
     id: number;
@@ -97,6 +96,7 @@ export function DataTable({
         selectedRows,
         toggleRowSelection,
         toggleAllRows,
+        clearSelection,
         sortField,
         sortDirection,
         search,
@@ -127,7 +127,7 @@ export function DataTable({
                 <DataTableBulkActions
                     count={selectedRows.length}
                     onDelete={() => onBulkDelete(selectedRows)}
-                    onClear={() => toggleAllRows()}
+                    onClear={() => clearSelection()}
                 />
             )}
 

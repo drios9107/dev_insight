@@ -28,10 +28,10 @@ class GithubService
      */
     private function get(string $endpoint, array $params = []): array
     {
-        $url = $this->apiBase . $endpoint;
+        $url = $this->apiBase.$endpoint;
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->token,
+            'Authorization' => 'Bearer '.$this->token,
             'Accept' => 'application/vnd.github.v3+json',
         ])->get($url, $params);
 
@@ -42,7 +42,7 @@ class GithubService
                 'body' => $response->body(),
             ]);
 
-            throw new Exception('GitHub API error: ' . $response->status());
+            throw new Exception('GitHub API error: '.$response->status());
         }
 
         /** @var array<int|string, mixed> $data */
@@ -103,7 +103,7 @@ class GithubService
 
         return array_values(array_filter(
             $all,
-            fn(array $item): bool => ! isset($item['pull_request']),
+            fn (array $item): bool => ! isset($item['pull_request']),
         ));
     }
 

@@ -233,7 +233,7 @@ const PullRequests = (props: any) => {
                     checks={checksOptions}
                     initialFilters={props.filters}
                     onDelete={setItemToDelete}
-                    onBulkDelete={onBulkDelete}
+                    onBulkDelete={setItemsToDelete}
                     selectable
                 />
 

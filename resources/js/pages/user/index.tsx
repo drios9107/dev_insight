@@ -1,14 +1,14 @@
 import { Head, router } from '@inertiajs/react';
+import { useCallback, useState } from 'react';
+import { toast } from 'sonner';
 import BodyWrapper from '@/components/custom/body-wrapper';
 import CustomAvatar from '@/components/custom/custom-avatar';
+import { DeleteModal } from '@/components/custom/delete-modal';
 import Header from '@/components/custom/header';
 import { DataTable } from '@/components/custom/table/data-table';
 import type { IColumn } from '@/components/custom/table/data-table';
 import user from '@/routes/user';
 import type { IUser } from '@/types/user';
-import { toast } from 'sonner';
-import { useCallback, useState } from 'react';
-import { DeleteModal } from '@/components/custom/delete-modal';
 
 const Users = (props: any) => {
     const [itemToDelete, setItemToDelete] = useState<number | null>(null);
