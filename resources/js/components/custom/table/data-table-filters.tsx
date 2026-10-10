@@ -58,9 +58,9 @@ export function DataTableFilters({
     };
 
     return (
-        <div className="mb-4 flex w-full flex-col gap-3">
+        <div className="flex w-full flex-col gap-3">
             <div
-                className={`mb-4 flex w-full flex-wrap items-center gap-3 ${className}`}
+                className={`flex w-full flex-wrap items-center gap-3 ${className}`}
             >
                 {/* Search */}
                 <div className="relative flex min-w-[200px] flex-1 items-center">

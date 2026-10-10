@@ -36,7 +36,7 @@ export function DataTablePagination({
     }
 
     return (
-        <div className="mt-6 flex w-full flex-wrap items-center justify-between rounded-md border bg-white p-3 shadow-sm">
+        <div className="flex w-full flex-wrap items-center justify-between rounded-md border bg-white p-3 shadow-sm">
             {/* Left side */}
             <div
                 className="flex items-center justify-start gap-3"

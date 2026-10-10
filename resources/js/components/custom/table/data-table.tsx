@@ -14,6 +14,7 @@ import { DataTableFilters } from './data-table-filters';
 import { DataTablePagination } from './data-table-pagination';
 import { TableActions } from './table-actions';
 import ShadCheckbox from '../inputs/shad-checkbox';
+import { DataTableBulkActions } from './data-table-bulk-actions';
 
 export interface BaseEntity {
     id: number;
@@ -123,24 +124,11 @@ export function DataTable({
 
             {/* Actions bar*/}
             {selectedRows.length > 0 && onBulkDelete && (
-                <div className="mb-3 flex items-center gap-3 rounded bg-blue-50 p-2">
-                    <Text size="2">{selectedRows.length} seleccionados</Text>
-                    <Button
-                        variant="solid"
-                        color="red"
-                        size="1"
-                        onClick={() => onBulkDelete(selectedRows)}
-                    >
-                        Eliminar seleccionados
-                    </Button>
-                    <Button
-                        variant="ghost"
-                        size="1"
-                        onClick={() => toggleAllRows()}
-                    >
-                        Limpiar selección
-                    </Button>
-                </div>
+                <DataTableBulkActions
+                    count={selectedRows.length}
+                    onDelete={() => onBulkDelete(selectedRows)}
+                    onClear={() => toggleAllRows()}
+                />
             )}
 
             {/* Table */}
