@@ -75,10 +75,9 @@ const Users = (props: any) => {
             addAll: true,
         },
     ];
-
     const onDelete = useCallback(() => {
         if (itemToDelete) {
-            router.delete(user.disable(itemToDelete).url, {
+            router.delete(user.destroy(itemToDelete).url, {
                 onSuccess: () => toast.success('User disabled successfully'),
                 onError: (error) =>
                     toast.error(`User disabled failed: ${error?.message}`),
@@ -88,7 +87,7 @@ const Users = (props: any) => {
     }, [itemToDelete]);
 
     const onBulkDelete = useCallback(() => {
-        router.delete(user.bulkDisable().url, {
+        router.delete(user.bulkDestroy().url, {
             data: { ids: itemsToDisable },
             preserveScroll: true,
             onSuccess: () => {

@@ -40,7 +40,7 @@ class ActivityLogController extends Controller
         $filters = $this->extractFilters($request, ['type', 'user_id']);
 
         $types = ActivityLog::distinct()->pluck('type')->toArray();
-        $users = User::select('id', 'name')->get();
+        $users = User::withTrashed()->select('id', 'name', 'deleted_at')->get();
 
         return Inertia::render('activity-log/index', [
             'list' => $data,

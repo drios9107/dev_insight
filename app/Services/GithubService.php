@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\GithubUser;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Http;
@@ -27,10 +28,10 @@ class GithubService
      */
     private function get(string $endpoint, array $params = []): array
     {
-        $url = $this->apiBase.$endpoint;
+        $url = $this->apiBase . $endpoint;
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.$this->token,
+            'Authorization' => 'Bearer ' . $this->token,
             'Accept' => 'application/vnd.github.v3+json',
         ])->get($url, $params);
 
@@ -41,7 +42,7 @@ class GithubService
                 'body' => $response->body(),
             ]);
 
-            throw new Exception('GitHub API error: '.$response->status());
+            throw new Exception('GitHub API error: ' . $response->status());
         }
 
         /** @var array<int|string, mixed> $data */
@@ -102,7 +103,7 @@ class GithubService
 
         return array_values(array_filter(
             $all,
-            fn (array $item): bool => ! isset($item['pull_request']),
+            fn(array $item): bool => ! isset($item['pull_request']),
         ));
     }
 
@@ -141,7 +142,7 @@ class GithubService
         $email = $commitData['commit']['author']['email'] ?? null;
 
         if ($email) {
-            $user = User::whereEmail($email)->first();
+            $user = GithubUser::whereEmail($email)->first();
             if ($user) {
                 return $user->id;
             }
@@ -150,7 +151,7 @@ class GithubService
         $githubId = $commitData['author']['id'] ?? null;
 
         if ($githubId) {
-            $user = User::whereGithubId($githubId)->first();
+            $user = GithubUser::whereGithubId($githubId)->first();
             if ($user) {
                 return $user->id;
             }
@@ -159,7 +160,7 @@ class GithubService
         $username = $commitData['author']['login'] ?? null;
 
         if ($username) {
-            $user = User::whereGithubUsername($username)->first();
+            $user = GithubUser::whereGithubUsername($username)->first();
             if ($user) {
                 return $user->id;
             }

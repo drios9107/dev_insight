@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BulkDestroyRequest;
 use App\Http\Requests\PullRequestReviewRequest;
 use App\Http\Resources\PullRequestReviewResource;
+use App\Models\GithubUser;
 use App\Models\User;
 use App\Services\PullRequestReviewService;
 use Illuminate\Http\RedirectResponse;
@@ -39,7 +40,7 @@ class PullRequestReviewController extends Controller
 
         $filters = $this->extractFilters($request, ['state', 'reviewer_id']);
 
-        $reviewers = User::select('id', 'name')->get();
+        $reviewers = GithubUser::select('id', 'name')->get();
 
         return Inertia::render('pull-request-review/index', [
             'list' => $data,
